@@ -156,24 +156,32 @@ public:
     vector <department> departmentvec; //vector store department the sheet has
     string inputlocate; //where input from e.g. 201       (also name)
 
-    sheet(string locate, bool state) //constructer
+    sheet(string locate, bool state) // constructer  讀檔  ((處理檔名，判斷須不須丟掉前三行，讀內容
     {
         ifstream input;
-        int skiplines; //lines to skip in file's begin
+        int skiplines; // lines to skip in file's begin
 
-        if (!state) //file named inputxxx.txt or xxx
+
+        // state = 0 : file named inputxxx.txt or xxx
+        if (!state) 
         {
-            skiplines = 3;
-            if (locate.size() < 10) //length("xxx") < length("input" +".txt")
-                inputlocate = locate; //store xxx
-            else
+            skiplines = 3 ;
+
+            // 全部都存成xxx
+            if (locate.size() < 10) // length("xxx") < length("input" +".txt")
+                inputlocate = locate; // store xxx
+            else                          // inputxxx.txt
             {
                 inputlocate = locate.substr(5); //"inputxxx.txt" to "xxx.txt"
                 inputlocate = inputlocate.substr(0, inputlocate.size() - 4); //"xxx.txt" to "xxx"
             }
 
+            // 再一律加上input和.txt
             input.open("input" + inputlocate + ".txt"); //open file "inputxxx.txt"
-            while (!input) // if "inputxxx.txt" can't be opened
+
+
+            // if "inputxxx.txt" can't be opened, input the filename again and repeat the steps of processing above
+            while (!input) 
             {
                 cout << "\nCan't open file, typenew: ";
                 cin >> locate;
@@ -187,19 +195,29 @@ public:
                 input.open("input" + inputlocate + ".txt"); //reopen
             }
         }
-        else //file named copyxxx.txt or xxx
+
+
+
+        // state = 1 : file named copyxxx.txt or xxx
+        else 
         {
             skiplines = 0;
-            if (locate.size() < 9)
-                inputlocate = locate;
-            else
-            {
-                inputlocate = locate.substr(4);
-                inputlocate = inputlocate.substr(0, inputlocate.size() - 4);
-            }
-            input.open("copy" + inputlocate + ".txt");
 
-            while (!input)
+            // 全部都存成xxx
+            if (locate.size() < 9)   // xxx
+                inputlocate = locate;   // store xxx
+    
+            else                     // copyxxx.txt
+            {
+                inputlocate = locate.substr(4); //"copyxxx.txt" to "xxx.txt"
+                inputlocate = inputlocate.substr(0, inputlocate.size() - 4); //"xxx.txt" to "xxx"
+            }
+
+            // 再一律加上copy和.txt
+            input.open("copy" + inputlocate + ".txt");  //open file "inputxxx.txt"
+
+            // if "copyxxx.txt" can't be opened, input the filename again and repeat the steps of processing above
+            while (!input) 
             {
                 cout << "\nCan't open file, typenew: ";
                 cin >> locate;
@@ -210,27 +228,26 @@ public:
                     inputlocate = locate.substr(4);;
                     inputlocate = inputlocate.substr(0, inputlocate.size() - 4);
                 }
-                input.open("copy" + inputlocate + ".txt");
+                input.open("copy" + inputlocate + ".txt"); //reopen
             }
         }
 
 
         string str;
         for (int i = 0; i < skiplines; i++) //input lines to skip useless information
-            getline(input, str);
+            getline(input, str);  
 
-
+        // anounce a new vector
         department d;
-
-
-        while (input >> d && d.readsuccess == 1) // input department while input available
-            //cout<<d<<endl;
+        while (input >> d && d.readsuccess == 1) // while input available, then input department 
             departmentvec.push_back(d);
     }
 
-    sheet(sheet s1, sheet s2) //construct use two sheet
+
+
+    sheet(sheet s1, sheet s2) //construct use two sheet 
     {
-        //put s1.departmentvec and s2.departmentvec into departmentvec
+        //merge two vec : s1.departmentvec and s2.departmentvec -> departmentvec
         for (auto i:s1.departmentvec)
             departmentvec.push_back(i);
         for (auto i:s2.departmentvec)
@@ -241,13 +258,13 @@ public:
         inputlocate = s1.inputlocate + "_" + s2.inputlocate; //new inputlocate(name) = "201"+"_"+"202"="201_202"
     }
 
-    void print() //print departmentvec
+    void print()  // print departmentvec 
     {
         for (auto i:departmentvec)
             cout << i << '\n';
     }
 
-    void eraseif(int student, int graduate) //find all data which doesn't satisfied the claim and erase it
+    void eraseif(int student, int graduate) // find all data which doesn't satisfied the claim and erase it. the filter
     {
         while (find_if(departmentvec.begin(), departmentvec.end(), [student, graduate](department d){
             return d.numofstudent < student || d.numofgraduate < graduate;
@@ -257,12 +274,12 @@ public:
             }));
     }
 
-    int size() //return the total number of department
+    int size() // return the total number of department
     {
         return departmentvec.size();
     }
 
-    void writefile(bool state)
+    void writefile(bool state)   // 寫入哪裡?
     {
         ofstream output((state?"output":"copy") + inputlocate + ".txt", ios::trunc);
         //open new output file stream output201.txt or copy201.txt
