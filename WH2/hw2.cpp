@@ -51,22 +51,22 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 	d.numofstudent = stoi(num);                   //convert string to int
 
 	num = "";
-	for(; i < str.size() && str[i] != '\t'; i++)
+	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 		num += str[i];
-	i++;
-	d.numofteacher = stoi(num);
+	i++;                                         //skip '\t'
+	d.numofteacher = stoi(num);                  //convert string to int
 
 	num = "";
-	for(; i < str.size() && str[i] != '\t'; i++)
+	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 		num += str[i];
-	i++;
-	d.numofgraduate = stoi(num);
+	i++;                                         //skip '\t'
+	d.numofgraduate = stoi(num);                 //convert string to int
 
 	for(int j = 6; j < 8; j++)
 	{
-		for(; i < str.size() && str[i] != '\t'; i++)
+		for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 			d.data[j] += str[i];
-		i++;
+		i++;                                         //skip '\t'
 	}
 	return s;
 }
@@ -76,7 +76,7 @@ istream &operator>>(istream&s, department&d) //department input stream Overload
 	string str;
 
 
-	getline(s, str);
+	getline(s, str); //read one line
 	if(str.size() < 3)
 	{
 		d.readsuccess = false;
@@ -89,36 +89,36 @@ istream &operator>>(istream&s, department&d) //department input stream Overload
 		d.data[j] = "";
 	for(int j = 0; j < 6; j++)
 	{
-		for(; i < str.size() && str[i] != '\t'; i++)
+		for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 			d.data[j] += str[i];
-		i++;
+		i++;                                         //skip '\t'
 	}
 
 	string num;
 
 
-	for(; i < str.size() && str[i] != '\t'; i++)
+	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 		num += str[i];
-	i++;
-	d.numofstudent = stoi(num);
+	i++;                                         //skip '\t'
+	d.numofstudent = stoi(num);                  //convert string to int
 
 	num = "";
-	for(; i < str.size() && str[i] != '\t'; i++)
+	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 		num += str[i];
-	i++;
-	d.numofteacher = stoi(num);
+	i++;                                         //skip '\t'
+	d.numofteacher = stoi(num);                  //convert string to int
 
 	num = "";
-	for(; i < str.size() && str[i] != '\t'; i++)
+	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 		num += str[i];
-	i++;
-	d.numofgraduate = stoi(num);
+	i++;                                         //skip '\t'
+	d.numofgraduate = stoi(num);                 //convert string to int
 
 	for(int j = 6; j < 8; j++)
 	{
-		for(; i < str.size() && str[i] != '\t'; i++)
+		for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 			d.data[j] += str[i];
-		i++;
+		i++;                                         //skip '\t'
 	}
 	return s;
 }
@@ -153,7 +153,8 @@ public:
 	vector <department> departmentvec; //vector store department the sheet has
 	string inputlocate;                //where input from e.g. 201       (also name)
 
-	sheet(string locate, bool state)   // constructer  讀檔  ((處理檔名，判斷須不須丟掉前三行，讀內容
+	sheet(string locate, bool state)   // constructer  read the file
+	//((process the file name，decide if we should skip the first three lines，read the content
 	{
 		ifstream input;
 		int		 skiplines; // lines to skip in file's begin
@@ -328,7 +329,7 @@ int main()
 		{
 			cout << "Input: ";
 			string locate;
-			cin >> locate; //input file locate(name)
+			cin >> locate;               //input file locate(name)
 
 			sheet firstsheet(locate, 0); //use the constructor to read the file
 
@@ -365,9 +366,9 @@ int main()
 
 			cout << "Input 2nd file: ";
 			cin >> locate;
-			sheet secondsheet(locate, 1);  //input file locate(name)
+			sheet secondsheet(locate, 1);              //input file locate(name)
 
-			sheet totalsheet(firstsheet, secondsheet);  //construct using two sheet
+			sheet totalsheet(firstsheet, secondsheet); //construct using two sheet
 
 			cout << "Total number of records = " << totalsheet.size() << endl;
 			totalsheet.print();
