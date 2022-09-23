@@ -8,10 +8,10 @@ using namespace std;
 class department
 {
 public:
-    string data[8];     //學校代碼 學校名稱 科系代碼 科系名稱 日間／進修別  等級別  縣市名稱 體系別
-    int numofstudent;   //學生數
-    int numofteacher;   //教師數
-    int numofgraduate;  //上學年度畢業生數
+    string data[8];          //學校代碼 學校名稱 科系代碼 科系名稱 日間／進修別  等級別  縣市名稱 體系別
+    int numofstudent;        //學生數
+    int numofteacher;        //教師數
+    int numofgraduate;       //上學年度畢業生數
     bool readsuccess = true; //input successed or not
 
 
@@ -42,7 +42,7 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
     {
         for (; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
             d.data[j] += str[i];
-        i++; //skip '\t'
+        i++;                                          //skip '\t'
     }
 
     string num; //string to store number
@@ -50,8 +50,8 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 
     for (; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
         num += str[i];
-    i++; //skip '\t'
-    d.numofstudent = stoi(num); //convert string to int
+    i++;                                          //skip '\t'
+    d.numofstudent = stoi(num);                   //convert string to int
 
     num = "";
     for (; i < str.size() && str[i] != '\t'; i++)
@@ -154,25 +154,25 @@ class sheet
 {
 public:
     vector <department> departmentvec; //vector store department the sheet has
-    string inputlocate; //where input from e.g. 201       (also name)
+    string inputlocate;                //where input from e.g. 201       (also name)
 
-    sheet(string locate, bool state) // constructer  讀檔  ((處理檔名，判斷須不須丟掉前三行，讀內容
+    sheet(string locate, bool state)   // constructer  讀檔  ((處理檔名，判斷須不須丟掉前三行，讀內容
     {
         ifstream input;
-        int skiplines; // lines to skip in file's begin
+        int      skiplines; // lines to skip in file's begin
 
 
         // state = 0 : file named inputxxx.txt or xxx
-        if (!state) 
+        if (!state)
         {
-            skiplines = 3 ;
+            skiplines = 3;
 
             // 全部都存成xxx
-            if (locate.size() < 10) // length("xxx") < length("input" +".txt")
-                inputlocate = locate; // store xxx
-            else                          // inputxxx.txt
+            if (locate.size() < 10)                                          // length("xxx") < length("input" +".txt")
+                inputlocate = locate;                                        // store xxx
+            else                                                             // inputxxx.txt
             {
-                inputlocate = locate.substr(5); //"inputxxx.txt" to "xxx.txt"
+                inputlocate = locate.substr(5);                              //"inputxxx.txt" to "xxx.txt"
                 inputlocate = inputlocate.substr(0, inputlocate.size() - 4); //"xxx.txt" to "xxx"
             }
 
@@ -181,7 +181,7 @@ public:
 
 
             // if "inputxxx.txt" can't be opened, input the filename again and repeat the steps of processing above
-            while (!input) 
+            while (!input)
             {
                 cout << "\nCan't open file, typenew: ";
                 cin >> locate;
@@ -197,19 +197,18 @@ public:
         }
 
 
-
         // state = 1 : file named copyxxx.txt or xxx
-        else 
+        else
         {
             skiplines = 0;
 
             // 全部都存成xxx
-            if (locate.size() < 9)   // xxx
-                inputlocate = locate;   // store xxx
-    
-            else                     // copyxxx.txt
+            if (locate.size() < 9)                                           // xxx
+                inputlocate = locate;                                        // store xxx
+
+            else                                                             // copyxxx.txt
             {
-                inputlocate = locate.substr(4); //"copyxxx.txt" to "xxx.txt"
+                inputlocate = locate.substr(4);                              //"copyxxx.txt" to "xxx.txt"
                 inputlocate = inputlocate.substr(0, inputlocate.size() - 4); //"xxx.txt" to "xxx"
             }
 
@@ -217,7 +216,7 @@ public:
             input.open("copy" + inputlocate + ".txt");  //open file "inputxxx.txt"
 
             // if "copyxxx.txt" can't be opened, input the filename again and repeat the steps of processing above
-            while (!input) 
+            while (!input)
             {
                 cout << "\nCan't open file, typenew: ";
                 cin >> locate;
@@ -234,18 +233,20 @@ public:
 
 
         string str;
+
+
         for (int i = 0; i < skiplines; i++) //input lines to skip useless information
-            getline(input, str);  
+            getline(input, str);
 
         // anounce a new vector
         department d;
-        while (input >> d && d.readsuccess == 1) // while input available, then input department 
+
+
+        while (input >> d && d.readsuccess == 1) // while input available, then input department
             departmentvec.push_back(d);
     }
 
-
-
-    sheet(sheet s1, sheet s2) //construct use two sheet 
+    sheet(sheet s1, sheet s2) //construct use two sheet
     {
         //merge two vec : s1.departmentvec and s2.departmentvec -> departmentvec
         for (auto i:s1.departmentvec)
@@ -254,11 +255,11 @@ public:
             departmentvec.push_back(i);
         sort(departmentvec.begin(), departmentvec.end(), [](department d1, department d2){
             return d1.data[0] < d2.data[0];
-        }); //sort departmentvec use schoolcode
+        });                                                  //sort departmentvec use schoolcode
         inputlocate = s1.inputlocate + "_" + s2.inputlocate; //new inputlocate(name) = "201"+"_"+"202"="201_202"
     }
 
-    void print()  // print departmentvec 
+    void print()  // print departmentvec
     {
         for (auto i:departmentvec)
             cout << i << '\n';
@@ -282,13 +283,15 @@ public:
     void writefile(bool state)   // 寫入哪裡?
     {
         ofstream output((state?"output":"copy") + inputlocate + ".txt", ios::trunc);
+
+
         //open new output file stream output201.txt or copy201.txt
         //clear the file is file already exist bt using ios::trunc
 
 
         for (auto i:departmentvec) //output
             output << i << '\n';
-        output.close(); //close file
+        output.close();            //close file
     }
 };
 
