@@ -2,9 +2,6 @@
 using namespace std;
 
 
-//學校代碼  學校名稱    科系代碼    科系名稱        日間／進修別  等級別 學生數 教師數 上學年度畢業生數    縣市名稱    體系別
-//0002  國立清華大學  520114  資訊工程學系  D 日 B       學士       565     43     117             18 新竹市  1 一般
-
 class department
 {
 public:
@@ -28,7 +25,7 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 
 
     getline(s, str); //read one line
-    if (str.size() < 3)
+    if(str.size() < 3)
     {
         d.readsuccess = false;
         return s;
@@ -36,11 +33,11 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
     int i = 0;
 
 
-    for (int j = 0; j < 8; j++)
+    for(int j = 0; j < 8; j++)
         d.data[j] = "";
-    for (int j = 0; j < 6; j++)
+    for(int j = 0; j < 6; j++)
     {
-        for (; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
+        for(; i < str.size() && str[i] != '\t'; i++)  //if str[i] == '\t' -> one complete data
             d.data[j] += str[i];
         i++;                                          //skip '\t'
     }
@@ -48,26 +45,26 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
     string num; //string to store number
 
 
-    for (; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
+    for(; i < str.size() && str[i] != '\t'; i++)  //if str[i] == '\t' -> one complete data
         num += str[i];
     i++;                                          //skip '\t'
     d.numofstudent = stoi(num);                   //convert string to int
 
     num = "";
-    for (; i < str.size() && str[i] != '\t'; i++)
+    for(; i < str.size() && str[i] != '\t'; i++)
         num += str[i];
     i++;
     d.numofteacher = stoi(num);
 
     num = "";
-    for (; i < str.size() && str[i] != '\t'; i++)
+    for(; i < str.size() && str[i] != '\t'; i++)
         num += str[i];
     i++;
     d.numofgraduate = stoi(num);
 
-    for (int j = 6; j < 8; j++)
+    for(int j = 6; j < 8; j++)
     {
-        for (; i < str.size() && str[i] != '\t'; i++)
+        for(; i < str.size() && str[i] != '\t'; i++)
             d.data[j] += str[i];
         i++;
     }
@@ -80,7 +77,7 @@ istream &operator>>(istream&s, department&d) //department input stream Overload
 
 
     getline(s, str);
-    if (str.size() < 3)
+    if(str.size() < 3)
     {
         d.readsuccess = false;
         return s;
@@ -88,11 +85,11 @@ istream &operator>>(istream&s, department&d) //department input stream Overload
     int i = 0;
 
 
-    for (int j = 0; j < 8; j++)
+    for(int j = 0; j < 8; j++)
         d.data[j] = "";
-    for (int j = 0; j < 6; j++)
+    for(int j = 0; j < 6; j++)
     {
-        for (; i < str.size() && str[i] != '\t'; i++)
+        for(; i < str.size() && str[i] != '\t'; i++)
             d.data[j] += str[i];
         i++;
     }
@@ -100,26 +97,26 @@ istream &operator>>(istream&s, department&d) //department input stream Overload
     string num;
 
 
-    for (; i < str.size() && str[i] != '\t'; i++)
+    for(; i < str.size() && str[i] != '\t'; i++)
         num += str[i];
     i++;
     d.numofstudent = stoi(num);
 
     num = "";
-    for (; i < str.size() && str[i] != '\t'; i++)
+    for(; i < str.size() && str[i] != '\t'; i++)
         num += str[i];
     i++;
     d.numofteacher = stoi(num);
 
     num = "";
-    for (; i < str.size() && str[i] != '\t'; i++)
+    for(; i < str.size() && str[i] != '\t'; i++)
         num += str[i];
     i++;
     d.numofgraduate = stoi(num);
 
-    for (int j = 6; j < 8; j++)
+    for(int j = 6; j < 8; j++)
     {
-        for (; i < str.size() && str[i] != '\t'; i++)
+        for(; i < str.size() && str[i] != '\t'; i++)
             d.data[j] += str[i];
         i++;
     }
@@ -128,24 +125,24 @@ istream &operator>>(istream&s, department&d) //department input stream Overload
 
 ostream &operator<<(ostream&s, department d)//department output stream Overload
 {
-    for (int i = 0; i < 6; i++)
+    for(int i = 0; i < 6; i++)
         s << d.data[i] << '\t'; //optput data and use '\t' to separate data
     s << d.numofstudent << '\t';
     s << d.numofteacher << '\t';
     s << d.numofgraduate << '\t';
-    for (int i = 6; i < 8; i++)
+    for(int i = 6; i < 8; i++)
         s << d.data[i] << '\t';
     return s;
 }
 
 ofstream &operator<<(ofstream&s, department d) //department output file stream Overload
 {
-    for (int i = 0; i < 6; i++)
+    for(int i = 0; i < 6; i++)
         s << d.data[i] << '\t'; //optput data and use '\t' to separate data
     s << d.numofstudent << '\t';
     s << d.numofteacher << '\t';
     s << d.numofgraduate << '\t';
-    for (int i = 6; i < 8; i++)
+    for(int i = 6; i < 8; i++)
         s << d.data[i] << '\t';
     return s;
 }
@@ -163,12 +160,12 @@ public:
 
 
         // state = 0 : file named inputxxx.txt or xxx
-        if (!state)
+        if(!state)
         {
             skiplines = 3;
 
             // 全部都存成xxx
-            if (locate.size() < 10)                                          // length("xxx") < length("input" +".txt")
+            if(locate.size() < 10)                                           // length("xxx") < length("input" +".txt")
                 inputlocate = locate;                                        // store xxx
             else                                                             // inputxxx.txt
             {
@@ -181,11 +178,11 @@ public:
 
 
             // if "inputxxx.txt" can't be opened, input the filename again and repeat the steps of processing above
-            while (!input)
+            while(!input)
             {
                 cout << "\nCan't open file, typenew: ";
                 cin >> locate;
-                if (locate.size() < 10)            //"input" +".txt"
+                if(locate.size() < 10)             //"input" +".txt"
                     inputlocate = locate;
                 else
                 {
@@ -203,7 +200,7 @@ public:
             skiplines = 0;
 
             // 全部都存成xxx
-            if (locate.size() < 9)                                           // xxx
+            if(locate.size() < 9)                                            // xxx
                 inputlocate = locate;                                        // store xxx
 
             else                                                             // copyxxx.txt
@@ -216,11 +213,11 @@ public:
             input.open("copy" + inputlocate + ".txt");  //open file "inputxxx.txt"
 
             // if "copyxxx.txt" can't be opened, input the filename again and repeat the steps of processing above
-            while (!input)
+            while(!input)
             {
                 cout << "\nCan't open file, typenew: ";
                 cin >> locate;
-                if (locate.size() < 9)
+                if(locate.size() < 9)
                     inputlocate = locate;
                 else
                 {
@@ -235,23 +232,23 @@ public:
         string str;
 
 
-        for (int i = 0; i < skiplines; i++) //input lines to skip useless information
+        for(int i = 0; i < skiplines; i++)  //input lines to skip useless information
             getline(input, str);
 
         // anounce a new vector
         department d;
 
 
-        while (input >> d && d.readsuccess == 1) // while input available, then input department
+        while(input >> d && d.readsuccess == 1)  // while input available, then input department
             departmentvec.push_back(d);
     }
 
     sheet(sheet s1, sheet s2) //construct use two sheet
     {
         //merge two vec : s1.departmentvec and s2.departmentvec -> departmentvec
-        for (auto i:s1.departmentvec)
+        for(auto i:s1.departmentvec)
             departmentvec.push_back(i);
-        for (auto i:s2.departmentvec)
+        for(auto i:s2.departmentvec)
             departmentvec.push_back(i);
         sort(departmentvec.begin(), departmentvec.end(), [](department d1, department d2){
             return d1.data[0] < d2.data[0];
@@ -261,13 +258,13 @@ public:
 
     void print()  // print departmentvec
     {
-        for (auto i:departmentvec)
+        for(auto i:departmentvec)
             cout << i << '\n';
     }
 
     void eraseif(int student, int graduate) // find all data which doesn't satisfied the claim and erase it. the filter
     {
-        while (find_if(departmentvec.begin(), departmentvec.end(), [student, graduate](department d){
+        while(find_if(departmentvec.begin(), departmentvec.end(), [student, graduate](department d){
             return d.numofstudent < student || d.numofgraduate < graduate;
         }) != departmentvec.end())
             departmentvec.erase(find_if(departmentvec.begin(), departmentvec.end(), [student, graduate](department d){
@@ -289,7 +286,7 @@ public:
         //clear the file is file already exist bt using ios::trunc
 
 
-        for (auto i:departmentvec) //output
+        for(auto i:departmentvec)  //output
             output << i << '\n';
         output.close();            //close file
     }
@@ -304,7 +301,7 @@ int main()
     int k = 100;
 
 
-    while (k != 0)
+    while(k != 0)
     {
         cout << "\n";
         cout << "**  data operate system  **" << "\n"; //print menu
@@ -315,7 +312,7 @@ int main()
         cout << "***************************" << "\n";
         cout << "Input a choice(0, 1, 2, 3): ";
         cin >> k;
-        if (cin.fail())
+        if(cin.fail())
         {
             cout << "\nCommand does not exist!\n";
             cin.clear();  //set cin stream to good(work) situation
@@ -325,12 +322,13 @@ int main()
             continue;     //skip this loop
         }
 
-        if (k != 0 && k != 1 && k != 2 && k != 3)
+        if(k != 0 && k != 1 && k != 2 && k != 3)
         {
             cout << "\nCommand does not exist!\n";
             continue; //skip this loop
         }
-        if (k == 1)
+
+        if(k == 1)
         {
             cout << "Input: ";
             string locate;
@@ -343,7 +341,7 @@ int main()
             firstsheet.writefile(0);
         }
 
-        if (k == 2)
+        if(k == 2)
         {
             cout << "Input: ";
             string locate;
@@ -362,7 +360,7 @@ int main()
             firstsheet.writefile(0);
         }
 
-        if (k == 3)
+        if(k == 3)
         {
             cout << "Input 1st file: ";
             string locate;
