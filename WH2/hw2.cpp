@@ -221,7 +221,7 @@ public:
 					inputlocate = locate;
 				else
 				{
-					inputlocate = locate.substr(4);;
+					inputlocate = locate.substr(4);
 					inputlocate = inputlocate.substr(0, inputlocate.size() - 4);
 				}
 				input.open("copy" + inputlocate + ".txt"); //reopen
@@ -277,7 +277,7 @@ public:
 		return departmentvec.size();
 	}
 
-	void writefile(bool state)   // 寫入哪裡?
+	void writefile(bool state) // output
 	{
 		ofstream output((state?"output":"copy") + inputlocate + ".txt", ios::trunc);
 
@@ -295,7 +295,6 @@ public:
 
 int main()
 {
-
 	int k = 100;
 
 
@@ -331,11 +330,11 @@ int main()
 			string locate;
 			cin >> locate; //input file locate(name)
 
-			sheet firstsheet(locate, 0);
+			sheet firstsheet(locate, 0); //use the constructor to read the file
 
 			cout << "Total number of records = " << firstsheet.size() << endl;
 			firstsheet.print();
-			firstsheet.writefile(0);
+			firstsheet.writefile(0);  // 0->copy
 		}
 
 		if(k == 2)
@@ -344,17 +343,17 @@ int main()
 			string locate;
 			cin >> locate;
 
-			sheet firstsheet(locate, 1);
+			sheet firstsheet(locate, 1);  //input file locate(name)
 			int	  student, graduate;
 			cout << "Threshold of student: ";
 			cin >> student;
 			cout << "Threshold of graduates: ";
 			cin >> graduate;
-			firstsheet.eraseif(student, graduate);
+			firstsheet.eraseif(student, graduate);  // select the vector
 
 			cout << "Total number of records = " << firstsheet.size() << endl;
 			firstsheet.print();
-			firstsheet.writefile(0);
+			firstsheet.writefile(0);    // 0->copy
 		}
 
 		if(k == 3)
@@ -362,17 +361,17 @@ int main()
 			cout << "Input 1st file: ";
 			string locate;
 			cin >> locate;
-			sheet firstsheet(locate, 1);
+			sheet firstsheet(locate, 1);  //input file locate(name)
 
 			cout << "Input 2nd file: ";
 			cin >> locate;
-			sheet secondsheet(locate, 1);
+			sheet secondsheet(locate, 1);  //input file locate(name)
 
-			sheet totalsheet(firstsheet, secondsheet);
+			sheet totalsheet(firstsheet, secondsheet);  //construct using two sheet
 
 			cout << "Total number of records = " << totalsheet.size() << endl;
 			totalsheet.print();
-			totalsheet.writefile(1);
+			totalsheet.writefile(1);    // 1->output
 		}
 	}
 }
