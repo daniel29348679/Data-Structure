@@ -295,8 +295,6 @@ public:
 
 int main()
 {
-	//sheet s("input201.txt");
-
 
 	int k = 100;
 
