@@ -36,7 +36,7 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 
 	for(int j = 0; j < 8; j++)                       //clear up the data[8]
 		d.data[j] = "";
-	for(int j = 0; j < 6; j++)                       // read in 學校代碼~等級別
+	for(int j = 0; j < 6; j++)                       //read in 學校代碼~等級別
 	{
 		for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 			d.data[j] += str[i];
@@ -91,7 +91,7 @@ istream &operator>>(istream&s, department&d) //department input stream Overload
 
 	for(int j = 0; j < 8; j++)                       //clear up the data[8]
 		d.data[j] = "";
-	for(int j = 0; j < 6; j++)                       // read in 學校代碼~等級別
+	for(int j = 0; j < 6; j++)                       //read in 學校代碼~等級別
 	{
 		for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 			d.data[j] += str[i];
@@ -160,7 +160,7 @@ public:
 	vector <department> departmentvec; //vector store department the sheet has
 	string inputlocate;                //where input from e.g. 201       (also name)
 
-	sheet(string locate, bool state)   // constructer  read the file
+	sheet(string locate, bool state)   //constructer  read the file
 	//((process the file name，decide if we should skip the first three lines，read the content
 	{
 		ifstream input;
@@ -172,7 +172,7 @@ public:
 		{
 			skiplines = 3;
 
-			// 全部都存成xxx
+			//全部都存成xxx
 			if(locate.size() < 10)                                           // length("xxx") < length("input" +".txt")
 				inputlocate = locate;                                        // store xxx
 			else                                                             // inputxxx.txt
@@ -181,11 +181,11 @@ public:
 				inputlocate = inputlocate.substr(0, inputlocate.size() - 4); //"xxx.txt" to "xxx"
 			}
 
-			// 再一律加上input和.txt
+			//再一律加上input和.txt
 			input.open("input" + inputlocate + ".txt"); //open file "inputxxx.txt"
 
 
-			// if "inputxxx.txt" can't be opened, input the filename again and repeat the steps of processing above
+			//if "inputxxx.txt" can't be opened, input the filename again and repeat the steps of processing above
 			while(!input)
 			{
 				cout << "\nCan't open file, typenew: ";
@@ -202,16 +202,16 @@ public:
 		}
 
 
-		// state = 1 : file named copyxxx.txt or xxx
+		//state = 1 : file named copyxxx.txt or xxx
 		else
 		{
 			skiplines = 0;
 
 			// 全部都存成xxx
-			if(locate.size() < 9)                                            // xxx
-				inputlocate = locate;                                        // store xxx
+			if(locate.size() < 9)                                            //xxx
+				inputlocate = locate;                                        //store xxx
 
-			else                                                             // copyxxx.txt
+			else                                                             //copyxxx.txt
 			{
 				inputlocate = locate.substr(4);                              //"copyxxx.txt" to "xxx.txt"
 				inputlocate = inputlocate.substr(0, inputlocate.size() - 4); //"xxx.txt" to "xxx"
@@ -220,7 +220,7 @@ public:
 			// 再一律加上copy和.txt
 			input.open("copy" + inputlocate + ".txt");  //open file "inputxxx.txt"
 
-			// if "copyxxx.txt" can't be opened, input the filename again and repeat the steps of processing above
+			//if "copyxxx.txt" can't be opened, input the filename again and repeat the steps of processing above
 			while(!input)
 			{
 				cout << "\nCan't open file, typenew: ";
@@ -247,7 +247,7 @@ public:
 		department d;
 
 
-		while(input >> d && d.readsuccess == 1)  // while input available, then input department
+		while(input >> d && d.readsuccess == 1)  //while input available, then input department
 			departmentvec.push_back(d);
 	}
 
@@ -270,7 +270,7 @@ public:
 			cout << i << '\n';
 	}
 
-	void eraseif(int student, int graduate) // find all data which doesn't satisfied the claim and erase it. the filter
+	void eraseif(int student, int graduate) //find all data which doesn't satisfied the claim and erase it. the filter
 	{
 		while(find_if(departmentvec.begin(), departmentvec.end(), [student, graduate](department d){
 			return d.numofstudent < student || d.numofgraduate < graduate;
@@ -280,12 +280,12 @@ public:
 			}));
 	}
 
-	int size() // return the total number of department
+	int size() //return the total number of department
 	{
 		return departmentvec.size();
 	}
 
-	void writefile(bool state) // output
+	void writefile(bool state) //output
 	{
 		ofstream output((state?"output":"copy") + inputlocate + ".txt", ios::trunc);
 
@@ -342,7 +342,7 @@ int main()
 
 			cout << "Total number of records = " << firstsheet.size() << endl;
 			firstsheet.print();
-			firstsheet.writefile(0);  // 0->copy
+			firstsheet.writefile(0);  //0->copy
 		}
 
 		if(k == 2)
@@ -357,11 +357,11 @@ int main()
 			cin >> student;
 			cout << "Threshold of graduates: ";
 			cin >> graduate;
-			firstsheet.eraseif(student, graduate);  // select the vector
+			firstsheet.eraseif(student, graduate);  //select the vector
 
 			cout << "Total number of records = " << firstsheet.size() << endl;
 			firstsheet.print();
-			firstsheet.writefile(0);    // 0->copy
+			firstsheet.writefile(0);    //0->copy
 		}
 
 		if(k == 3)
@@ -379,7 +379,7 @@ int main()
 
 			cout << "Total number of records = " << totalsheet.size() << endl;
 			totalsheet.print();
-			totalsheet.writefile(1);    // 1->output
+			totalsheet.writefile(1);    //1->output
 		}
 	}
 }
