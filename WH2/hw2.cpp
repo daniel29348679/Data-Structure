@@ -9,7 +9,6 @@ public:
 	int numofstudent;        //學生數
 	int numofteacher;        //教師數
 	int numofgraduate;       //上學年度畢業生數
-	bool readsuccess = true; //input successed or not
 
 
 	//ifstream, istream, ofstream, ostream are friends of department's, so they can acess private members in department
@@ -26,11 +25,6 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 
 
 	getline(s, str); //read one line
-	if(str.size() < 3)
-	{
-		d.readsuccess = false; //fail in read one line
-		return s;              //the function end
-	}
 	int i = 0;
 
 
@@ -81,11 +75,6 @@ istream &operator>>(istream&s, department&d) //department input stream Overload
 
 
 	getline(s, str); //read one line
-	if(str.size() < 3)
-	{
-		d.readsuccess = false; //fail in read one line
-		return s;              //the function end
-	}
 	int i = 0;
 
 
@@ -247,7 +236,7 @@ public:
 		department d;
 
 
-		while(input >> d && d.readsuccess == 1)  //while input available, then input department
+		while(!input.eof()&&input >> d )  //while input available, then input department
 			departmentvec.push_back(d);
 	}
 
