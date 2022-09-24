@@ -12,6 +12,7 @@ public:
 	bool readsuccess = true; //input successed or not
 
 
+	//ifstream, istream, ofstream, ostream are friends of department's, so they can acess private members in department
 	friend ifstream &operator>>(ifstream&s, department&d);
 	friend istream &operator>>(istream&s, department&d);
 	friend ofstream &operator<<(ofstream&s, department d);
@@ -19,7 +20,7 @@ public:
 };
 
 
-ifstream &operator>>(ifstream&s, department&d) //department input file stream Overload
+ifstream &operator>>(ifstream&s, department&d) //department input file stream Overload, return what it read
 {
 	string str;
 
@@ -27,41 +28,44 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 	getline(s, str); //read one line
 	if(str.size() < 3)
 	{
-		d.readsuccess = false;
-		return s;
+		d.readsuccess = false; //fail in read one line
+		return s;              //the function end
 	}
 	int i = 0;
 
 
-	for(int j = 0; j < 8; j++)
+	for(int j = 0; j < 8; j++)                       //clear up the data[8]
 		d.data[j] = "";
-	for(int j = 0; j < 6; j++)
+	for(int j = 0; j < 6; j++)                       // read in 學校代碼~等級別
 	{
-		for(; i < str.size() && str[i] != '\t'; i++)  //if str[i] == '\t' -> one complete data
+		for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 			d.data[j] += str[i];
-		i++;                                          //skip '\t'
+		i++;                                         //skip '\t'
 	}
 
 	string num; //string to store number
 
-
+	//read in 學生人數
 	for(; i < str.size() && str[i] != '\t'; i++)  //if str[i] == '\t' -> one complete data
 		num += str[i];
 	i++;                                          //skip '\t'
 	d.numofstudent = stoi(num);                   //convert string to int
 
+	//read in 教師人數
 	num = "";
 	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 		num += str[i];
 	i++;                                         //skip '\t'
 	d.numofteacher = stoi(num);                  //convert string to int
 
+	//read in 畢業人數
 	num = "";
 	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 		num += str[i];
 	i++;                                         //skip '\t'
 	d.numofgraduate = stoi(num);                 //convert string to int
 
+	//read in 縣市名稱~體系別
 	for(int j = 6; j < 8; j++)
 	{
 		for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
@@ -79,15 +83,15 @@ istream &operator>>(istream&s, department&d) //department input stream Overload
 	getline(s, str); //read one line
 	if(str.size() < 3)
 	{
-		d.readsuccess = false;
-		return s;
+		d.readsuccess = false; //fail in read one line
+		return s;              //the function end
 	}
 	int i = 0;
 
 
-	for(int j = 0; j < 8; j++)
+	for(int j = 0; j < 8; j++)                       //clear up the data[8]
 		d.data[j] = "";
-	for(int j = 0; j < 6; j++)
+	for(int j = 0; j < 6; j++)                       // read in 學校代碼~等級別
 	{
 		for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 			d.data[j] += str[i];
@@ -96,24 +100,27 @@ istream &operator>>(istream&s, department&d) //department input stream Overload
 
 	string num;
 
-
+	//read in 學生人數
 	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 		num += str[i];
 	i++;                                         //skip '\t'
 	d.numofstudent = stoi(num);                  //convert string to int
 
+	//read in 教師人數
 	num = "";
 	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 		num += str[i];
 	i++;                                         //skip '\t'
 	d.numofteacher = stoi(num);                  //convert string to int
 
+	//read in 畢業人數
 	num = "";
 	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 		num += str[i];
 	i++;                                         //skip '\t'
 	d.numofgraduate = stoi(num);                 //convert string to int
 
+	//read in 縣市名稱~體系別
 	for(int j = 6; j < 8; j++)
 	{
 		for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
