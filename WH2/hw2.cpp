@@ -66,6 +66,7 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 			d.data[j] += str[i];
 		i++;                                         //skip '\t'
 	}
+
 	return s;
 }
 
@@ -116,6 +117,7 @@ istream &operator>>(istream&s, department&d) //department input stream Overload
 			d.data[j] += str[i];
 		i++;                                         //skip '\t'
 	}
+
 	return s;
 }
 
@@ -236,7 +238,7 @@ public:
 		department d;
 
 
-		while(!input.eof()&&input >> d )  //while input available, then input department
+		while(!input.eof() && input >> d) //while input available, then input department
 			departmentvec.push_back(d);
 	}
 
@@ -266,7 +268,7 @@ public:
 		}) != departmentvec.end())
 			departmentvec.erase(find_if(departmentvec.begin(), departmentvec.end(), [student, graduate](department d){
 				return d.numofstudent < student || d.numofgraduate < graduate;
-			}));
+			})); //while there exist a department which doesn't satisfy the request, erase it
 	}
 
 	int size() //return the total number of department
