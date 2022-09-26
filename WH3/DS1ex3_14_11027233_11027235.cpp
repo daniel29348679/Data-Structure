@@ -215,7 +215,7 @@ int main()
 
 				if(i == ',' && isint == 1) //last is number
 				{
-					operandst.push(n); //push opreand to stack
+					operandst.push(n);     //push opreand to stack
 					n	  = 0;
 					isint = 0;
 				}
@@ -248,7 +248,7 @@ int main()
 			}
 
 			cout << "Answer: " << operandst.top(); //cout answer
-quit:       ; //quit at if(k==3) end
+quit:       ;                                      //quit at if(k==3) end
 		}
 	}
 }
