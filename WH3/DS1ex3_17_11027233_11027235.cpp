@@ -137,8 +137,9 @@ int main()
 			getline(cin, str);
 			stack <char> operatorst;
 
-			int	 n	   = 0;
-			bool isint = 0; //last is operand
+			int	 n				 = 0;
+			bool isint			 = 0; //last is operand
+			bool istimesordibide = 0;
 			for(auto i:str)
 			{
 				if(i == ' ')
@@ -156,6 +157,12 @@ int main()
 						cout << n << ','; //cout operand
 						n	  = 0;
 						isint = 0;
+						if(istimesordibide)
+						{
+							cout << operatorst.top() << ',';
+							operatorst.pop();
+							istimesordibide = 0;
+						}
 					}
 					operatorst.push(i); //push operator to stack
 				}
@@ -167,6 +174,12 @@ int main()
 						cout << n << ',';
 						n	  = 0;
 						isint = 0;
+						if(istimesordibide)
+						{
+							cout << operatorst.top() << ',';
+							operatorst.pop();
+							istimesordibide = 0;
+						}
 					}
 
 					while(operatorst.top() != '(') //output stack until '('
@@ -176,6 +189,11 @@ int main()
 					}
 					operatorst.pop(); //pop '('
 				}
+
+
+				if(i == '*' || i == '/')
+					istimesordibide = 1;
+
 			}
 
 			if(isint) //output remained operand
