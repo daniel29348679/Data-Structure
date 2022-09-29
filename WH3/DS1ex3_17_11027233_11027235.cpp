@@ -136,10 +136,11 @@ int main()
 			cout << "Input:";
 			getline(cin, str);
 			stack <char> operatorst;
-
-			int	 n				 = 0;
-			bool isint			 = 0; //last is operand
-			bool istimesordibide = 0;
+			list<ch>
+			int	 n					  = 0;
+			bool isint				  = 0; //last is operand
+			bool istimesordibide	  = 0;
+			bool barckettimesordibide = 0;
 			for(auto i:str)
 			{
 				if(i == ' ')
@@ -149,8 +150,16 @@ int main()
 					n	  = n * 10 + i - '0'; //add to n
 					isint = 1;                //set isint to true
 				}
-
-				if(i == '+' || i == '-' || i == '*' || i == '/' || i == '(') //operator
+				if(i == '(')                  //operator
+				{
+					operatorst.push(i);       //push operator to stack
+					if(istimesordibide)
+					{
+						barckettimesordibide = 1;
+						istimesordibide		 = 0;
+					}
+				}
+				if(i == '+' || i == '-' || i == '*' || i == '/') //operator
 				{
 					if(isint)
 					{
@@ -188,12 +197,17 @@ int main()
 						operatorst.pop();
 					}
 					operatorst.pop(); //pop '('
+					if(barckettimesordibide)
+					{
+						barckettimesordibide = 0;
+						cout << operatorst.top() << ',';
+						operatorst.pop();
+					}
 				}
 
 
 				if(i == '*' || i == '/')
 					istimesordibide = 1;
-
 			}
 
 			if(isint) //output remained operand
