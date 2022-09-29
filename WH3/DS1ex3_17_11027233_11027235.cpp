@@ -62,7 +62,7 @@ int main()
 		if(k == 1)
 		{
 			int	   numofparenthesis = 0; //number of '( - number of ')
-			int	   lasttype			= 2; //1->operand,2->operator
+			int	   lasttype			= -2; //1->operand,2->operator
 			bool   lastisnumer		= 0; //true means last char is number
 			bool   allgood			= 1; //no error
 			string str;
@@ -80,8 +80,12 @@ int main()
 
 
 				//deal with parenthesis
-				if(i == '(')
+				if(i == '('){
 					numofparenthesis++;
+					lastisnumer=0;
+				}
+
+
 				if(i == ')')
 				{
 					numofparenthesis--;
@@ -126,7 +130,7 @@ int main()
 						allgood = 0;
 						break;
 					}
-					if(nowtype == lasttype && nowtype == 2) //operator after operator
+					if(nowtype == 2 && (lasttype==2||lasttype==-2)) //operator after operator
 					{
 						cout << "Error 2: there is one extra operator.";
 						allgood = 0;
@@ -135,8 +139,12 @@ int main()
 					lasttype = nowtype; //if found new type than refresh lasttype
 				}
 			}
-
-			if(numofparenthesis > 0)//'(' - ')' after all must = 0
+			if(lasttype == 2 && allgood )//'(' - ')' after all must = 0
+			{
+				cout << "Error 2: there is one extra operator.";
+				allgood = 0;
+			}
+			if(numofparenthesis > 0 && allgood )//'(' - ')' after all must = 0
 			{
 				cout << "Error 2: there is one extra open parenthesis.";
 				allgood = 0;
