@@ -323,10 +323,6 @@ quit:       ;                                      //quit at if(k==3) end
 		}
 
 
-
-
-
-
 		if(k == 111)
 		{
 			string str;
@@ -428,7 +424,7 @@ quit:       ;                                      //quit at if(k==3) end
 				cout << c;
 
 			stack <int> operandst;
-			n	   = 0;
+			n	  = 0;
 			isint = 0;
 			for(auto i:outputlist)
 			{
@@ -478,8 +474,7 @@ quit:       ;                                      //quit at if(k==3) end
 				operandst.push(n);                 //push opreand to stack
 			}
 			cout << "Answer: " << operandst.top(); //cout answer
-quit0:       ;                                      //quit at if(k==3) end
+quit0:      ;                                      //quit at if(k==3) end
 		}
-
 	}
 }
