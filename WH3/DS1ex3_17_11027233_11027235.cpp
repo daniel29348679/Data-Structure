@@ -7,25 +7,24 @@ vector <char> allowedcharvec = {'0', '1', '2', '3', '4', '5', '6',
 								'(', ')', ' '}; // all allowed char in legal algorithm
 
 
-list<char> &operator<<(list<char> &li,char c)
+list <char> &operator<<(list <char>&li, char c)
 {
-    li.push_back(c);
-    return li;
+	li.push_back(c);
+	return li;
 }
 
-
-list<char> &operator<<(list<char> &li,int i)
+list <char> &operator<<(list <char>&li, int i)
 {
 	for(auto c:to_string(i))
-    	li.push_back(c);
-    return li;
+		li.push_back(c);
+	return li;
 }
 
-list<char> &operator<<(list<char> &li,string s)
+list <char> &operator<<(list <char>&li, string s)
 {
 	for(auto c:s)
-    	li.push_back(c);
-    return li;
+		li.push_back(c);
+	return li;
 }
 
 int main()
@@ -61,14 +60,14 @@ int main()
 		}
 		if(k == 1)
 		{
-			int	   numofparenthesis = 0; //number of '( - number of ')
+			int	   numofparenthesis = 0;  //number of '( - number of ')
 			int	   lasttype			= -2; //1->operand,2->operator
-			bool   lastisnumer		= 0; //true means last char is number
-			bool   allgood			= 1; //no error
+			bool   lastisnumer		= 0;  //true means last char is number
+			bool   allgood			= 1;  //no error
 			string str;
-			cin.get();                   //after cin>>k left a '\n' so use cin.get() to clear it
+			cin.get();                    //after cin>>k left a '\n' so use cin.get() to clear it
 			cout << "Input:";
-			getline(cin, str);           //read line
+			getline(cin, str);            //read line
 			for(auto i:str)
 			{
 				if(find(allowedcharvec.begin(), allowedcharvec.end(), i) == allowedcharvec.end()) //i must in allowedcharvec
@@ -80,9 +79,10 @@ int main()
 
 
 				//deal with parenthesis
-				if(i == '('){
+				if(i == '(')
+				{
 					numofparenthesis++;
-					lastisnumer=0;
+					lastisnumer = 0;
 				}
 
 
@@ -130,7 +130,7 @@ int main()
 						allgood = 0;
 						break;
 					}
-					if(nowtype == 2 && (lasttype==2||lasttype==-2)) //operator after operator
+					if(nowtype == 2 && (lasttype == 2 || lasttype == -2)) //operator after operator
 					{
 						cout << "Error 2: there is one extra operator.";
 						allgood = 0;
@@ -139,12 +139,12 @@ int main()
 					lasttype = nowtype; //if found new type than refresh lasttype
 				}
 			}
-			if(lasttype == 2 && allgood )//'(' - ')' after all must = 0
+			if(lasttype == 2 && allgood) //'(' - ')' after all must = 0
 			{
 				cout << "Error 2: there is one extra operator.";
 				allgood = 0;
 			}
-			if(numofparenthesis > 0 && allgood )//'(' - ')' after all must = 0
+			if(numofparenthesis > 0 && allgood) //'(' - ')' after all must = 0
 			{
 				cout << "Error 2: there is one extra open parenthesis.";
 				allgood = 0;
@@ -165,11 +165,12 @@ int main()
 			cout << "Input:";
 			getline(cin, str);
 			stack <char> operatorst;
-			list<char> outputlist;
-			int	 n					  = 0;
-			bool isint				  = 0; //last is operand
-			bool istimesordibide	  = 0;
-			bool barckettimesordibide = 0;
+			stack<bool> hasoperatorafbar;
+			list <char>	 outputlist;
+			int			 n					  = 0;
+			bool		 isint				  = 0; //last is operand
+			bool		 istimesordibide	  = 0;
+			bool		 barckettimesordibide = 0;
 			for(auto i:str)
 			{
 				if(i == ' ')
@@ -184,8 +185,12 @@ int main()
 					operatorst.push(i);       //push operator to stack
 					if(istimesordibide)
 					{
-						barckettimesordibide = 1;
+						hasoperatorafbar.push(1);
 						istimesordibide		 = 0;
+					}
+					else
+					{
+						hasoperatorafbar.push(0);
 					}
 				}
 				if(i == '+' || i == '-' || i == '*' || i == '/') //operator
@@ -226,12 +231,12 @@ int main()
 						operatorst.pop();
 					}
 					operatorst.pop(); //pop '('
-					if(barckettimesordibide)
+					if(hasoperatorafbar.top())
 					{
-						barckettimesordibide = 0;
 						outputlist << operatorst.top() << ',';
 						operatorst.pop();
 					}
+					hasoperatorafbar.pop();
 				}
 
 
@@ -252,7 +257,8 @@ int main()
 			}
 			outputlist.pop_back(); //clean last ','
 
-			for(auto c:outputlist) cout<<c;
+			for(auto c:outputlist)
+				cout << c;
 		}
 
 
@@ -263,8 +269,8 @@ int main()
 			cout << "Input:";
 			getline(cin, str);
 			stack <int> operandst;
-			list<char> intputlist;
-			intputlist<<str;
+			list <char> intputlist;
+			intputlist << str;
 			int	 n	   = 0;
 			bool isint = 0;
 			for(auto i:intputlist)
