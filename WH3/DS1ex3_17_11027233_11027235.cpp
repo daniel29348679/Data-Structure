@@ -53,7 +53,7 @@ int main()
 			continue;     //skip this loop
 		}
 
-		if(k != 0 && k != 1 && k != 2 && k != 3)
+		if(k != 0 && k != 1 && k != 2 && k != 3 && k != 111)
 		{
 			cout << "\nCommand does not exist!\n";
 			continue; //skip this loop
@@ -165,7 +165,7 @@ int main()
 			cout << "Input:";
 			getline(cin, str);
 			stack <char> operatorst;
-			stack<bool> hasoperatorafbar;
+			stack <bool> hasoperatorafbar;
 			list <char>	 outputlist;
 			int			 n					  = 0;
 			bool		 isint				  = 0; //last is operand
@@ -186,18 +186,16 @@ int main()
 					if(istimesordibide)
 					{
 						hasoperatorafbar.push(1);
-						istimesordibide		 = 0;
+						istimesordibide = 0;
 					}
 					else
-					{
 						hasoperatorafbar.push(0);
-					}
 				}
 				if(i == '+' || i == '-' || i == '*' || i == '/') //operator
 				{
 					if(isint)
 					{
-						cout << n << ','; //cout operand
+						outputlist << n << ','; //cout operand
 						n	  = 0;
 						isint = 0;
 						if(istimesordibide)
@@ -316,9 +314,172 @@ int main()
 					}
 				}
 			}
-
+			if(isint == 1)                         //store last number
+			{
+				operandst.push(n);                 //push opreand to stack
+			}
 			cout << "Answer: " << operandst.top(); //cout answer
 quit:       ;                                      //quit at if(k==3) end
 		}
+
+
+
+
+
+
+		if(k == 111)
+		{
+			string str;
+			cin.get();
+			cout << "Input:";
+			getline(cin, str);
+			stack <char> operatorst;
+			stack <bool> hasoperatorafbar;
+			list <char>	 outputlist;
+			int			 n					  = 0;
+			bool		 isint				  = 0; //last is operand
+			bool		 istimesordibide	  = 0;
+			bool		 barckettimesordibide = 0;
+			for(auto i:str)
+			{
+				if(i == ' ')
+					continue;                 //skip ' '
+				if('0' <= i && i <= '9')      //if i is number
+				{
+					n	  = n * 10 + i - '0'; //add to n
+					isint = 1;                //set isint to true
+				}
+				if(i == '(')                  //operator
+				{
+					operatorst.push(i);       //push operator to stack
+					if(istimesordibide)
+					{
+						hasoperatorafbar.push(1);
+						istimesordibide = 0;
+					}
+					else
+						hasoperatorafbar.push(0);
+				}
+				if(i == '+' || i == '-' || i == '*' || i == '/') //operator
+				{
+					if(isint)
+					{
+						outputlist << n << ','; //cout operand
+						n	  = 0;
+						isint = 0;
+						if(istimesordibide)
+						{
+							outputlist << operatorst.top() << ',';
+							operatorst.pop();
+							istimesordibide = 0;
+						}
+					}
+					operatorst.push(i); //push operator to stack
+				}
+
+				if(i == ')') //if find ')'
+				{
+					if(isint)
+					{
+						outputlist << n << ',';
+						n	  = 0;
+						isint = 0;
+						if(istimesordibide)
+						{
+							outputlist << operatorst.top() << ',';
+							operatorst.pop();
+							istimesordibide = 0;
+						}
+					}
+
+					while(operatorst.top() != '(') //output stack until '('
+					{
+						outputlist << operatorst.top() << ',';
+						operatorst.pop();
+					}
+					operatorst.pop(); //pop '('
+					if(hasoperatorafbar.top())
+					{
+						outputlist << operatorst.top() << ',';
+						operatorst.pop();
+					}
+					hasoperatorafbar.pop();
+				}
+
+
+				if(i == '*' || i == '/')
+					istimesordibide = 1;
+			}
+
+			if(isint) //output remained operand
+			{
+				outputlist << n << ',';
+				n	  = 0;
+				isint = 0;
+			}
+			while(operatorst.size()) //output remained operator
+			{
+				outputlist << operatorst.top() << ',';
+				operatorst.pop();
+			}
+			outputlist.pop_back(); //clean last ','
+
+			for(auto c:outputlist)
+				cout << c;
+
+			stack <int> operandst;
+			n	   = 0;
+			isint = 0;
+			for(auto i:outputlist)
+			{
+				if(i == ' ')
+					continue;
+				if('0' <= i && i <= '9')
+				{
+					n	  = n * 10 + i - '0';
+					isint = 1;
+				}
+
+				if(i == ',' && isint == 1) //last is number
+				{
+					operandst.push(n);     //push opreand to stack
+					n	  = 0;
+					isint = 0;
+				}
+				if(i == '+' || i == '-' || i == '*' || i == '/')
+				{
+					//get a and b
+					int b = operandst.top(); //stack:1,2,3,4,5,6,a,b
+					operandst.pop();
+					int a = operandst.top(); //stack:1,2,3,4,5,6,a
+					operandst.pop();
+
+					//push a +-*/ b back into stack
+					if(i == '+')
+						operandst.push(a + b);
+					if(i == '-')
+						operandst.push(a - b);
+					if(i == '*')
+						operandst.push(a * b);
+					if(i == '/')
+					{
+						if(b != 0) // b can't be 0
+							operandst.push(a / b);
+						else
+						{
+							cout << "ERROR!!!! can't do /0";
+							goto quit0; //continue the while(k!=0)
+						}
+					}
+				}
+			}
+			if(isint == 1)                         //store last number
+			{
+				operandst.push(n);                 //push opreand to stack
+			}
+			cout << "Answer: " << operandst.top(); //cout answer
+quit0:       ;                                      //quit at if(k==3) end
+		}
+
 	}
 }
