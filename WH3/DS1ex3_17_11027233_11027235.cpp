@@ -7,6 +7,27 @@ vector <char> allowedcharvec = {'0', '1', '2', '3', '4', '5', '6',
 								'(', ')', ' '}; // all allowed char in legal algorithm
 
 
+list<char> &operator<<(list<char> &li,char c)
+{
+    li.push_back(c);
+    return li;
+}
+
+
+list<char> &operator<<(list<char> &li,int i)
+{
+	for(auto c:to_string(i))
+    	li.push_back(c);
+    return li;
+}
+
+list<char> &operator<<(list<char> &li,string s)
+{
+	for(auto c:s)
+    	li.push_back(c);
+    return li;
+}
+
 int main()
 {
 	int k = 100;
@@ -136,7 +157,7 @@ int main()
 			cout << "Input:";
 			getline(cin, str);
 			stack <char> operatorst;
-			list<ch>
+			list<char> outputlist;
 			int	 n					  = 0;
 			bool isint				  = 0; //last is operand
 			bool istimesordibide	  = 0;
@@ -168,7 +189,7 @@ int main()
 						isint = 0;
 						if(istimesordibide)
 						{
-							cout << operatorst.top() << ',';
+							outputlist << operatorst.top() << ',';
 							operatorst.pop();
 							istimesordibide = 0;
 						}
@@ -180,12 +201,12 @@ int main()
 				{
 					if(isint)
 					{
-						cout << n << ',';
+						outputlist << n << ',';
 						n	  = 0;
 						isint = 0;
 						if(istimesordibide)
 						{
-							cout << operatorst.top() << ',';
+							outputlist << operatorst.top() << ',';
 							operatorst.pop();
 							istimesordibide = 0;
 						}
@@ -193,14 +214,14 @@ int main()
 
 					while(operatorst.top() != '(') //output stack until '('
 					{
-						cout << operatorst.top() << ',';
+						outputlist << operatorst.top() << ',';
 						operatorst.pop();
 					}
 					operatorst.pop(); //pop '('
 					if(barckettimesordibide)
 					{
 						barckettimesordibide = 0;
-						cout << operatorst.top() << ',';
+						outputlist << operatorst.top() << ',';
 						operatorst.pop();
 					}
 				}
@@ -212,16 +233,18 @@ int main()
 
 			if(isint) //output remained operand
 			{
-				cout << n << ',';
+				outputlist << n << ',';
 				n	  = 0;
 				isint = 0;
 			}
 			while(operatorst.size()) //output remained operator
 			{
-				cout << operatorst.top() << ',';
+				outputlist << operatorst.top() << ',';
 				operatorst.pop();
 			}
-			cout << '\b' << " "; //delete last ','
+			outputlist.pop_back(); //clean last ','
+
+			for(auto c:outputlist) cout<<c;
 		}
 
 
@@ -232,10 +255,11 @@ int main()
 			cout << "Input:";
 			getline(cin, str);
 			stack <int> operandst;
-
+			list<char> intputlist;
+			intputlist<<str;
 			int	 n	   = 0;
 			bool isint = 0;
-			for(auto i:str)
+			for(auto i:intputlist)
 			{
 				if(i == ' ')
 					continue;
