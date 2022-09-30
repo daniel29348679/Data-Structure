@@ -42,11 +42,11 @@ int main()
 	while(k != 0)
 	{
 		cout << "\n\n";
-		cout << "**  Function                  **" << "\n"; //print menu
-		cout << "* 0. Quit                      *" << "\n";
-		cout << "* 1. legal algorithm detection *" << "\n";
-		cout << "* 2. inorder to postifx and    *" << "\n";
-		cout << "* postifx to answer            *" << "\n";
+		cout << "**  Mission                    **" << "\n"; //print menu
+		cout << "* 0. Quit                       *" << "\n";
+		cout << "* 1. legal algorithm detection  *" << "\n";
+		cout << "* 2. inorder to postifx and     *" << "\n";
+		cout << "* postifx to answer(mission2&3) *" << "\n";
 		cout << "*********************************" << "\n";
 		cout << "Input a choice(0, 1, 2): ";
 		cin >> k;
