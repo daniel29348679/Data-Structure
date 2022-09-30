@@ -12,25 +12,6 @@ struct node
 	char opertor;//operator (operator can't use)
 };
 
-list <char> &operator<<(list <char>&li, char c)
-{
-	li.push_back(c);
-	return li;
-}
-
-list <char> &operator<<(list <char>&li, int i)
-{
-	for(auto c:to_string(i))
-		li.push_back(c);
-	return li;
-}
-
-list <char> &operator<<(list <char>&li, string s)
-{
-	for(auto c:s)
-		li.push_back(c);
-	return li;
-}
 
 list <node> &operator<<(list <node>&li, char c)
 {
@@ -67,7 +48,7 @@ int main()
 		cout << "* 2. inorder to postifx and    *" << "\n";
 		cout << "* postifx to answer            *" << "\n";
 		cout << "*********************************" << "\n";
-		cout << "Input a choice(0, 1, 2, 3): ";
+		cout << "Input a choice(0, 1, 2): ";
 		cin >> k;
 		if(cin.fail())
 		{
@@ -79,7 +60,7 @@ int main()
 			continue;     //skip this loop
 		}
 
-		if(k != 0 && k != 1 && k != 2 && k != 3 && k != 111)
+		if(k != 0 && k != 1 && k != 2)
 		{
 			cout << "\nCommand does not exist!\n";
 			continue; //skip this loop
