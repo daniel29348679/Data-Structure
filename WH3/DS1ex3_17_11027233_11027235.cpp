@@ -5,7 +5,12 @@ using namespace std;
 vector <char> allowedcharvec = {'0', '1', '2', '3', '4', '5', '6',
 								'7', '8', '9', '+', '-', '*', '/',
 								'(', ')', ' '}; // all allowed char in legal algorithm
-
+struct node
+{
+	bool operandoroperator; //node is operand or operator
+	int	 operand;
+	char opertor;//operator (operator can't use)
+};
 
 list <char> &operator<<(list <char>&li, char c)
 {
@@ -27,6 +32,27 @@ list <char> &operator<<(list <char>&li, string s)
 	return li;
 }
 
+list <node> &operator<<(list <node>&li, char c)
+{
+	li.push_back({1, 0, c});
+	return li;
+}
+
+list <node> &operator<<(list <node>&li, int i)
+{
+	li.push_back({0, i, '\0'});
+	return li;
+}
+
+ostream &operator<<(ostream&out, node n)
+{
+	if(n.operandoroperator)
+		out << n.opertor;
+	else
+		out << n.operand;
+	return out;
+}
+
 int main()
 {
 	int k = 100;
@@ -35,11 +61,11 @@ int main()
 	while(k != 0)
 	{
 		cout << "\n\n";
-		cout << "**  Function                   **" << "\n"; //print menu
-		cout << "* 0. Quit                       *" << "\n";
-		cout << "* 1. legal algorithm detection  *" << "\n";
-		cout << "* 2. inorder to postifx         *" << "\n";
-		cout << "* 3. postifx to answer          *" << "\n";
+		cout << "**  Function                  **" << "\n"; //print menu
+		cout << "* 0. Quit                      *" << "\n";
+		cout << "* 1. legal algorithm detection *" << "\n";
+		cout << "* 2. inorder to postifx and    *" << "\n";
+		cout << "* postifx to answer            *" << "\n";
 		cout << "*********************************" << "\n";
 		cout << "Input a choice(0, 1, 2, 3): ";
 		cin >> k;
@@ -60,10 +86,9 @@ int main()
 		}
 		if(k == 1)
 		{
-			int	   numofparenthesis = 0;  //number of '( - number of ')
+			int	   numofparenthesis = 0;  //number of '(' - number of ')'
 			int	   lasttype			= -2; //1->operand,2->operator
 			bool   lastisnumer		= 0;  //true means last char is number
-			bool   allgood			= 1;  //no error
 			string str;
 			cin.get();                    //after cin>>k left a '\n' so use cin.get() to clear it
 			cout << "Input:";
@@ -73,8 +98,7 @@ int main()
 				if(find(allowedcharvec.begin(), allowedcharvec.end(), i) == allowedcharvec.end()) //i must in allowedcharvec
 				{
 					cout << "Error 1: " << i << " is not a legitimate character.";
-					allgood = 0; //set allgod to false
-					break;       //if found one so that don't have to fine another
+					goto quit1;      //if found one so that don't have to fine another
 				}
 
 
@@ -99,8 +123,7 @@ int main()
 				if(numofparenthesis < 0) //number of '(' must always >= ')'
 				{
 					cout << "Error 2: there is one extra close parenthesis.";
-					allgood = 0;
-					break;
+					goto quit1;
 				}
 
 
@@ -127,35 +150,29 @@ int main()
 					if(nowtype == lasttype && nowtype == 1) //operand after operand
 					{
 						cout << "Error 2: there is one extra operand.";
-						allgood = 0;
-						break;
+						goto quit1;
 					}
 					if(nowtype == 2 && (lasttype == 2 || lasttype == -2)) //operator after operator
 					{
 						cout << "Error 2: there is one extra operator.";
-						allgood = 0;
-						break;
+						goto quit1;
 					}
 					lasttype = nowtype; //if found new type than refresh lasttype
 				}
 			}
-			if(lasttype == 2 && allgood) //'(' - ')' after all must = 0
+			if(lasttype == 2)  //last input must be operand
 			{
 				cout << "Error 2: there is one extra operator.";
-				allgood = 0;
+				goto quit1;
 			}
-			if(numofparenthesis > 0 && allgood) //'(' - ')' after all must = 0
+			if(numofparenthesis > 0)  //'(' - ')' after all must = 0
 			{
 				cout << "Error 2: there is one extra open parenthesis.";
-				allgood = 0;
+				goto quit1;
 			}
-			if(allgood) //no error cout right
-				cout << "It is a legitimate infix expression";
+			cout << "It is a legitimate infix expression";//no error cout right
 
-			//(29+101)*33/25
-			//24*7770^(55+30*2)
-			//(90+(70*(68-55/10))
-			//(24*1111)19/(55+30*2)
+quit1:      ;
 		}
 
 		if(k == 2)
@@ -164,45 +181,44 @@ int main()
 			cin.get();
 			cout << "Input:";
 			getline(cin, str);
-			stack <char> operatorst;
-			stack <bool> hasoperatorafbar;
-			list <char>	 outputlist;
-			int			 n					  = 0;
-			bool		 isint				  = 0; //last is operand
-			bool		 istimesordibide	  = 0;
-			bool		 barckettimesordibide = 0;
+			stack <char> operatorst;          //stack store operator
+			stack <bool> hasoperatorafbar;    //true means '*' or '/' before '('
+			list <node>	 outputlist;          //
+			int			 n				 = 0; //store number
+			bool		 isint			 = 0; //last is operand
+			bool		 istimesordibide = 0; //last is '*' or '/'
 			for(auto i:str)
 			{
 				if(i == ' ')
-					continue;                 //skip ' '
-				if('0' <= i && i <= '9')      //if i is number
+					continue;                     //skip ' '
+				if('0' <= i && i <= '9')          //if i is number
 				{
-					n	  = n * 10 + i - '0'; //add to n
-					isint = 1;                //set isint to true
+					n	  = n * 10 + i - '0';     //add to n
+					isint = 1;                    //set isint to true
 				}
-				if(i == '(')                  //operator
+				if(i == '(')                      //operator
 				{
-					operatorst.push(i);       //push operator to stack
-					if(istimesordibide)
+					operatorst.push(i);           //push operator to stack
+					if(istimesordibide)           //if there is '*' or '/' before '('
 					{
-						hasoperatorafbar.push(1);
-						istimesordibide = 0;
+						hasoperatorafbar.push(1); //push true
+						istimesordibide = 0;      //reset istimesordibide
 					}
 					else
-						hasoperatorafbar.push(0);
+						hasoperatorafbar.push(0);                //push false
 				}
 				if(i == '+' || i == '-' || i == '*' || i == '/') //operator
 				{
-					if(isint)
+					if(isint) //if stored number than output
 					{
-						outputlist << n << ','; //cout operand
-						n	  = 0;
-						isint = 0;
-						if(istimesordibide)
+						outputlist << n;  //store operand
+						n	  = 0; //reset n
+						isint = 0; //reset isint
+						if(istimesordibide) //if there is '*' or '/' before operand
 						{
-							outputlist << operatorst.top() << ',';
-							operatorst.pop();
-							istimesordibide = 0;
+							outputlist << operatorst.top(); //output operator
+							operatorst.pop(); //pop operator
+							istimesordibide = 0; //reset istimesordibide
 						}
 					}
 					operatorst.push(i); //push operator to stack
@@ -210,14 +226,14 @@ int main()
 
 				if(i == ')') //if find ')'
 				{
-					if(isint)
+					if(isint) //if stored number than output
 					{
-						outputlist << n << ',';
+						outputlist << n;
 						n	  = 0;
 						isint = 0;
 						if(istimesordibide)
 						{
-							outputlist << operatorst.top() << ',';
+							outputlist << operatorst.top();
 							operatorst.pop();
 							istimesordibide = 0;
 						}
@@ -225,13 +241,13 @@ int main()
 
 					while(operatorst.top() != '(') //output stack until '('
 					{
-						outputlist << operatorst.top() << ',';
+						outputlist << operatorst.top();
 						operatorst.pop();
 					}
 					operatorst.pop(); //pop '('
-					if(hasoperatorafbar.top())
+					if(hasoperatorafbar.top()) //'*' or '/' before '(' must output when '(' remove
 					{
-						outputlist << operatorst.top() << ',';
+						outputlist << operatorst.top();
 						operatorst.pop();
 					}
 					hasoperatorafbar.pop();
@@ -242,207 +258,30 @@ int main()
 					istimesordibide = 1;
 			}
 
-			if(isint) //output remained operand
+			if(isint)                //output remained operand
 			{
-				outputlist << n << ',';
-				n	  = 0;
-				isint = 0;
+				outputlist << n;     //store into outputlist
+				n	  = 0;           //reset n
+				isint = 0;           //reset isint
 			}
 			while(operatorst.size()) //output remained operator
 			{
-				outputlist << operatorst.top() << ',';
+				outputlist << operatorst.top();
 				operatorst.pop();
 			}
-			outputlist.pop_back(); //clean last ','
 
 			for(auto c:outputlist)
-				cout << c;
-		}
+				cout << c << ','; //print list
+			cout << '\b' << ' ';
 
-
-		if(k == 3)
-		{
-			string str;
-			cin.get();
-			cout << "Input:";
-			getline(cin, str);
+			//mission 3!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			stack <int> operandst;
-			list <char> intputlist;
-			intputlist << str;
-			int	 n	   = 0;
-			bool isint = 0;
-			for(auto i:intputlist)
-			{
-				if(i == ' ')
-					continue;
-				if('0' <= i && i <= '9')
-				{
-					n	  = n * 10 + i - '0';
-					isint = 1;
-				}
-
-				if(i == ',' && isint == 1) //last is number
-				{
-					operandst.push(n);     //push opreand to stack
-					n	  = 0;
-					isint = 0;
-				}
-				if(i == '+' || i == '-' || i == '*' || i == '/')
-				{
-					//get a and b
-					int b = operandst.top(); //stack:1,2,3,4,5,6,a,b
-					operandst.pop();
-					int a = operandst.top(); //stack:1,2,3,4,5,6,a
-					operandst.pop();
-
-					//push a +-*/ b back into stack
-					if(i == '+')
-						operandst.push(a + b);
-					if(i == '-')
-						operandst.push(a - b);
-					if(i == '*')
-						operandst.push(a * b);
-					if(i == '/')
-					{
-						if(b != 0) // b can't be 0
-							operandst.push(a / b);
-						else
-						{
-							cout << "ERROR!!!! can't do /0";
-							goto quit; //continue the while(k!=0)
-						}
-					}
-				}
-			}
-			if(isint == 1)                         //store last number
-			{
-				operandst.push(n);                 //push opreand to stack
-			}
-			cout << "Answer: " << operandst.top(); //cout answer
-quit:       ;                                      //quit at if(k==3) end
-		}
-
-
-		if(k == 111)
-		{
-			string str;
-			cin.get();
-			cout << "Input:";
-			getline(cin, str);
-			stack <char> operatorst;
-			stack <bool> hasoperatorafbar;
-			list <char>	 outputlist;
-			int			 n					  = 0;
-			bool		 isint				  = 0; //last is operand
-			bool		 istimesordibide	  = 0;
-			bool		 barckettimesordibide = 0;
-			for(auto i:str)
-			{
-				if(i == ' ')
-					continue;                 //skip ' '
-				if('0' <= i && i <= '9')      //if i is number
-				{
-					n	  = n * 10 + i - '0'; //add to n
-					isint = 1;                //set isint to true
-				}
-				if(i == '(')                  //operator
-				{
-					operatorst.push(i);       //push operator to stack
-					if(istimesordibide)
-					{
-						hasoperatorafbar.push(1);
-						istimesordibide = 0;
-					}
-					else
-						hasoperatorafbar.push(0);
-				}
-				if(i == '+' || i == '-' || i == '*' || i == '/') //operator
-				{
-					if(isint)
-					{
-						outputlist << n << ','; //cout operand
-						n	  = 0;
-						isint = 0;
-						if(istimesordibide)
-						{
-							outputlist << operatorst.top() << ',';
-							operatorst.pop();
-							istimesordibide = 0;
-						}
-					}
-					operatorst.push(i); //push operator to stack
-				}
-
-				if(i == ')') //if find ')'
-				{
-					if(isint)
-					{
-						outputlist << n << ',';
-						n	  = 0;
-						isint = 0;
-						if(istimesordibide)
-						{
-							outputlist << operatorst.top() << ',';
-							operatorst.pop();
-							istimesordibide = 0;
-						}
-					}
-
-					while(operatorst.top() != '(') //output stack until '('
-					{
-						outputlist << operatorst.top() << ',';
-						operatorst.pop();
-					}
-					operatorst.pop(); //pop '('
-					if(hasoperatorafbar.top())
-					{
-						outputlist << operatorst.top() << ',';
-						operatorst.pop();
-					}
-					hasoperatorafbar.pop();
-				}
-
-
-				if(i == '*' || i == '/')
-					istimesordibide = 1;
-			}
-
-			if(isint) //output remained operand
-			{
-				outputlist << n << ',';
-				n	  = 0;
-				isint = 0;
-			}
-			while(operatorst.size()) //output remained operator
-			{
-				outputlist << operatorst.top() << ',';
-				operatorst.pop();
-			}
-			outputlist.pop_back(); //clean last ','
-
-			for(auto c:outputlist)
-				cout << c;
-
-			stack <int> operandst;
-			n	  = 0;
-			isint = 0;
+			n = 0;
 			for(auto i:outputlist)
 			{
-				if(i == ' ')
-					continue;
-				if('0' <= i && i <= '9')
-				{
-					n	  = n * 10 + i - '0';
-					isint = 1;
-				}
-
-				if(i == ',' && isint == 1) //last is number
-				{
-					operandst.push(n);     //push opreand to stack
-					n	  = 0;
-					isint = 0;
-				}
-				if(i == '+' || i == '-' || i == '*' || i == '/')
+				if(i.operandoroperator == 0) //if i is operand
+					operandst.push(i.operand);
+				if(i.operandoroperator == 1) //if i is operator
 				{
 					//get a and b
 					int b = operandst.top(); //stack:1,2,3,4,5,6,a,b
@@ -451,30 +290,26 @@ quit:       ;                                      //quit at if(k==3) end
 					operandst.pop();
 
 					//push a +-*/ b back into stack
-					if(i == '+')
-						operandst.push(a + b);
-					if(i == '-')
+					if(i.opertor == '+')
+						operandst.push(a + b); //stack:1,2,3,4,5,6,a+b
+					if(i.opertor == '-')
 						operandst.push(a - b);
-					if(i == '*')
+					if(i.opertor == '*')
 						operandst.push(a * b);
-					if(i == '/')
+					if(i.opertor == '/')
 					{
 						if(b != 0) // b can't be 0
 							operandst.push(a / b);
 						else
 						{
 							cout << "ERROR!!!! can't do /0";
-							goto quit0; //continue the while(k!=0)
+							goto quit2; //quit this mission
 						}
 					}
 				}
 			}
-			if(isint == 1)                         //store last number
-			{
-				operandst.push(n);                 //push opreand to stack
-			}
 			cout << "Answer: " << operandst.top(); //cout answer
-quit0:      ;                                      //quit at if(k==3) end
+quit2:      ;                                      //quit at if(k==2) end
 		}
 	}
 }
