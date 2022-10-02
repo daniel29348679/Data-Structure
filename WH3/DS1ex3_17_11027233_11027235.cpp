@@ -1,4 +1,4 @@
-//Dev-C++
+//Dev-C++ -std=c++14
 #include <bits/stdc++.h>
 using namespace std;
 
