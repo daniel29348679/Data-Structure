@@ -253,7 +253,7 @@ quit1:      ;
 
 			for(auto c:outputlist)
 				cout << c << ','; //print list
-			cout << '\b' << ' ';
+			cout << '\b' << '\0';
 
 			//mission 3!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			stack <int> operandst;
