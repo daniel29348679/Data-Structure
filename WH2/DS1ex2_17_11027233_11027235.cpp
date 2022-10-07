@@ -241,6 +241,7 @@ public:
 
 		while(!input.eof() && input >> d) //while input available, then input department
 			departmentvec.push_back(d);
+		input.close();
 	}
 
 	sheet(sheet s1, sheet s2) //construct use two sheet
