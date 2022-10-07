@@ -163,7 +163,6 @@ quit1:      ;
 			cout << "Input:";
 			getline(cin, str);
 			stack <char> operatorst;          //stack store operator
-			stack <bool> hasoperatorafbar;    //true means '*' or '/' before '('
 			list <node>	 outputlist;          //
 			int			 n				 = 0; //store number
 			bool		 isint			 = 0; //last is operand
@@ -182,11 +181,8 @@ quit1:      ;
 					operatorst.push(i);           //push operator to stack
 					if(istimesordibide)           //if there is '*' or '/' before '('
 					{
-						hasoperatorafbar.push(1); //push true
 						istimesordibide = 0;      //reset istimesordibide
 					}
-					else
-						hasoperatorafbar.push(0);                //push false
 				}
 				if(i == '+' || i == '-' || i == '*' || i == '/') //operator
 				{
@@ -226,12 +222,11 @@ quit1:      ;
 						operatorst.pop();
 					}
 					operatorst.pop(); //pop '('
-					if(hasoperatorafbar.top()) //'*' or '/' before '(' must output when '(' remove
+					if(operatorst.top()=='*'||operatorst.top()=='/') //'*' or '/' before '(' must output when '(' remove
 					{
 						outputlist << operatorst.top();
 						operatorst.pop();
 					}
-					hasoperatorafbar.pop();
 				}
 
 
