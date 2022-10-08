@@ -25,10 +25,8 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 {
 	string str;
 
-
 	getline(s, str); //read one line
 	int i = 0;
-
 
 	for(int j = 0; j < 8; j++)                       //clear up the data[8]
 		d.data[j] = "";
@@ -68,7 +66,7 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 			d.data[j] += str[i];
 		i++;                                         //skip '\t'
 	}
-
+	s.get(); //clear remained '\n'
 	return s;
 }
 
