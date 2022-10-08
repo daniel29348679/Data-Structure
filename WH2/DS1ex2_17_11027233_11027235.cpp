@@ -66,6 +66,7 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 			d.data[j] += str[i];
 		i++;                                         //skip '\t'
 	}
+
 	s.get(); //clear remained '\n'
 	return s;
 }
@@ -118,6 +119,7 @@ istream &operator>>(istream&s, department&d) //department input stream Overload
 		i++;                                         //skip '\t'
 	}
 
+	s.get(); //clear remained '\n'
 	return s;
 }
 
