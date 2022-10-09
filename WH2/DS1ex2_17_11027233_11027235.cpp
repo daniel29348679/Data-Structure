@@ -26,6 +26,11 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 	string str;
 
 	getline(s, str); //read one line
+	if(str.size()<3) //too short = error
+	{
+		s.clear(ios::failbit); //set failbit to true
+		return s;
+	}
 	int i = 0;
 
 	for(int j = 0; j < 8; j++)                       //clear up the data[8]
@@ -67,61 +72,9 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 		i++;                                         //skip '\t'
 	}
 
-	s.get(); //clear remained '\n'
 	return s;
 }
 
-istream &operator>>(istream&s, department&d) //department input stream Overload
-{
-	string str;
-
-
-	getline(s, str); //read one line
-	int i = 0;
-
-
-	for(int j = 0; j < 8; j++)                       //clear up the data[8]
-		d.data[j] = "";
-	for(int j = 0; j < 6; j++)                       //read in 學校代碼~等級別
-	{
-		for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
-			d.data[j] += str[i];
-		i++;                                         //skip '\t'
-	}
-
-	string num;
-
-	//read in 學生人數
-	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
-		num += str[i];
-	i++;                                         //skip '\t'
-	d.numofstudent = stoi(num);                  //convert string to int
-
-	//read in 教師人數
-	num = "";
-	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
-		num += str[i];
-	i++;                                         //skip '\t'
-	d.numofteacher = stoi(num);                  //convert string to int
-
-	//read in 畢業人數
-	num = "";
-	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
-		num += str[i];
-	i++;                                         //skip '\t'
-	d.numofgraduate = stoi(num);                 //convert string to int
-
-	//read in 縣市名稱~體系別
-	for(int j = 6; j < 8; j++)
-	{
-		for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
-			d.data[j] += str[i];
-		i++;                                         //skip '\t'
-	}
-
-	s.get(); //clear remained '\n'
-	return s;
-}
 
 ostream &operator<<(ostream&s, department d)//department output stream Overload
 {
@@ -240,7 +193,7 @@ public:
 		department d;
 
 
-		while(!input.eof() && input >> d) //while input available, then input department
+		while( input >> d && !input.fail()) //while input available, then input department
 			departmentvec.push_back(d);
 		input.close();
 	}
