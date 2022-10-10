@@ -1,4 +1,4 @@
-//Dev-C++ -std=c++14
+//Dev-C++ -std=c++20
 //曾品元11027233/江庭瑄11027235
 #include <bits/stdc++.h>
 using namespace std;
@@ -193,7 +193,7 @@ public:
 		department d;
 
 
-		while( input >> d && !input.fail()) //while input available, then input department
+		while( input >> d ) //while input available, then input department
 			departmentvec.push_back(d);
 		input.close();
 	}
