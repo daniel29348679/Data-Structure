@@ -210,6 +210,17 @@ public:
 		inputlocate = s1.inputlocate + "_" + s2.inputlocate; //new inputlocate(name) = "201"+"_"+"202"="201_202"
 	}
 
+	void addsheet(sheet s1) //add use two sheet
+	{
+		//merge two vec : s1.departmentvec and  departmentvec
+		for(auto i:s1.departmentvec)
+			departmentvec.push_back(i);
+		sort(departmentvec.begin(), departmentvec.end(), [](department d1, department d2){
+			return d1.data[0] < d2.data[0];
+		});                                                  //sort departmentvec use schoolcode
+		inputlocate += + "_" + s1.inputlocate; //new inputlocate(name) = "201"+"_"+"202"="201_202"
+	}
+
 	void print()  // print departmentvec
 	{
 		for(auto i:departmentvec)
@@ -333,18 +344,19 @@ int main()
 			cout << "Input 1st file: ";
 			string locate;
 			cin >> locate;
-			sheet firstsheet(locate, 1);  //input file locate(name)
+			sheet totalsheet(locate, 1);  //input file locate(name)
 
-			cout << "Input 2nd file: ";
-			cin >> locate;
-			sheet secondsheet(locate, 1);              //input file locate(name)
+			cout << "How many file to add: ";
+			int i;
+			cin>>i;
+			while(i--)
+			{
+				cout << "Input new file: ";
+				cin >> locate;
+				sheet tempsheet(locate, 1);
+				totalsheet.addsheet(tempsheet);
+			}
 
-			cout << "Input 3rd file: ";
-			cin >> locate;
-			sheet thirdsheet(locate, 1);
-
-			sheet addsheet(firstsheet, secondsheet); //construct using two sheet
-			sheet totalsheet(addsheet, thirdsheet);  //construct using two sheet
 
 			cout << "Total number of records = " << totalsheet.size() << endl;
 			totalsheet.print();
