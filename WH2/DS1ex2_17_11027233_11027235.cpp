@@ -345,7 +345,7 @@ int main()
 			sheet thirdsheet(locate, 1);
 
 			sheet totalsheet(firstsheet, secondsheet); //construct using two sheet
-			totalsheet(firstsheet, totalsheet); //construct using two sheet
+			totalsheet(thirdsheet, totalsheet); //construct using two sheet
 
 			cout << "Total number of records = " << totalsheet.size() << endl;
 			totalsheet.print();
