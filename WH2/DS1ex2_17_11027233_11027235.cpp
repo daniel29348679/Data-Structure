@@ -260,9 +260,10 @@ int main()
 		cout << "* 0. Quit                 *" << "\n";
 		cout << "* 1. read and write file  *" << "\n";
 		cout << "* 2. read and select file *" << "\n";
-		cout << "* 3. read and merge file  *" << "\n";
+		cout << "* 3. read and merge files  *" << "\n";
+		cout << "* 4. read and merge files  *" << "\n";
 		cout << "***************************" << "\n";
-		cout << "Input a choice(0, 1, 2, 3): ";
+		cout << "Input a choice(0, 1, 2, 3, 4): ";
 		cin >> k;
 		if(cin.fail())
 		{
@@ -323,6 +324,28 @@ int main()
 			sheet secondsheet(locate, 1);              //input file locate(name)
 
 			sheet totalsheet(firstsheet, secondsheet); //construct using two sheet
+
+			cout << "Total number of records = " << totalsheet.size() << endl;
+			totalsheet.print();
+			totalsheet.writefile(1);    //1->output
+		}
+		if(k == 4)
+		{
+			cout << "Input 1st file: ";
+			string locate;
+			cin >> locate;
+			sheet firstsheet(locate, 1);  //input file locate(name)
+
+			cout << "Input 2nd file: ";
+			cin >> locate;
+			sheet secondsheet(locate, 1);              //input file locate(name)
+
+			cout << "Input 3rd file: ";
+			cin >> locate;
+			sheet thirdsheet(locate, 1);
+
+			sheet totalsheet(firstsheet, secondsheet); //construct using two sheet
+			totalsheet(firstsheet, totalsheet); //construct using two sheet
 
 			cout << "Total number of records = " << totalsheet.size() << endl;
 			totalsheet.print();
