@@ -270,8 +270,8 @@ int main()
 		cout << "* 0. Quit                 *" << "\n";
 		cout << "* 1. read and write file  *" << "\n";
 		cout << "* 2. read and select file *" << "\n";
-		cout << "* 3. read and merge files  *" << "\n";
-		cout << "* 4. read and merge files  *" << "\n";
+		cout << "* 3. read and merge files *" << "\n";
+		cout << "* 4. merge M files        *" << "\n";
 		cout << "***************************" << "\n";
 		cout << "Input a choice(0, 1, 2, 3, 4): ";
 		cin >> k;
