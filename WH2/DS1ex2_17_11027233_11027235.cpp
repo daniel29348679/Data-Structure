@@ -47,22 +47,25 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 	//read in 學生人數
 	for(; i < str.size() && str[i] != '\t'; i++)  //if str[i] == '\t' -> one complete data
 		num += str[i];
-	i++;                                          //skip '\t'
-	d.numofstudent = stoi(num);                   //convert string to int
+	i++; //skip '\t'
+	num.erase(remove(num.begin(), num.end(), '"'), num.end()); //erase "
+	d.numofstudent = stoi(num);                                //convert string to int
 
 	//read in 教師人數
 	num = "";
 	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 		num += str[i];
-	i++;                                         //skip '\t'
-	d.numofteacher = stoi(num);                  //convert string to int
+	i++; //skip '\t'
+	num.erase(remove(num.begin(), num.end(), '"'), num.end()); //erase "
+	d.numofteacher = stoi(num);                                //convert string to int
 
 	//read in 畢業人數
 	num = "";
 	for(; i < str.size() && str[i] != '\t'; i++) //if str[i] == '\t' -> one complete data
 		num += str[i];
-	i++;                                         //skip '\t'
-	d.numofgraduate = stoi(num);                 //convert string to int
+	i++; //skip '\t'
+	num.erase(remove(num.begin(), num.end(), '"'), num.end()); //erase "
+	d.numofgraduate = stoi(num);                               //convert string to int
 
 	//read in 縣市名稱~體系別
 	for(int j = 6; j < 8; j++)
@@ -217,8 +220,8 @@ public:
 			departmentvec.push_back(i);
 		sort(departmentvec.begin(), departmentvec.end(), [](department d1, department d2){
 			return d1.data[0] < d2.data[0];
-		});                                                  //sort departmentvec use schoolcode
-		inputlocate += + "_" + s1.inputlocate; //new inputlocate(name) = "201"+"_"+"202"="201_202"
+		});                                    //sort departmentvec use schoolcode
+		inputlocate += +"_" + s1.inputlocate;  //new inputlocate(name) = "201"+"_"+"202"="201_202"
 	}
 
 	void print()  // print departmentvec
@@ -348,7 +351,7 @@ int main()
 
 			cout << "How many file to add: ";
 			int i;
-			cin>>i;
+			cin >> i;
 			while(i--)
 			{
 				cout << "Input new file: ";
