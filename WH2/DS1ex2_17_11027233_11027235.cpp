@@ -25,8 +25,8 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 {
 	string str;
 
-	getline(s, str); //read one line
-	if(str.size()<3) //too short = error
+	getline(s, str);           //read one line
+	if(str.size() < 3)         //too short = error
 	{
 		s.clear(ios::failbit); //set failbit to true
 		return s;
@@ -74,7 +74,6 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
 
 	return s;
 }
-
 
 ostream &operator<<(ostream&s, department d)//department output stream Overload
 {
@@ -193,7 +192,7 @@ public:
 		department d;
 
 
-		while( input >> d ) //while input available, then input department
+		while(input >> d)   //while input available, then input department
 			departmentvec.push_back(d);
 		input.close();
 	}
@@ -275,7 +274,7 @@ int main()
 			continue;     //skip this loop
 		}
 
-		if(k != 0 && k != 1 && k != 2 && k != 3)
+		if(k != 0 && k != 1 && k != 2 && k != 3 && k != 4)
 		{
 			cout << "\nCommand does not exist!\n";
 			continue; //skip this loop
@@ -344,8 +343,8 @@ int main()
 			cin >> locate;
 			sheet thirdsheet(locate, 1);
 
-			sheet totalsheet(firstsheet, secondsheet); //construct using two sheet
-			totalsheet(firstsheet, totalsheet); //construct using two sheet
+			sheet addsheet(firstsheet, secondsheet); //construct using two sheet
+			sheet totalsheet(addsheet, thirdsheet);  //construct using two sheet
 
 			cout << "Total number of records = " << totalsheet.size() << endl;
 			totalsheet.print();
