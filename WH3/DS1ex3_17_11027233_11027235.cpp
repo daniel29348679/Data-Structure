@@ -3,6 +3,52 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+template <class T>
+class stackk
+{
+private:
+	int s = 0;
+	struct node
+	{
+		T	  t;
+		node *father;
+	};
+
+	node *nowptr = NULL;
+public:
+	bool empty()
+	{
+		return s == 0;
+	}
+
+	int size()
+	{
+		return s;
+	}
+
+	void push(T t)
+	{
+		s++;
+		node *n = new node;
+		n->t	  = t;
+		n->father = nowptr;
+		nowptr	  = n;
+	}
+
+	void pop()
+	{
+		unique_ptr<node> i ( nowptr ); //call auto release ptr
+		nowptr = nowptr->father;
+		s--;
+	}
+
+	T top()
+	{
+		return nowptr->t;
+	}
+};
+
+
 vector <char> allowedcharvec = {'0', '1', '2', '3', '4', '5', '6',
 								'7', '8', '9', '+', '-', '*', '/',
 								'(', ')', ' '}; // all allowed char in legal algorithm
@@ -10,7 +56,7 @@ struct node
 {
 	bool operandoroperator; //node is operand or operator
 	int	 operand;
-	char opertor;//operator (operator can't use)
+	char opertor;           //operator (operator can't use)
 };
 
 
@@ -163,11 +209,11 @@ quit1:      ;
 			cin.get();
 			cout << "Input:";
 			getline(cin, str);
-			stack <char> operatorst;          //stack store operator
-			list <node>	 outputlist;          //
-			int			 n				 = 0; //store number
-			bool		 isint			 = 0; //last is operand
-			bool		 istimesordibide = 0; //last is '*' or '/'
+			stackk <char> operatorst;          //stack store operator
+			list <node>	  outputlist;          //
+			int			  n				  = 0; //store number
+			bool		  isint			  = 0; //last is operand
+			bool		  istimesordibide = 0; //last is '*' or '/'
 			for(auto i:str)
 			{
 				if(i == ' ')
@@ -187,22 +233,22 @@ quit1:      ;
 				}
 				if(i == '+' || i == '-' || i == '*' || i == '/') //operator
 				{
-					if(isint) //if stored number than output
+					if(isint)                                    //if stored number than output
 					{
-						outputlist << n;  //store operand
-						n	  = 0; //reset n
-						isint = 0; //reset isint
-						if(istimesordibide) //if there is '*' or '/' before operand
+						outputlist << n;                         //store operand
+						n	  = 0;                               //reset n
+						isint = 0;                               //reset isint
+						if(istimesordibide)                      //if there is '*' or '/' before operand
 						{
-							outputlist << operatorst.top(); //output operator
-							operatorst.pop(); //pop operator
-							istimesordibide = 0; //reset istimesordibide
+							outputlist << operatorst.top();      //output operator
+							operatorst.pop();                    //pop operator
+							istimesordibide = 0;                 //reset istimesordibide
 						}
 					}
 					operatorst.push(i); //push operator to stack
 				}
 
-				if(i == ')') //if find ')'
+				if(i == ')')  //if find ')'
 				{
 					if(isint) //if stored number than output
 					{
@@ -222,14 +268,13 @@ quit1:      ;
 						outputlist << operatorst.top();
 						operatorst.pop();
 					}
-					operatorst.pop(); //pop '('
-					if(operatorst.top()=='*'||operatorst.top()=='/') //'*' or '/' before '(' must output when '(' remove
+					operatorst.pop();                                                               //pop '('
+					if(!operatorst.empty() && (operatorst.top() == '*' || operatorst.top() == '/')) //'*' or '/' before '(' must output when '(' remove
 					{
 						outputlist << operatorst.top();
 						operatorst.pop();
 					}
 				}
-
 
 				if(i == '*' || i == '/')
 					istimesordibide = 1;
@@ -252,7 +297,7 @@ quit1:      ;
 			cout << '\b' << '\0';
 
 			//mission 3!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			stack <int> operandst;
+			stackk <int> operandst;
 			n = 0;
 			for(auto i:outputlist)
 			{
@@ -285,7 +330,7 @@ quit1:      ;
 					}
 				}
 			}
-			cout << "Answer: " << operandst.top(); //cout answer
+			cout << "\nAnswer: " << operandst.top(); //cout answer
 quit2:      ;                                      //quit at if(k==2) end
 		}
 	}

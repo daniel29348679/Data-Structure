@@ -208,7 +208,7 @@ public:
 		for(auto i:s2.departmentvec)
 			departmentvec.push_back(i);
 		sort(departmentvec.begin(), departmentvec.end(), [](department d1, department d2){
-			return d1.data[0] < d2.data[0];
+			return d1.data[0] != d2.data[0] ? d1.data[0] < d2.data[0]:stoi(d1.data[2]) < stoi(d2.data[2]);
 		});                                                  //sort departmentvec use schoolcode
 		inputlocate = s1.inputlocate + "_" + s2.inputlocate; //new inputlocate(name) = "201"+"_"+"202"="201_202"
 	}
