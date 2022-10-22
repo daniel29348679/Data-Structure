@@ -37,7 +37,8 @@ public:
 
 	void pop()
 	{
-		unique_ptr<node> i ( nowptr ); //call auto release ptr
+		unique_ptr <node> i(nowptr);   //call auto release ptr
+
 		nowptr = nowptr->father;
 		s--;
 	}
@@ -220,6 +221,19 @@ quit1:      ;
 				{
 					n	  = n * 10 + i - '0';     //add to n
 					isint = 1;                    //set isint to true
+					continue;
+				}
+				if(isint)     //if stored number than output
+				{
+					outputlist << n;
+					n	  = 0;
+					isint = 0;
+					if(istimesordibide)
+					{
+						outputlist << operatorst.top();
+						operatorst.pop();
+						istimesordibide = 0;
+					}
 				}
 				if(i == '(')                      //operator
 				{
@@ -231,36 +245,24 @@ quit1:      ;
 				}
 				if(i == '+' || i == '-' || i == '*' || i == '/') //operator
 				{
-					if(isint)                                    //if stored number than output
+					if(i == '+' || i == '-')
 					{
-						outputlist << n;                         //store operand
-						n	  = 0;                               //reset n
-						isint = 0;                               //reset isint
-						if(istimesordibide)                      //if there is '*' or '/' before operand
-						{
-							outputlist << operatorst.top();      //output operator
-							operatorst.pop();                    //pop operator
-							istimesordibide = 0;                 //reset istimesordibide
-						}
-					}
-					operatorst.push(i); //push operator to stack
-				}
-
-				if(i == ')')  //if find ')'
-				{
-					if(isint) //if stored number than output
-					{
-						outputlist << n;
-						n	  = 0;
-						isint = 0;
-						if(istimesordibide)
+						if(operatorst.size())
 						{
 							outputlist << operatorst.top();
 							operatorst.pop();
-							istimesordibide = 0;
 						}
+						operatorst.push(i); //push operator to stack
 					}
+					if(i == '*' || i == '/')
+					{
+						operatorst.push(i); //push operator to stack
+						istimesordibide = 1;
+					}
+				}
 
+				if(i == ')')                       //if find ')'
+				{
 					while(operatorst.top() != '(') //output stack until '('
 					{
 						outputlist << operatorst.top();
@@ -274,8 +276,6 @@ quit1:      ;
 					}
 				}
 
-				if(i == '*' || i == '/')
-					istimesordibide = 1;
 			}
 
 			if(isint)                //output remained operand
@@ -292,7 +292,7 @@ quit1:      ;
 
 			for(auto c:outputlist)
 				cout << c << ','; //print list
-			cout << '\b' << '\0';
+			cout << '\b' << ' ';
 
 			//mission 3!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			stackk <int> operandst;
@@ -329,7 +329,7 @@ quit1:      ;
 				}
 			}
 			cout << "\nAnswer: " << operandst.top(); //cout answer
-quit2:      ;                                      //quit at if(k==2) end
+quit2:      ;                                        //quit at if(k==2) end
 		}
 	}
 }
