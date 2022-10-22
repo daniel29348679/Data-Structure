@@ -170,8 +170,6 @@ int main()
 					lastisnumer = 0;
 				}
 
-				if(i == ' ')
-					lastisnumer = 0;
 
 				if(nowtype != -1)                           //if nowtype == -1 -> no new type found
 				{
