@@ -3,6 +3,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+//#define err
+
 template <class T>
 class stackk
 {
@@ -129,7 +131,8 @@ int main()
 					cout << "Error 1: " << i << " is not a legitimate character.";
 					goto quit1;      //if found one so that don't have to fine another
 				}
-
+				if(i == ' ')
+					continue;                     //skip ' '
 
 				//deal with parenthesis
 				if(i == '(')
@@ -137,7 +140,6 @@ int main()
 					numofparenthesis++;
 					lastisnumer = 0;
 				}
-
 
 				if(i == ')')
 				{
@@ -186,6 +188,10 @@ int main()
 					}
 					lasttype = nowtype; //if found new type than refresh lasttype
 				}
+
+				#ifdef err
+				cout << "now:" << i << endl;
+				#endif
 			}
 			if(lasttype == 2)  //last input must be operand
 			{
@@ -247,18 +253,17 @@ quit1:      ;
 				{
 					if(i == '+' || i == '-')
 					{
-						if(operatorst.size())
+						if(operatorst.size() && operatorst.top() != '(')
 						{
 							outputlist << operatorst.top();
 							operatorst.pop();
 						}
-						operatorst.push(i); //push operator to stack
 					}
 					if(i == '*' || i == '/')
 					{
-						operatorst.push(i); //push operator to stack
 						istimesordibide = 1;
 					}
+					operatorst.push(i); //push operator to stack
 				}
 
 				if(i == ')')                       //if find ')'
@@ -269,13 +274,12 @@ quit1:      ;
 						operatorst.pop();
 					}
 					operatorst.pop();                                                               //pop '('
-					if(!operatorst.empty() && (operatorst.top() == '*' || operatorst.top() == '/')) //'*' or '/' before '(' must output when '(' remove
+					if(operatorst.size() && (operatorst.top() == '*' || operatorst.top() == '/')) //'*' or '/' before '(' must output when '(' remove
 					{
 						outputlist << operatorst.top();
 						operatorst.pop();
 					}
 				}
-
 			}
 
 			if(isint)                //output remained operand
@@ -291,8 +295,8 @@ quit1:      ;
 			}
 
 			for(auto c:outputlist)
-				cout << c << ','; //print list
-			cout << '\b' << ' ';
+				cout << c << ',';  //print list
+			cout << '\b' << ' ';   //delete last ','
 
 			//mission 3!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			stackk <int> operandst;
