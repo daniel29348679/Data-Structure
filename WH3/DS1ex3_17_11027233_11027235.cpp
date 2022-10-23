@@ -39,16 +39,54 @@ public:
 
 	void pop()
 	{
-		unique_ptr <node> i(nowptr);   //call auto release ptr
+		auto i = nowptr;   //store nowptr
 
 		nowptr = nowptr->father;
 		s--;
+		delete i; //release
 	}
 
 	T top()
 	{
 		return nowptr->t;
 	}
+};
+
+template <class T>
+class listt
+{
+public:
+    int s = 0;
+    struct node
+    {
+        T     t;
+        node *next = NULL;
+    };
+
+    node *headptr = NULL;
+
+
+    void push_back(T t)
+    {
+        s++;
+        if(headptr == NULL)
+        {
+            headptr    = new node;
+            headptr->t = t;
+            return;
+        }
+        auto x = headptr;
+        while(x->next != NULL)
+            x = x->next;
+        x->next = new node;
+        x       = x->next;
+        x->t    = t;
+    }
+
+    node * begin()
+    {
+        return headptr;
+    }
 };
 
 
@@ -63,13 +101,13 @@ struct node
 };
 
 
-list <node> &operator<<(list <node>&li, char c)
+listt <node> &operator<<(listt <node>&li, char c)
 {
 	li.push_back({1, 0, c});
 	return li;
 }
 
-list <node> &operator<<(list <node>&li, int i)
+listt <node> &operator<<(listt <node>&li, int i)
 {
 	li.push_back({0, i, '\0'});
 	return li;
@@ -215,7 +253,7 @@ quit1:      ;
 			cout << "Input:";
 			getline(cin, str);
 			stackk <char> operatorst;          //stack store operator
-			list <node>	  outputlist;          //
+			listt <node>	  outputlist;          //
 			int			  n				  = 0; //store number
 			bool		  isint			  = 0; //last is operand
 			bool		  istimesordibide = 0; //last is '*' or '/'
@@ -252,17 +290,13 @@ quit1:      ;
 				if(i == '+' || i == '-' || i == '*' || i == '/') //operator
 				{
 					if(i == '+' || i == '-')
-					{
 						if(operatorst.size() && operatorst.top() != '(')
 						{
 							outputlist << operatorst.top();
 							operatorst.pop();
 						}
-					}
 					if(i == '*' || i == '/')
-					{
 						istimesordibide = 1;
-					}
 					operatorst.push(i); //push operator to stack
 				}
 
@@ -273,7 +307,7 @@ quit1:      ;
 						outputlist << operatorst.top();
 						operatorst.pop();
 					}
-					operatorst.pop();                                                               //pop '('
+					operatorst.pop();                                                             //pop '('
 					if(operatorst.size() && (operatorst.top() == '*' || operatorst.top() == '/')) //'*' or '/' before '(' must output when '(' remove
 					{
 						outputlist << operatorst.top();
@@ -294,15 +328,20 @@ quit1:      ;
 				operatorst.pop();
 			}
 
-			for(auto c:outputlist)
+			for(auto ptr=outputlist.begin();ptr!=nullptr;ptr=ptr->next) //auto c:outputlist
+			{
+				auto c=ptr->t;
 				cout << c << ',';  //print list
+			}
+
 			cout << '\b' << ' ';   //delete last ','
 
 			//mission 3!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			stackk <int> operandst;
 			n = 0;
-			for(auto i:outputlist)
+			for(auto ptr=outputlist.begin();ptr!=nullptr;ptr=ptr->next) //auto i:outputlist
 			{
+				auto i=ptr->t;
 				if(i.operandoroperator == 0) //if i is operand
 					operandst.push(i.operand);
 				if(i.operandoroperator == 1) //if i is operator
