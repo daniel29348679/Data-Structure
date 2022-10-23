@@ -50,6 +50,16 @@ public:
 	{
 		return nowptr->t;
 	}
+
+	~stackk() //destruster
+	{
+		while(nowptr != NULL)
+		{
+			auto i=nowptr;
+			nowptr=nowptr->father;
+			delete i;
+		}
+	}
 };
 
 template <class T>
@@ -87,6 +97,15 @@ public:
     {
         return headptr;
     }
+   	~listt() //destruster
+   	{
+		while(headptr != NULL)
+		{
+			auto i=headptr;
+			headptr=headptr->next;
+			delete i;
+		}
+	}
 };
 
 
