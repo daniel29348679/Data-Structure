@@ -98,6 +98,18 @@ struct node
 };
 
 
+list<node> &operator<<(list<node>&li, char c)
+{
+    li.push_back({1, 0, c});
+    return li;
+}
+
+list<node> &operator<<(list<node>&li, int i)
+{
+    li.push_back({0, i, '\0'});
+    return li;
+}
+
 listt<node> &operator<<(listt<node>&li, char c)
 {
     li.push_back({1, 0, c});
@@ -119,6 +131,17 @@ ostream &operator<<(ostream&out, node n)
     return out;
 }
 
+int place(node n)
+{
+    if(n.opertor == '+' || n.opertor == '-')
+        return 1;
+
+    if(n.opertor == '*' || n.opertor == '/')
+        return 2;
+
+    return 0;
+}
+
 int main()
 {
     int k = 100;
@@ -132,8 +155,9 @@ int main()
         cout << "* 1. legal algorithm detection  *" << "\n";
         cout << "* 2. inorder to postifx and     *" << "\n";
         cout << "* postifx to answer(mission2&3) *" << "\n";
+        cout << "* 3. challenge                  *" << "\n";
         cout << "*********************************" << "\n";
-        cout << "Input a choice(0, 1, 2): ";
+        cout << "Input a choice(0, 1, 2, 3): ";
         cin >> k;
         if(cin.fail())
         {
@@ -145,7 +169,7 @@ int main()
             continue;     //skip this loop
         }
 
-        if(k != 0 && k != 1 && k != 2)
+        if(k != 0 && k != 1 && k != 2 && k != 3)
         {
             cout << "\nCommand does not exist!\n";
             continue; //skip this loop
@@ -370,6 +394,118 @@ quit1:      ;
             }
             cout << "\nAnswer: " << operandst.top(); //cout answer
 quit2:      ;                                        //quit at if(k==2) end
+        }
+
+        if(k == 3)
+        {
+            string str;
+            cin.get();
+            cout << "Input:";
+            getline(cin, str);
+            list<node> nodli;
+            nodli << '(';
+            bool isint = 0;
+            int  n     = 0;
+            for(auto i:str) //convert strint into useful data
+            {
+                if(i == ' ')
+                    continue;
+                if('0' <= i && i <= '9')
+                {
+                    n     = n * 10 + i - '0';     //add to n
+                    isint = 1;                    //set isint to true
+                    continue;
+                }
+                if(isint)
+                {
+                    nodli << n;
+                    n     = 0;
+                    isint = 0;
+                }
+                nodli << i;
+            }
+            if(isint)
+            {
+                nodli << n;
+                n     = 0;
+                isint = 0;
+            }
+            nodli << ')';
+
+            vector<node> ansvec;
+            stack<node>  operatorst;
+
+            for(auto ii = nodli.rbegin(); ii != nodli.rend(); ii++) //auto i:nodli but reverse
+            {
+                auto i = *ii;
+                if(i.operandoroperator == 0)
+                {
+                    ansvec.insert(ansvec.begin(),i);
+                    continue;
+                }
+
+                if(i.opertor == '+' || i.opertor == '-' || i.opertor == '*' || i.opertor == '/')
+                {
+                    while(place(operatorst.top()) > place(i))
+                    {
+                        ansvec.insert(ansvec.begin(),operatorst.top());
+                        operatorst.pop();
+                    }
+                    operatorst.push(i);
+                }
+
+                if(i.opertor == '(')
+                {
+                    while(operatorst.top().opertor != ')')
+                    {
+                        ansvec.insert(ansvec.begin(),operatorst.top());
+                        operatorst.pop();
+                    }
+                    operatorst.pop();
+                }
+                if(i.opertor == ')')
+                    operatorst.push(i);
+            }
+            cout << "preorder:";
+            for(auto t:ansvec)
+                cout << t << ',';
+            cout << '\b' << ' ';
+
+            while(ansvec.size() > 1)
+            {
+                int last = 0;
+                int ans;
+                for(int i = 0; i < ansvec.size() - 2; i++)
+                    if(ansvec[i].operandoroperator == 1 && ansvec[i + 1].operandoroperator == 0 && ansvec[i + 2].operandoroperator == 0)
+                        last = i;
+
+                int b = ansvec[last + 2].operand;
+                int a = ansvec[last + 1].operand;
+
+                //push a +-*/ b back into stack
+                if(ansvec[last ].opertor == '+')
+                    ans = (a + b);     //stack:1,2,3,4,5,6,a+b
+                if(ansvec[last ].opertor == '-')
+                    ans = (a - b);
+                if(ansvec[last ].opertor == '*')
+                    ans = (a * b);
+                if(ansvec[last].opertor == '/')
+                {
+                    if(b != 0)     // b can't be 0
+                        ans = (a / b);
+                    else
+                    {
+                        cout << "ERROR!!!! can't do /0";
+                        goto quit3;     //quit this mission
+                    }
+                }
+
+                ansvec.erase(ansvec.begin()+last + 2);
+                ansvec.erase(ansvec.begin()+last + 1);
+                ansvec[last]={0, ans, '\0'};
+            }
+            cout<<"\nAns:"<<ansvec[0];
+quit3:      ;
         }
     }
 }
