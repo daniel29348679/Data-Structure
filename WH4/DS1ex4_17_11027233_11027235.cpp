@@ -1,5 +1,10 @@
+//Dev-C++ -std=c++20
+//曾品元11027233/江庭瑄11027235
+
 #include <bits/stdc++.h>
 using namespace std;
+
+#define error
 
 template<typename v, typename T>
 void shellsort(vector<v>&vec, T sortrule)
@@ -104,9 +109,9 @@ public:
                 //煮完
                 if(ordervec[ing].startcooking + ordervec[ing].duration > ordervec[ing].timeout)
                 {
-                    ordervec[ing].stat  = "timeout";
-                    ordervec[ing].cid   = cid;
-                    ordervec[ing].delay = nowtime - ordervec[ing].arrival - ordervec[ing].duration;
+                    ordervec[ing].stat      = "timeout";
+                    ordervec[ing].cid       = cid;
+                    ordervec[ing].delay     = nowtime - ordervec[ing].arrival - ordervec[ing].duration;
                     ordervec[ing].departure = nowtime;
                     cancelvec.push_back(ordervec[ing]);
                 }
@@ -123,7 +128,7 @@ public:
             {
                 ing = top();
                 pop();
-                if(nowtime >= ordervec[ing].arrival&&nowtime < ordervec[ing].timeout)
+                if(nowtime >= ordervec[ing].arrival && nowtime < ordervec[ing].timeout)
                 {
                     cooking = 1;
                     ordervec[ing].startcooking = nowtime;
@@ -132,7 +137,7 @@ public:
                 {
                     ordervec[ing].stat  = "abort";
                     ordervec[ing].cid   = cid;
-                    ordervec[ing].delay = nowtime - ordervec[ing].arrival ;
+                    ordervec[ing].delay = nowtime - ordervec[ing].arrival;
                     ordervec[ing].abort = nowtime;
                     cancelvec.push_back(ordervec[ing]);
                 }
@@ -291,10 +296,10 @@ int main()
                 chef1.cook();
             }
 
-
+            #ifdef error
             for(auto i:ordervec)
                 cout << i << '\n';
-
+            #endif
             string ans   = "";
             int    delay = 0;
 
@@ -321,11 +326,11 @@ int main()
 
 
             ans += "[Total Delay]\n" + to_string(delay) + " min.\n";
-            ans += "[Failure Perecentage]\n" + to_string((float)100*(ab + timo) / totalsize).substr(0,to_string((float)100*(ab + timo) / totalsize).find(".")+3) + " %\n";
+            ans += "[Failure Perecentage]\n" + to_string((float)100 * (ab + timo) / totalsize).substr(0, to_string((float)100 * (ab + timo) / totalsize).find(".") + 3) + " %\n";
 
             cout << ans;
             ofstream out("one" + name + ".txt", ios::trunc);
-            out<<ans;
+            out << ans;
             vecclear();
         }
 
@@ -362,11 +367,11 @@ int main()
                         chef2.push(i);
                         chef2.cook();
                     }
-                    else if(chef1.size<chef2.size)
+                    else if(chef1.size < chef2.size)
                         chef1.push(i);
-                    else if(chef1.size>chef2.size)
+                    else if(chef1.size > chef2.size)
                         chef2.push(i);
-                    else if(chef1.size==chef2.size&&chef1.size < 3)
+                    else if(chef1.size == chef2.size && chef1.size < 3)
                         chef1.push(i);
                     else
                     {
@@ -383,8 +388,10 @@ int main()
             }
 
 
+            #ifdef error
             for(auto i:ordervec)
                 cout << i << '\n';
+            #endif
 
             string ans   = "";
             int    delay = 0;
@@ -395,7 +402,7 @@ int main()
                 return o.stat == "abort";
             }))
             {
-                ans   += "[" + to_string(++ab) + "]\t" + to_string(x.oid) + "\t"+x.cid+ "\t" + to_string(x.delay) + "\t" + to_string(x.abort) + "\n";
+                ans   += "[" + to_string(++ab) + "]\t" + to_string(x.oid) + "\t" + x.cid + "\t" + to_string(x.delay) + "\t" + to_string(x.abort) + "\n";
                 delay += x.delay;
             }
 
@@ -406,18 +413,18 @@ int main()
                 return o.stat == "timeout";
             }))
             {
-                ans   += "[" + to_string(++ab) + "]\t" + to_string(x.oid) + "\t"+x.cid+"\t" + to_string(x.delay) + "\t" + to_string(x.departure) + "\n";
+                ans   += "[" + to_string(++ab) + "]\t" + to_string(x.oid) + "\t" + x.cid + "\t" + to_string(x.delay) + "\t" + to_string(x.departure) + "\n";
                 delay += x.delay;
             }
 
 
             ans += "[Total Delay]\n" + to_string(delay) + " min.\n";
-            ans += "[Failure Perecentage]\n" + to_string((float)100*(ab + timo) / totalsize).substr(0,to_string((float)100*(ab + timo) / totalsize).find(".")+3) + " %\n";
+            ans += "[Failure Perecentage]\n" + to_string((float)100 * (ab + timo) / totalsize).substr(0, to_string((float)100 * (ab + timo) / totalsize).find(".") + 3) + " %\n";
 
             cout << ans;
 
             ofstream out("two" + name + ".txt", ios::trunc);
-            out<<ans;
+            out << ans;
             vecclear();
         }
     }
