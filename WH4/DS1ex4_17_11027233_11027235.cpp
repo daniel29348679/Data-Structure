@@ -16,9 +16,11 @@ void shellsort(vector<v>&vec, T sortrule)
 
     for(; range > 0; range /= 2)
         for(int i = 0; i + range < vec.size(); i++)
-            for(int j = 1; i + range * j < vec.size(); j++)
-                if(!sortrule(vec[i], vec[i + range * j]))
-                    swap(vec[i], vec[i + range * j]);
+            if(!sortrule(vec[i], vec[i + range])){
+                swap(vec[i], vec[i + range]);
+                for(int j=i-range;j>=0&&!sortrule(vec[j], vec[j + range]);j-=range)
+                    swap(vec[j], vec[j + range]);
+            }
 }
 
 class order
