@@ -4,21 +4,21 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define error
+//#define error
 
 template<typename v, typename T>
-void shellsort(vector<v>&vec, T sortrule)
+void shellsort(vector<v>&vec, T sortrule) //shell sort
 {
-    int range = 1;
-
+    int range = 1; //spacing between to node
     while(range * 2 <= vec.size())
         range *= 2;
 
     for(; range > 0; range /= 2)
         for(int i = 0; i + range < vec.size(); i++)
-            if(!sortrule(vec[i], vec[i + range])){
+            if(!sortrule(vec[i], vec[i + range])) 
+            {
                 swap(vec[i], vec[i + range]);
-                for(int j=i-range;j>=0&&!sortrule(vec[j], vec[j + range]);j-=range)
+                for(int j = i - range; j >= 0 && !sortrule(vec[j], vec[j + range]); j -= range)
                     swap(vec[j], vec[j + range]);
             }
 }
@@ -54,11 +54,11 @@ ostream &operator<<(ostream&s, order&i)
     return s;
 }
 
-vector<order> ordervec;
-vector<order> cancelvec;
-//vector<order> finishvec;
-int nowtime = 0;
-void vecclear()
+vector<order> ordervec; //all order
+vector<order> cancelvec; //canceled order
+
+int nowtime = 0; //now time that thef can know
+void vecclear() //vec clear
 {
     ordervec.clear();
     cancelvec.clear();
@@ -68,7 +68,7 @@ class chef
 {
 public:
 
-    int cheftime = 0;
+    //int cheftime = 0;
     string cid;
     int ordqueue[3];
     int index    = 0;
@@ -85,31 +85,30 @@ public:
         if(size > 2)
             cout << "ERROR!!!!!!!!!!!!";
         size++;
-        ordqueue[(index + size - 1) % 3] = o;
+        ordqueue[(index + size - 1) % 3] = o; //push to back
     }
 
     void pop()
     {
         if(size < 1)
             cout << "ERROR!!!!!!!!!!!!";
-        size--;
-        index++;
+        size--; //size-=1
+        index++; //move to next int
     }
 
     int top()
     {
         if(size < 1)
             cout << "ERROR!!!!!!!!!!!!";
-        return ordqueue[(index) % 3];
+        return ordqueue[(index) % 3]; //return front int
     }
 
     void cook()
     {
         if(cooking)
-            if(nowtime >= ordervec[ing].startcooking + ordervec[ing].duration)
+            if(nowtime >= ordervec[ing].startcooking + ordervec[ing].duration) //cook finish
             {
-                //煮完
-                if(ordervec[ing].startcooking + ordervec[ing].duration > ordervec[ing].timeout)
+                if(ordervec[ing].startcooking + ordervec[ing].duration > ordervec[ing].timeout) //already timeout
                 {
                     ordervec[ing].stat      = "timeout";
                     ordervec[ing].cid       = cid;
@@ -117,7 +116,7 @@ public:
                     ordervec[ing].departure = nowtime;
                     cancelvec.push_back(ordervec[ing]);
                 }
-                else
+                else //cook success
                 {
                     ordervec[ing].stat = "success";
                     ordervec[ing].cid  = cid;
@@ -125,12 +124,12 @@ public:
                 cooking = 0;
             }
 
-        if(!cooking) //收新的
+        if(!cooking) //enable to recive new order
             while(size && !cooking)
             {
                 ing = top();
                 pop();
-                if(nowtime >= ordervec[ing].arrival && nowtime < ordervec[ing].timeout)
+                if(nowtime >= ordervec[ing].arrival && nowtime < ordervec[ing].timeout) //not exist time limit
                 {
                     cooking = 1;
                     ordervec[ing].startcooking = nowtime;
@@ -199,10 +198,9 @@ int main()
         cout << "\n\n";
         cout << "**  Mission                    **" << "\n"; //print menu
         cout << "* 0. Quit                       *" << "\n";
-        cout << "* 1. legal algorithm detection  *" << "\n";
-        cout << "* 2. inorder to postifx and     *" << "\n";
-        cout << "* postifx to answer(mission2&3) *" << "\n";
-        cout << "* 3. challenge                  *" << "\n";
+        cout << "* 1. sort                       *" << "\n";
+        cout << "* 2. one chef                   *" << "\n";
+        cout << "* 3. two chef                   *" << "\n";
         cout << "*********************************" << "\n";
         cout << "Input a choice(0, 1, 2, 3): ";
         cin >> k;
@@ -228,8 +226,12 @@ int main()
             cout << "input:";
             cin >> name;
             ifstream in("input" + name + ".txt");
-            if(!in)
-                cout << "error";
+            while(!in){
+                cout << "read file error, input:";
+                cin >> name;
+                in.open("input" + name + ".txt");
+            }
+
             getline(in, s);
             order o;
             int   time = clock();
@@ -262,8 +264,11 @@ int main()
             cout << "input:\n";
             cin >> name;
             ifstream in("sort" + name + ".txt");
-            if(!in)
-                cout << "error";
+            while(!in){
+                cout << "read file error, input:";
+                cin >> name;
+                in.open("sort" + name + ".txt");
+            }
             getline(in, s);
             order o;
             while(in >> o)
@@ -342,8 +347,11 @@ int main()
             cout << "input:\n";
             cin >> name;
             ifstream in("sort" + name + ".txt");
-            if(!in)
-                cout << "error";
+            while(!in){
+                cout << "read file error, input:";
+                cin >> name;
+                in.open("sort" + name + ".txt");
+            }
             getline(in, s);
             order o;
             while(in >> o)
