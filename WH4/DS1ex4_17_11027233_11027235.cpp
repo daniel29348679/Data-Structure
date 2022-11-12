@@ -9,13 +9,14 @@ using namespace std;
 template<typename v, typename T>
 void shellsort(vector<v>&vec, T sortrule) //shell sort
 {
-    int range = 1; //spacing between to node
+    int range = 1;                        //spacing between to node
+
     while(range * 2 <= vec.size())
         range *= 2;
 
     for(; range > 0; range /= 2)
         for(int i = 0; i + range < vec.size(); i++)
-            if(!sortrule(vec[i], vec[i + range])) 
+            if(!sortrule(vec[i], vec[i + range]))
             {
                 swap(vec[i], vec[i + range]);
                 for(int j = i - range; j >= 0 && !sortrule(vec[j], vec[j + range]); j -= range)
@@ -54,11 +55,11 @@ ostream &operator<<(ostream&s, order&i)
     return s;
 }
 
-vector<order> ordervec; //all order
+vector<order> ordervec;  //all order
 vector<order> cancelvec; //canceled order
 
-int nowtime = 0; //now time that thef can know
-void vecclear() //vec clear
+int nowtime = 0;         //now time that thef can know
+void vecclear()          //vec clear
 {
     ordervec.clear();
     cancelvec.clear();
@@ -67,14 +68,12 @@ void vecclear() //vec clear
 class chef
 {
 public:
-
-    //int cheftime = 0;
-    string cid;
-    int ordqueue[3];
-    int index    = 0;
-    int size     = 0;
-    bool cooking = 0;
-    int ing;
+    string cid;       //cook id
+    int ordqueue[3];  //queue
+    int index    = 0; //queue front index
+    int size     = 0; //queue size
+    bool cooking = 0; //thef state
+    int ing;          //cooking index
     chef(string s)
     {
         cid = s;
@@ -92,7 +91,7 @@ public:
     {
         if(size < 1)
             cout << "ERROR!!!!!!!!!!!!";
-        size--; //size-=1
+        size--;  //size-=1
         index++; //move to next int
     }
 
@@ -106,7 +105,7 @@ public:
     void cook()
     {
         if(cooking)
-            if(nowtime >= ordervec[ing].startcooking + ordervec[ing].duration) //cook finish
+            if(nowtime >= ordervec[ing].startcooking + ordervec[ing].duration)                  //cook finish
             {
                 if(ordervec[ing].startcooking + ordervec[ing].duration > ordervec[ing].timeout) //already timeout
                 {
@@ -226,7 +225,8 @@ int main()
             cout << "input:";
             cin >> name;
             ifstream in("input" + name + ".txt");
-            while(!in){
+            while(!in)
+            {
                 cout << "read file error, input:";
                 cin >> name;
                 in.open("input" + name + ".txt");
@@ -264,7 +264,8 @@ int main()
             cout << "input:\n";
             cin >> name;
             ifstream in("sort" + name + ".txt");
-            while(!in){
+            while(!in)
+            {
                 cout << "read file error, input:";
                 cin >> name;
                 in.open("sort" + name + ".txt");
@@ -327,7 +328,7 @@ int main()
                 return o.stat == "timeout";
             }))
             {
-                ans   += "[" + to_string(++ab) + "]\t" + to_string(x.oid) + "\t" + to_string(x.delay) + "\t" + to_string(x.departure) + "\n";
+                ans   += "[" + to_string(++timo) + "]\t" + to_string(x.oid) + "\t" + to_string(x.delay) + "\t" + to_string(x.departure) + "\n";
                 delay += x.delay;
             }
 
@@ -347,7 +348,8 @@ int main()
             cout << "input:\n";
             cin >> name;
             ifstream in("sort" + name + ".txt");
-            while(!in){
+            while(!in)
+            {
                 cout << "read file error, input:";
                 cin >> name;
                 in.open("sort" + name + ".txt");
@@ -423,7 +425,7 @@ int main()
                 return o.stat == "timeout";
             }))
             {
-                ans   += "[" + to_string(++ab) + "]\t" + to_string(x.oid) + "\t" + x.cid + "\t" + to_string(x.delay) + "\t" + to_string(x.departure) + "\n";
+                ans   += "[" + to_string(++timo) + "]\t" + to_string(x.oid) + "\t" + x.cid + "\t" + to_string(x.delay) + "\t" + to_string(x.departure) + "\n";
                 delay += x.delay;
             }
 
