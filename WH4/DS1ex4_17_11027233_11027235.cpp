@@ -41,7 +41,7 @@ public:
 };
 
 
-ostream &operator<<(ostream&s, order&i)
+ostream &operator<<(ostream&s, order&i) //for debugger
 {
     s << i.oid << '\t'
       << i.arrival << '\t'
@@ -65,6 +65,7 @@ void vecclear()          //vec clear
     cancelvec.clear();
 }
 
+int totaldealed;
 class chef
 {
 public:
@@ -109,6 +110,7 @@ public:
             {
                 if(ordervec[ing].startcooking + ordervec[ing].duration > ordervec[ing].timeout) //already timeout
                 {
+                    totaldealed++;
                     ordervec[ing].stat      = "timeout";
                     ordervec[ing].cid       = cid;
                     ordervec[ing].delay     = nowtime - ordervec[ing].arrival - ordervec[ing].duration;
@@ -117,6 +119,7 @@ public:
                 }
                 else //cook success
                 {
+                    totaldealed++;
                     ordervec[ing].stat = "success";
                     ordervec[ing].cid  = cid;
                 }
@@ -135,6 +138,7 @@ public:
                 }
                 else //if(nowtime > ordervec[ing].timeout)
                 {
+                    totaldealed++;
                     ordervec[ing].stat  = "abort";
                     ordervec[ing].cid   = cid;
                     ordervec[ing].delay = nowtime - ordervec[ing].arrival;
@@ -224,25 +228,28 @@ int main()
             string name, s;
             cout << "input:";
             cin >> name;
-            ifstream in("input" + name + ".txt");
-            while(!in)
+            ifstream in("input" + name + ".txt"); //open file stream
+            while(!in)                            //open error
             {
                 cout << "read file error, input:";
                 cin >> name;
-                in.open("input" + name + ".txt");
+                in.open("input" + name + ".txt"); //retry
             }
 
             getline(in, s);
             order o;
             int   time = clock();
             while(in >> o)
-                ordervec.push_back(o);
-            cout << "Sorting data:" << clock() - time << "ms\n";
+                ordervec.push_back(o); //read data
+
+            cout << "Reading data:" << clock() - time << "ms\n";
+
             time = clock();
             shellsort(ordervec, [](order a, order b){
                 return a.arrival != b.arrival?a.arrival < b.arrival:a.oid < b.oid;
-            });
-            cout << "Reading data:" << clock() - time << "ms\n";
+            }); //sort
+            cout << "Sorting data:" << clock() - time << "ms\n";
+
             time = clock();
             cout << "OID  Arrival Duration    Timeout\n";
             ofstream out("sort" + name + ".txt", ios::trunc);
@@ -254,8 +261,7 @@ int main()
             }
 
             cout << "Writing data:" << clock() - time << "ms\n";
-            time = clock();
-            vecclear();
+            vecclear(); //clear all vector
         }
 
         if(k == 2)
@@ -270,18 +276,19 @@ int main()
                 cin >> name;
                 in.open("sort" + name + ".txt");
             }
-            getline(in, s);
+            getline(in, s); //skip first line
             order o;
             while(in >> o)
                 ordervec.push_back(o);
 
-            int  totalsize = ordervec.size();
+            int totalsize = ordervec.size();
+            totaldealed = 0;
             chef chef1("chef1");
             int  i = 0;
-            for(nowtime = 0 ; nowtime < 1000 ; nowtime++)
+            for(nowtime = 0 ; totaldealed < totalsize ; nowtime++)           //keep working until all order finished
             {
-                chef1.cook();
-                while(i < ordervec.size() && ordervec[i].arrival == nowtime)
+                chef1.cook();                                                //cook and reflash                                                //cook
+                while(i < ordervec.size() && ordervec[i].arrival == nowtime) //if has order to input
                 {
                     if(!chef1.cooking)
                     {
@@ -291,8 +298,9 @@ int main()
 
                     else if(chef1.size < 3)
                         chef1.push(i);
-                    else
+                    else //chef has no queue to store order
                     {
+                        totaldealed++;
                         ordervec[i].stat  = "abort";
                         ordervec[i].cid   = "0";
                         ordervec[i].abort = ordervec[i].arrival;
@@ -300,45 +308,42 @@ int main()
                     }
                     i++;
                 }
-
-                chef1.cook();
             }
 
-            #ifdef error
+            #ifdef error //debugger
             for(auto i:ordervec)
                 cout << i << '\n';
             #endif
-            string ans   = "";
+            string ans   = ""; //strint to store output
             int    delay = 0;
 
-            ans += "[Abort List]\n\tOID\tDelay\tAbort\n";
-            int ab = 0;
+            ans += "[Abort List]\n\tOID\tDelay\tAbort\n"; //title
+            int ab = 0;                                   //abort count
             for(auto x:cancelvec | ranges::views::filter([](order o){
-                return o.stat == "abort";
+                return o.stat == "abort";                 //only "abort" can pass
             }))
             {
                 ans   += "[" + to_string(++ab) + "]\t" + to_string(x.oid) + "\t" + to_string(x.delay) + "\t" + to_string(x.abort) + "\n";
                 delay += x.delay;
-            }
+            } //aborted order
 
 
             ans += "[Timeout List]\n\tOID\tDelay\tDeparture\n";
-            int timo = 0;
+            int timo = 0;                   //timeout count
             for(auto x:cancelvec | ranges::views::filter([](order o){
-                return o.stat == "timeout";
+                return o.stat == "timeout"; //only "timeout" can pass
             }))
             {
                 ans   += "[" + to_string(++timo) + "]\t" + to_string(x.oid) + "\t" + to_string(x.delay) + "\t" + to_string(x.departure) + "\n";
                 delay += x.delay;
-            }
+            } //timeout order
 
 
             ans += "[Total Delay]\n" + to_string(delay) + " min.\n";
             ans += "[Failure Perecentage]\n" + to_string((float)100 * (ab + timo) / totalsize).substr(0, to_string((float)100 * (ab + timo) / totalsize).find(".") + 3) + " %\n";
 
             cout << ans;
-            ofstream out("one" + name + ".txt", ios::trunc);
-            out << ans;
+            ofstream("one" + name + ".txt", ios::trunc) << ans;
             vecclear();
         }
 
@@ -359,17 +364,18 @@ int main()
             while(in >> o)
                 ordervec.push_back(o);
 
-            int  totalsize = ordervec.size();
+            int totalsize = ordervec.size();
+            totaldealed = 0;
             chef chef1("1");
             chef chef2("2");
             int  i = 0;
-            for(nowtime = 0 ; nowtime < 1000 ; nowtime++)
+            for(nowtime = 0 ; totaldealed < totalsize ; nowtime++)
             {
                 chef1.cook();
                 chef2.cook();
                 while(i < ordervec.size() && ordervec[i].arrival == nowtime)
                 {
-                    if(!chef1.cooking)
+                    if(!chef1.cooking) //not cooking get order first
                     {
                         chef1.push(i);
                         chef1.cook();
@@ -379,14 +385,15 @@ int main()
                         chef2.push(i);
                         chef2.cook();
                     }
-                    else if(chef1.size < chef2.size)
+                    else if(chef1.size < chef2.size) //than who has less order get new order
                         chef1.push(i);
                     else if(chef1.size > chef2.size)
                         chef2.push(i);
-                    else if(chef1.size == chef2.size && chef1.size < 3)
+                    else if(chef1.size == chef2.size && chef1.size < 3) //same chef1 get
                         chef1.push(i);
-                    else
+                    else //no one get ->"abort"
                     {
+                        totaldealed++;
                         ordervec[i].stat  = "abort";
                         ordervec[i].cid   = "0";
                         ordervec[i].abort = ordervec[i].arrival;
@@ -394,9 +401,6 @@ int main()
                     }
                     i++;
                 }
-
-                chef1.cook();
-                chef2.cook();
             }
 
 
@@ -435,8 +439,7 @@ int main()
 
             cout << ans;
 
-            ofstream out("two" + name + ".txt", ios::trunc);
-            out << ans;
+            ofstream("one" + name + ".txt", ios::trunc) << ans;
             vecclear();
         }
     }
