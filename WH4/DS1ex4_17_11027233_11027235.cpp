@@ -27,17 +27,17 @@ void shellsort(vector<v>&vec, T sortrule) //shell sort
 class order
 {
 public:
-    int oid;
+    int oid;   //order id??????????????????????????????????????????????//
     int arrival;
     int duration;
     int timeout;
-    int startcooking;
+    int startcooking;    //time of start cooking
     int abort     = 0;
     int delay     = 0;
-    int departure = 0;
+    int departure = 0;    //????????????????????????????????????
 
-    string stat = "";
-    string cid;
+    string stat = "";  //order status
+    string cid;     //cook id??????????????????????????????????????????????
 };
 
 
@@ -73,22 +73,22 @@ public:
     int ordqueue[3];  //queue
     int index    = 0; //queue front index
     int size     = 0; //queue size
-    bool cooking = 0; //thef state
+    bool cooking = 0; //chef state
     int ing;          //cooking index
     chef(string s)
     {
         cid = s;
     }
 
-    void push(int o)
+    void push(int o) //push to back of the queue
     {
         if(size > 2)
             cout << "ERROR!!!!!!!!!!!!";
         size++;
-        ordqueue[(index + size - 1) % 3] = o; //push to back
+        ordqueue[(index + size - 1) % 3] = o;
     }
 
-    void pop()
+    void pop()   //remove sth out of the queue
     {
         if(size < 1)
             cout << "ERROR!!!!!!!!!!!!";
@@ -103,7 +103,7 @@ public:
         return ordqueue[(index) % 3]; //return front int
     }
 
-    void cook()
+    void cook() //廚師的工作:從queue拿東西來做, 判斷是否完成逾時((過了下單時間還是可拿來做((本來就是arrival到才可以進queue
     {
         if(cooking)
             if(nowtime >= ordervec[ing].startcooking + ordervec[ing].duration)                  //cook finish
@@ -126,8 +126,8 @@ public:
                 cooking = 0;
             }
 
-        if(!cooking) //enable to recive new order
-            while(size && !cooking)
+        if(!cooking) //enable to recive new order, find sth to do from the queue
+            while(size && !cooking)  //queue isn't empty but the chef isn't cooking
             {
                 ing = top();
                 pop();
@@ -287,7 +287,7 @@ int main()
             int  i = 0;
             for(nowtime = 0 ; totaldealed < totalsize ; nowtime++)           //keep working until all order finished
             {
-                chef1.cook();                                                //cook and reflash                                                //cook
+                chef1.cook();                                             //cook and reflash                                                //cook
                 while(i < ordervec.size() && ordervec[i].arrival == nowtime) //if has order to input
                 {
                     if(!chef1.cooking)
@@ -310,7 +310,7 @@ int main()
                 }
             }
 
-            #ifdef error //debugger
+            #ifdef error //debugger?????????????????????????????????????????????????????????????
             for(auto i:ordervec)
                 cout << i << '\n';
             #endif
@@ -439,7 +439,7 @@ int main()
 
             cout << ans;
 
-            ofstream("one" + name + ".txt", ios::trunc) << ans;
+            ofstream("two" + name + ".txt", ios::trunc) << ans;
             vecclear();
         }
     }
