@@ -236,7 +236,7 @@ int main()
                 in.open("input" + name + ".txt"); //retry
             }
 
-            getline(in, s);
+            getline(in, s);                       //skip first line
             order o;
             int   time = clock();
             while(in >> o)
@@ -256,6 +256,7 @@ int main()
             out << "OID  Arrival Duration    Timeout\n";
             for(auto i:ordervec)
             {
+                //print and write the data into the file
                 cout << i.oid << '\t' << i.arrival << '\t' << i.duration << '\t' << i.timeout << '\n';
                 out << i.oid << '\t' << i.arrival << '\t' << i.duration << '\t' << i.timeout << '\n';
             }
@@ -269,8 +270,8 @@ int main()
             string name, s;
             cout << "input:\n";
             cin >> name;
-            ifstream in("sort" + name + ".txt");
-            while(!in)
+            ifstream in("sort" + name + ".txt"); //open file stream
+            while(!in)                           //open error
             {
                 cout << "read file error, input:";
                 cin >> name;
@@ -279,13 +280,13 @@ int main()
             getline(in, s); //skip first line
             order o;
             while(in >> o)
-                ordervec.push_back(o);
+                ordervec.push_back(o);   //read data
 
             int totalsize = ordervec.size();
             totaldealed = 0;
             chef chef1("chef1");
             int  i = 0;
-            for(nowtime = 0 ; totaldealed < totalsize ; nowtime++)           //keep working until all order finished
+            for(nowtime = 0 ; totaldealed < totalsize ; nowtime++)        //keep working until all order finished
             {
                 chef1.cook();                                             //cook and reflash                                                //cook
                 while(i < ordervec.size() && ordervec[i].arrival == nowtime) //if has order to input
@@ -328,7 +329,7 @@ int main()
             } //aborted order
 
 
-            ans += "[Timeout List]\n\tOID\tDelay\tDeparture\n";
+            ans += "[Timeout List]\n\tOID\tDelay\tDeparture\n";//title
             int timo = 0;                   //timeout count
             for(auto x:cancelvec | ranges::views::filter([](order o){
                 return o.stat == "timeout"; //only "timeout" can pass
@@ -342,9 +343,10 @@ int main()
             ans += "[Total Delay]\n" + to_string(delay) + " min.\n";
             ans += "[Failure Perecentage]\n" + to_string((float)100 * (ab + timo) / totalsize).substr(0, to_string((float)100 * (ab + timo) / totalsize).find(".") + 3) + " %\n";
 
+            //print and write the data into the file
             cout << ans;
             ofstream("one" + name + ".txt", ios::trunc) << ans;
-            vecclear();
+            vecclear();  //clear all vector
         }
 
         if(k == 3)
@@ -352,16 +354,16 @@ int main()
             string name, s;
             cout << "input:\n";
             cin >> name;
-            ifstream in("sort" + name + ".txt");
-            while(!in)
+            ifstream in("sort" + name + ".txt");     //open file stream
+            while(!in)                               //open error
             {
                 cout << "read file error, input:";
                 cin >> name;
                 in.open("sort" + name + ".txt");
             }
-            getline(in, s);
+            getline(in, s);                          //skip first line
             order o;
-            while(in >> o)
+            while(in >> o)                           //read data
                 ordervec.push_back(o);
 
             int totalsize = ordervec.size();
@@ -369,18 +371,18 @@ int main()
             chef chef1("1");
             chef chef2("2");
             int  i = 0;
-            for(nowtime = 0 ; totaldealed < totalsize ; nowtime++)
+            for(nowtime = 0 ; totaldealed < totalsize ; nowtime++)  //keep working until all order finished
             {
-                chef1.cook();
+                chef1.cook();   //cook and reflash
                 chef2.cook();
-                while(i < ordervec.size() && ordervec[i].arrival == nowtime)
+                while(i < ordervec.size() && ordervec[i].arrival == nowtime)  //if has order to input
                 {
                     if(!chef1.cooking) //not cooking get order first
                     {
                         chef1.push(i);
                         chef1.cook();
                     }
-                    else if(!chef2.cooking)
+                    else if(!chef2.cooking)  //chef1 first and then chef2
                     {
                         chef2.push(i);
                         chef2.cook();
@@ -409,38 +411,38 @@ int main()
                 cout << i << '\n';
             #endif
 
-            string ans   = "";
+            string ans   = "";  //strint to store output
             int    delay = 0;
 
-            ans += "[Abort List]\n\tOID\tCID\tDelay\tAbort\n";
-            int ab = 0;
+            ans += "[Abort List]\n\tOID\tCID\tDelay\tAbort\n";  //title
+            int ab = 0;                                         //abort count
             for(auto x:cancelvec | ranges::views::filter([](order o){
-                return o.stat == "abort";
+                return o.stat == "abort";  //only "abort" can pass
             }))
             {
                 ans   += "[" + to_string(++ab) + "]\t" + to_string(x.oid) + "\t" + x.cid + "\t" + to_string(x.delay) + "\t" + to_string(x.abort) + "\n";
                 delay += x.delay;
-            }
+            } //Abort order
 
 
-            ans += "[Timeout List]\n\tOID\tCID\tDelay\tDeparture\n";
-            int timo = 0;
+            ans += "[Timeout List]\n\tOID\tCID\tDelay\tDeparture\n";  //title
+            int timo = 0;                                             //timeout count
             for(auto x:cancelvec | ranges::views::filter([](order o){
-                return o.stat == "timeout";
+                return o.stat == "timeout";    //only "timeout" can pass
             }))
             {
                 ans   += "[" + to_string(++timo) + "]\t" + to_string(x.oid) + "\t" + x.cid + "\t" + to_string(x.delay) + "\t" + to_string(x.departure) + "\n";
                 delay += x.delay;
-            }
+            }  //timeout order
 
 
             ans += "[Total Delay]\n" + to_string(delay) + " min.\n";
             ans += "[Failure Perecentage]\n" + to_string((float)100 * (ab + timo) / totalsize).substr(0, to_string((float)100 * (ab + timo) / totalsize).find(".") + 3) + " %\n";
 
+            //print and write the data into the file
             cout << ans;
-
             ofstream("two" + name + ".txt", ios::trunc) << ans;
-            vecclear();
+            vecclear(); //clear all vector
         }
     }
 }
