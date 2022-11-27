@@ -34,10 +34,10 @@ public:
     int startcooking;    //time of start cooking
     int abort     = 0;
     int delay     = 0;
-    int departure = 0;    //????????????????????????????????????
+    int departure = 0; //????????????????????????????????????
 
     string stat = "";  //order status
-    string cid;     //cook id??????????????????????????????????????????????
+    string cid;        //cook id??????????????????????????????????????????????
 };
 
 
@@ -84,8 +84,7 @@ public:
     {
         if(size > 2)
             cout << "ERROR!!!!!!!!!!!!";
-        size++;
-        ordqueue[(index + size - 1) % 3] = o;
+        ordqueue[(index + size++) % 3] = o;
     }
 
     void pop()   //remove sth out of the queue
@@ -126,8 +125,8 @@ public:
                 cooking = 0;
             }
 
-        if(!cooking) //enable to recive new order, find sth to do from the queue
-            while(size && !cooking)  //queue isn't empty but the chef isn't cooking
+        if(!cooking)                //enable to recive new order, find sth to do from the queue
+            while(size && !cooking) //queue isn't empty but the chef isn't cooking
             {
                 ing = top();
                 pop();
@@ -286,9 +285,9 @@ int main()
             totaldealed = 0;
             chef chef1("chef1");
             int  i = 0;
-            for(nowtime = 0 ; totaldealed < totalsize ; nowtime++)        //keep working until all order finished
+            for(nowtime = 0 ; totaldealed < totalsize ; nowtime++)           //keep working until all order finished
             {
-                chef1.cook();                                             //cook and reflash                                                //cook
+                chef1.cook();                                                //cook and reflash                                                //cook
                 while(i < ordervec.size() && ordervec[i].arrival == nowtime) //if has order to input
                 {
                     if(!chef1.cooking)
@@ -329,10 +328,10 @@ int main()
             } //aborted order
 
 
-            ans += "[Timeout List]\n\tOID\tDelay\tDeparture\n";//title
-            int timo = 0;                   //timeout count
+            ans += "[Timeout List]\n\tOID\tDelay\tDeparture\n"; //title
+            int timo = 0;                                       //timeout count
             for(auto x:cancelvec | ranges::views::filter([](order o){
-                return o.stat == "timeout"; //only "timeout" can pass
+                return o.stat == "timeout";                     //only "timeout" can pass
             }))
             {
                 ans   += "[" + to_string(++timo) + "]\t" + to_string(x.oid) + "\t" + to_string(x.delay) + "\t" + to_string(x.departure) + "\n";
@@ -371,13 +370,13 @@ int main()
             chef chef1("1");
             chef chef2("2");
             int  i = 0;
-            for(nowtime = 0 ; totaldealed < totalsize ; nowtime++)  //keep working until all order finished
+            for(nowtime = 0 ; totaldealed < totalsize ; nowtime++)           //keep working until all order finished
             {
-                chef1.cook();   //cook and reflash
+                chef1.cook();                                                //cook and reflash
                 chef2.cook();
-                while(i < ordervec.size() && ordervec[i].arrival == nowtime)  //if has order to input
+                while(i < ordervec.size() && ordervec[i].arrival == nowtime) //if has order to input
                 {
-                    if(!chef1.cooking) //not cooking get order first
+                    if(!chef1.cooking)                                       //not cooking get order first
                     {
                         chef1.push(i);
                         chef1.cook();
@@ -414,10 +413,10 @@ int main()
             string ans   = "";  //strint to store output
             int    delay = 0;
 
-            ans += "[Abort List]\n\tOID\tCID\tDelay\tAbort\n";  //title
-            int ab = 0;                                         //abort count
+            ans += "[Abort List]\n\tOID\tCID\tDelay\tAbort\n"; //title
+            int ab = 0;                                        //abort count
             for(auto x:cancelvec | ranges::views::filter([](order o){
-                return o.stat == "abort";  //only "abort" can pass
+                return o.stat == "abort";                      //only "abort" can pass
             }))
             {
                 ans   += "[" + to_string(++ab) + "]\t" + to_string(x.oid) + "\t" + x.cid + "\t" + to_string(x.delay) + "\t" + to_string(x.abort) + "\n";
@@ -425,10 +424,10 @@ int main()
             } //Abort order
 
 
-            ans += "[Timeout List]\n\tOID\tCID\tDelay\tDeparture\n";  //title
-            int timo = 0;                                             //timeout count
+            ans += "[Timeout List]\n\tOID\tCID\tDelay\tDeparture\n"; //title
+            int timo = 0;                                            //timeout count
             for(auto x:cancelvec | ranges::views::filter([](order o){
-                return o.stat == "timeout";    //only "timeout" can pass
+                return o.stat == "timeout";                          //only "timeout" can pass
             }))
             {
                 ans   += "[" + to_string(++timo) + "]\t" + to_string(x.oid) + "\t" + x.cid + "\t" + to_string(x.delay) + "\t" + to_string(x.departure) + "\n";
