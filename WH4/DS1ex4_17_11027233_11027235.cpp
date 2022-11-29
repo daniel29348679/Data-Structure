@@ -79,6 +79,7 @@ public:
     int size     = 0; //queue size
     bool cooking = 0; //chef state
     int ing;          //cooking index
+    int stopuntil = -1;
     chef()
     {
         return;
@@ -114,11 +115,22 @@ public:
     void cook() //廚師的工作:從queue拿東西來做, 判斷是否完成逾時((過了下單時間還是可拿來做((本來就是arrival到才可以進queue
     {
         if(cooking)
-            if(nowtime >= ordervec[ing].startcooking + ordervec[ing].duration)                  //cook finish
+        {
+            if(1 && ordervec[ing].startcooking < ordervec[ing].timeout && ordervec[ing].timeout < ordervec[ing].startcooking + ordervec[ing].duration)
+            {
+                totaldealed++;
+                ordervec[ing].stat      = "timeout";
+                ordervec[ing].cid       = cid;
+                ordervec[ing].delay     = ordervec[ing].startcooking - ordervec[ing].arrival;
+                ordervec[ing].departure = ordervec[ing].arrival + ordervec[ing].duration + ordervec[ing].delay;
+                cancelvec.push_back(ordervec[ing]);
+                cooking   = 0;
+                stopuntil = ordervec[ing].startcooking + ordervec[ing].duration;
+            }
+            else if(nowtime >= ordervec[ing].startcooking + ordervec[ing].duration)             //cook finish
             {
                 if(ordervec[ing].startcooking + ordervec[ing].duration > ordervec[ing].timeout) //already timeout
                 {
-                    //cout << "!!timeout" << cid << " time:" << nowtime << endl;
                     totaldealed++;
                     ordervec[ing].stat      = "timeout";
                     ordervec[ing].cid       = cid;
@@ -134,6 +146,10 @@ public:
                 }
                 cooking = 0;
             }
+        }
+        if(nowtime < stopuntil)
+            return;
+
         if(!cooking)                //enable to recive new order, find sth to do from the queue
             while(size && !cooking) //queue isn't empty but the chef isn't cooking
             {
