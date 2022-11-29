@@ -1,5 +1,7 @@
 //Dev-C++ -std=c++20
 //曾品元11027233/江庭瑄11027235
+//you can download compiler from
+//https://github.com/niXman/mingw-builds-binaries/releases/download/12.2.0-rt_v10-rev1/x86_64-12.2.0-release-posix-seh-rt_v10-rev1.7z
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -35,6 +37,7 @@ public:
     int abort     = 0;
     int delay     = 0;
     int departure = 0; //????????????????????????????????????
+    int finishout = -1;
 
     string stat = "";  //order status
     string cid;        //cook id??????????????????????????????????????????????
@@ -51,7 +54,8 @@ ostream &operator<<(ostream&s, order&i) //for debugger
       << i.cid << '\t'
       << i.abort << '\t'
       << i.delay << '\t'
-      << i.departure;
+      << i.departure << '\t'
+      << i.finishout;
     return s;
 }
 
@@ -75,6 +79,11 @@ public:
     int size     = 0; //queue size
     bool cooking = 0; //chef state
     int ing;          //cooking index
+    chef()
+    {
+        return;
+    }
+
     chef(string s)
     {
         cid = s;
@@ -109,6 +118,7 @@ public:
             {
                 if(ordervec[ing].startcooking + ordervec[ing].duration > ordervec[ing].timeout) //already timeout
                 {
+                    //cout << "!!timeout" << cid << " time:" << nowtime << endl;
                     totaldealed++;
                     ordervec[ing].stat      = "timeout";
                     ordervec[ing].cid       = cid;
@@ -124,7 +134,6 @@ public:
                 }
                 cooking = 0;
             }
-
         if(!cooking)                //enable to recive new order, find sth to do from the queue
             while(size && !cooking) //queue isn't empty but the chef isn't cooking
             {
@@ -203,8 +212,9 @@ int main()
         cout << "* 1. sort                       *" << "\n";
         cout << "* 2. one chef                   *" << "\n";
         cout << "* 3. two chef                   *" << "\n";
+        cout << "* 4. N chef                     *" << "\n";
         cout << "*********************************" << "\n";
-        cout << "Input a choice(0, 1, 2, 3): ";
+        cout << "Input a choice(0, 1, 2, 3, 4): ";
         cin >> k;
         if(cin.fail())
         {
@@ -216,7 +226,7 @@ int main()
             continue;     //skip this loop
         }
 
-        if(k != 0 && k != 1 && k != 2 && k != 3)
+        if(k != 0 && k != 1 && k != 2 && k != 3 && k != 4)
         {
             cout << "\nCommand does not exist!\n";
             continue; //skip this loop
@@ -423,7 +433,6 @@ int main()
                 delay += x.delay;
             } //Abort order
 
-
             ans += "[Timeout List]\n\tOID\tCID\tDelay\tDeparture\n"; //title
             int timo = 0;                                            //timeout count
             for(auto x:cancelvec | ranges::views::filter([](order o){
@@ -441,6 +450,123 @@ int main()
             //print and write the data into the file
             cout << ans;
             ofstream("two" + name + ".txt", ios::trunc) << ans;
+            vecclear(); //clear all vector
+        }
+
+
+        if(k == 4)
+        {
+            string name, s;
+            cout << "input:\n";
+            cin >> name;
+            ifstream in("sort" + name + ".txt");     //open file stream
+            while(!in)                               //open error
+            {
+                cout << "read file error, input:";
+                cin >> name;
+                in.open("sort" + name + ".txt");
+            }
+            getline(in, s);                          //skip first line
+            order o;
+            while(in >> o)                           //read data
+                ordervec.push_back(o);
+
+            int totalsize = ordervec.size();
+            totaldealed = 0;
+
+            cout << "number of chef:";
+            int n;
+            cin >> n;
+            chef chefs[n];
+            for(int i = 0; i < n; i++)
+                chefs[i].cid = to_string(i + 1);
+            int i = 0;
+            for(nowtime = 0 ; totaldealed < totalsize ; nowtime++)           //keep working until all order finished
+            {
+                for(int j = 0; j < n; j++)                                   //cook and reflash
+                    chefs[j].cook();
+                while(i < ordervec.size() && ordervec[i].arrival == nowtime) //if has order to input
+                {
+                    bool success = 0;
+                    for(int j = 0; j < n && !success; j++)
+                        if(!chefs[j].cooking)
+                        {
+                            chefs[j].push(i);
+                            chefs[j].cook();
+                            success = 1;
+                        }
+
+                    for(int j = 0; j < n && !success; j++)
+                        if(chefs[j].size == 0)
+                        {
+                            chefs[j].push(i);
+                            chefs[j].cook();
+                            success = 1;
+                        }
+
+                    for(int j = 0; j < n && !success; j++)
+                        if(chefs[j].size == 1)
+                        {
+                            chefs[j].push(i);
+                            chefs[j].cook();
+                            success = 1;
+                        }
+                    for(int j = 0; j < n && !success; j++)
+                        if(chefs[j].size == 2)
+                        {
+                            chefs[j].push(i);
+                            chefs[j].cook();
+                            success = 1;
+                        }
+                    if(!success) //no one get ->"abort"
+                    {
+                        totaldealed++;
+                        ordervec[i].stat  = "abort";
+                        ordervec[i].cid   = "0";
+                        ordervec[i].abort = ordervec[i].arrival;
+                        cancelvec.push_back(ordervec[i]);
+                    }
+                    i++;
+                }
+            }
+
+
+            #ifdef error
+            for(auto i:ordervec)
+                cout << i << '\n';
+            #endif
+
+            string ans   = "";  //strint to store output
+            int    delay = 0;
+
+            ans += "[Abort List]\n\tOID\tCID\tDelay\tAbort\n"; //title
+            int ab = 0;                                        //abort count
+            for(auto x:cancelvec | ranges::views::filter([](order o){
+                return o.stat == "abort";                      //only "abort" can pass
+            }))
+            {
+                ans   += "[" + to_string(++ab) + "]\t" + to_string(x.oid) + "\t" + x.cid + "\t" + to_string(x.delay) + "\t" + to_string(x.abort) + "\n";
+                delay += x.delay;
+            } //Abort order
+
+
+            ans += "[Timeout List]\n\tOID\tCID\tDelay\tDeparture\n"; //title
+            int timo = 0;                                            //timeout count
+            for(auto x:cancelvec | ranges::views::filter([](order o){
+                return o.stat == "timeout";                          //only "timeout" can pass
+            }))
+            {
+                ans   += "[" + to_string(++timo) + "]\t" + to_string(x.oid) + "\t" + x.cid + "\t" + to_string(x.delay) + "\t" + to_string(x.departure) + "\n";
+                delay += x.delay;
+            }  //timeout order
+
+
+            ans += "[Total Delay]\n" + to_string(delay) + " min.\n";
+            ans += "[Failure Perecentage]\n" + to_string((float)100 * (ab + timo) / totalsize).substr(0, to_string((float)100 * (ab + timo) / totalsize).find(".") + 3) + " %\n";
+
+            //print and write the data into the file
+            cout << ans;
+            ofstream("more" + name + ".txt", ios::trunc) << ans;
             vecclear(); //clear all vector
         }
     }
