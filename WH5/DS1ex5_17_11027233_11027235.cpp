@@ -2,87 +2,27 @@
 //曾品元11027233/江庭瑄11027235
 
 #include <bits/stdc++.h>
+#include <windows.h>
 using namespace std;
 
+#define MAXthread    3
+mutex mu, mus[MAXthread], mustar[MAXthread];
 
-template<typename v, typename T>
-void choosesort(vector<v>&vec, T sortrule) //shell sort
+
+LARGE_INTEGER nFreq;
+LARGE_INTEGER nBeginTime;
+LARGE_INTEGER nEndTime;
+
+void startTime()
 {
-    for(int i = 0; i < vec.size(); i++)
-    {
-        int max = i;
-        for(int j = i + 1; j < vec.size(); j++)
-            if(!sortrule(vec[max], vec[j]))
-                max = j;
-        swap(vec[max], vec[i]);
-    }
+    QueryPerformanceFrequency(&nFreq);
+    QueryPerformanceCounter(&nBeginTime);
 }
 
-template<typename v, typename T>
-void bubblesort(vector<v>&vec, T sortrule) //shell sort
+double getTime()
 {
-    for(int i = vec.size() - 1; i > 0; i--)
-        for(int j = 0; j < i; j++)
-            if(!sortrule(vec[j], vec[j + 1]))
-                swap(vec[j], vec[j + 1]);
-}
-
-template<typename v, typename T>
-void mergesort(vector<v>&vec, T sortrule)
-{
-    for(int r = 1; r < vec.size(); r *= 2)
-        for(int i = 0 ; i < vec.size() ;)
-        {
-            int       x = i, y = i + r;
-            vector<v> tempvec;
-            while(x < i + r && y < i + r * 2 && y < vec.size())
-            {
-                if(sortrule(vec[x], vec[y]))
-                    tempvec.push_back(vec[x++]);
-                else
-                    tempvec.push_back(vec[y++]);
-            }
-
-            while(x < i + r)
-                tempvec.push_back(vec[x++]);
-            while(y < i + r * 2 && y < vec.size())
-                tempvec.push_back(vec[y++]);
-
-            for(auto t:tempvec)
-                vec[i++] = t;
-        }
-}
-
-template<typename v, typename T>
-void quicksort(vector<v>&vec, T sortrule)
-{
-    function<void(int, int)> sortpart = [&](int f, int e) -> void
-                                        {
-                                            if(e == f + 1)
-                                                return;
-
-                                            int i = f + 1, j = e - 1;
-
-                                            while(i <= j)
-                                            {
-                                                while(sortrule(vec[i], vec[f]) && i < e && i < j)
-                                                    i++;
-                                                while(sortrule(vec[f], vec[j]) && f < j && i < j)
-                                                    j--;
-                                                if(i == j)
-                                                {
-                                                    if(!sortrule(vec[f], vec[i]))
-                                                        swap(vec[f], vec[i]);
-                                                    sortpart(f, i);
-                                                    sortpart(i, e);
-                                                    break;
-                                                }
-                                                else
-                                                    swap(vec[i], vec[j]);
-                                            }
-                                        };
-
-    sortpart(0, vec.size());
+    QueryPerformanceCounter(&nEndTime);
+    return (double)(nEndTime.QuadPart - nBeginTime.QuadPart) / (double)nFreq.QuadPart;
 }
 
 class department
@@ -101,9 +41,109 @@ public:
     friend ostream &operator<<(ostream&s, department d);
 };
 
-bool compare(department a, department b)
+inline bool compare(department& a, department& b)
 {
     return a.numofgraduate < b.numofgraduate;
+}
+
+template<typename v, typename T>
+void bubblesort(vector<v>&vec, T sortrule) //bubble sort 602ms
+{
+    int indexvec[vec.size()];
+
+    for(int i = 0; i < vec.size(); i++)
+        indexvec[i] = i;
+
+    for(int i = vec.size() - 1; i > 0; i--)
+        for(int j = 0; j < i; j++)
+            if(!sortrule(vec[indexvec[j]], vec[indexvec[j + 1]]))
+                swap(indexvec[j], indexvec[j + 1]);
+
+    vector<v> copyvec;
+
+    copyvec.assign(vec.begin(), vec.end());
+    vec.clear();
+    for(int i = 0; i < copyvec.size(); i++)
+        vec.push_back(copyvec[indexvec[i]]);
+}
+
+template<typename v, typename T>
+void mergesort(vector<v>&vec, T sortrule) //mergesort 1524ms
+{
+    vector<int> tempvec;
+    vector<int> indexvec;
+
+    for(int i = 0; i < vec.size(); i++)
+        indexvec.push_back(i);
+
+    for(int r = 1; r < vec.size(); r *= 2)
+    {
+        tempvec.clear();
+        tempvec.assign(indexvec.begin(), indexvec.end());
+        indexvec.clear();
+        for(int i = 0 ; i < tempvec.size() ; i += r * 2)
+        {
+            int x = i, y = i + r;
+            while(x < i + r && y < i + r * 2 && y < tempvec.size() && x < tempvec.size())
+            {
+                if(sortrule(vec[tempvec[x]], vec[tempvec[y]]))
+                    indexvec.push_back(tempvec[x++]);
+                else
+                    indexvec.push_back(tempvec[y++]);
+            }
+
+            while(x < i + r && x < tempvec.size())
+                indexvec.push_back(tempvec[x++]);
+            while(y < i + r * 2 && y < tempvec.size())
+                indexvec.push_back(tempvec[y++]);
+        }
+    }
+
+
+    vector<v> copyvec;
+
+    copyvec.assign(vec.begin(), vec.end());
+    vec.clear();
+    for(int i = 0; i < indexvec.size(); i++)
+        vec.push_back(copyvec[indexvec[i]]);
+}
+
+vector<int> indexvec;
+template<typename v, typename T>
+void quicksort(vector<v>&vec, T sortrule, int l = 0, int r = -2)    //quick sort 4ms
+{
+    if(r == -2)
+    {
+        for(int i = 0; i < vec.size(); i++)
+            indexvec.push_back(i);
+        quicksort(vec, sortrule, l, vec.size());
+        vector<v> copyvec;
+
+        copyvec.assign(vec.begin(), vec.end());
+        vec.clear();
+        for(int i = 0; i < indexvec.size(); i++)
+            vec.push_back(copyvec[indexvec[i]]);
+        indexvec.clear();
+        return;
+    }
+
+
+    if(l >= r)
+        return;
+
+    int i = l, j = r - 1;
+    while(i != j)
+    {
+        while(sortrule(vec[indexvec[l]], vec[indexvec[j]]) && i < j)
+            j--;
+        while(!(sortrule(vec[indexvec[l]], vec[indexvec[i]])) && i < j)
+            i++;
+        if(i < j)
+            swap(indexvec[i], indexvec[j]);
+    }
+    swap(indexvec[i], indexvec[l]);
+    quicksort(vec, sortrule, l, i);
+    quicksort(vec, sortrule, i + 1, r);
 }
 
 ifstream &operator>>(ifstream&s, department&d) //department input file stream Overload, return what it read
@@ -187,7 +227,7 @@ ofstream &operator<<(ofstream&s, department d) //department output file stream O
     return s;
 }
 
-int powten(int k)
+inline int powten(int k)
 {
     int i = 1;
 
@@ -195,6 +235,138 @@ int powten(int k)
         i *= 10;
     return i;
 }
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+vector<int>        indexvecc;
+int                minn;
+vector<department> departmentvecc;
+int                f[MAXthread], e[MAXthread];
+bool               star[MAXthread];
+bool               clos = 0;
+
+
+int getminn(int x = -1, bool mandatory = 0)
+{
+    lock_guard<std::mutex> lg(mu);
+
+    if(x == -1)
+        return minn;
+
+    if(!compare(departmentvecc[indexvecc[minn]], departmentvecc[indexvecc[x]]))
+        minn = x;
+    if(mandatory)
+        minn = x;
+    return 0;
+}
+
+int getf(int k, int x = -1)
+{
+    lock_guard<std::mutex> lg(mus[k]);
+
+    if(x == -1)
+        return f[k];
+
+    f[k] = x;
+    return 0;
+}
+
+int gete(int k, int x = -1)
+{
+    lock_guard<std::mutex> lg(mus[k]);
+
+    if(x == -1)
+        return e[k];
+
+    e[k] = x;
+    return 0;
+}
+
+bool getstar(int k)
+{
+    lock_guard<std::mutex> lg(mustar[k]);
+
+    return star[k];
+}
+
+void changestar(int k, bool x)
+{
+    lock_guard<std::mutex> lg(mustar[k]);
+
+    star[k] = x;
+}
+
+void partsort(int k)  //selection sort 32ms
+{
+    while(1)
+    {
+        if(getstar(k))
+        {
+            //cout << "run!" << f[k] << " " << e[k] << endl;
+            int l = getf(k), r = gete(k);
+            int min = l;
+            for(int j = l + 1 ; j < r; j++)
+                if(!compare(departmentvecc[indexvecc[minn]], departmentvecc[indexvecc[j]]))
+                {
+                    min = j;
+
+                    //cout << "minn=" << minn << endl;
+                }
+            getminn(min);
+            changestar(k, 0);
+        }
+        if(clos)
+            return;
+    }
+}
+
+void selectionsort() //selection sort 32ms
+{
+    for(int i = 0; i < departmentvecc.size(); i++)
+        indexvecc.push_back(i);
+    thread threads[MAXthread];
+    clos = 0;
+    for(int j = 0 ; j < MAXthread; j++)
+    {
+        changestar(j, 0);
+        threads[j] = thread(partsort, j);
+    }
+    startTime();
+
+    for(int i = 0; i + 1 < departmentvecc.size(); i++)
+    {
+        getminn(i, 1);
+        for(int j = 0 ; j < MAXthread; j++)
+        {
+            getf(j, i + (departmentvecc.size() - i) * j / MAXthread);
+            gete(j, i + (departmentvecc.size() - i) * (j + 1) / MAXthread);
+            changestar(j, 1);
+        }
+        while(1)
+        {
+            bool b = 1;
+            for(int j = 0 ; j < MAXthread; j++)
+                if(getstar(j) == 1)
+                    b = 0;
+            if(b)
+                break;
+        }
+        swap(indexvecc[getminn()], indexvecc[i]);
+    }
+    clos = 1;
+    for(int j = 0 ; j < MAXthread; j++)
+        threads[j].join();
+    vector<department> copyvec;
+
+    copyvec.assign(departmentvecc.begin(), departmentvecc.end());
+    departmentvecc.clear();
+    for(int i = 0; i < copyvec.size(); i++)
+        departmentvecc.push_back(copyvec[indexvecc[i]]);
+    indexvecc.clear();
+}
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 class sheet
 {
@@ -254,14 +426,36 @@ public:
         input.close();
     }
 
+    void reread()
+    {
+        ifstream input("input" + inputlocate + ".txt");;
+        int      skiplines;        // lines to skip in file's begin
+        string   str;
+
+        for(int i = 0; i < 3; i++) //input lines to skip useless information
+            getline(input, str);
+        departmentvec.clear();
+        // anounce a new vector
+        department d;
+
+
+        while(input >> d)   //while input available, then input department
+            departmentvec.push_back(d);
+        input.close();
+    }
+
     void print()  // print departmentvec
     {
+        return;
+
         for(auto i:departmentvec)
             cout << i << '\n';
     }
 
     void writefile(string sorttype) //output
     {
+        return;
+
         ofstream output(sorttype + inputlocate + ".txt", ios::trunc);
 
 
@@ -274,67 +468,90 @@ public:
         output.close();            //close file
     }
 
-    void choosesortt()
+    void selectionsortt()
     {
-        int t = clock();
+        reread();
+        departmentvecc.assign(departmentvec.begin(), departmentvec.end());
+        startTime();
 
-        choosesort(departmentvec, compare);
-        cout << "choose sort:" << clock() - t << "ms\n";
-        writefile("choosesort");
+        selectionsort();
+        departmentvec.clear();
+        departmentvec.assign(departmentvecc.begin(), departmentvecc.end());
+        departmentvecc.clear();
+        cout << "selection sort:" << getTime() * 1000 << "ms\n";
+        writefile("selectionsort");
     }
 
     void bubblesortt()
     {
-        int t = clock();
+        reread();
+        startTime();
 
         bubblesort(departmentvec, compare);
-        cout << "bubble sort:" << clock() - t << "ms\n";
+        cout << "bubble sort:" << getTime() * 1000 << "ms\n";
         writefile("bubblesort");
     }
 
     void mergesortt()
     {
-        int t = clock();
+        reread();
+        startTime();
 
         mergesort(departmentvec, compare);
-        cout << "merge sort:" << clock() - t << "ms\n";
+        cout << "merge sort:" << getTime() * 1000 << "ms\n";
         writefile("mergesort");
     }
 
     void quicksortt()
     {
-        int t = clock();
+        reread();
+        startTime();
 
         quicksort(departmentvec, compare);
-        cout << "quick sort:" << clock() - t << "ms\n";
+        cout << "quick sort:" << getTime() * 1000 << "ms\n";
         writefile("quicksort");
     }
 
-    void radixsortt()
+    void radixsortt() //1ms
     {
-        int t = clock();
-        queue<department> que[10];
+        reread();
+        vector<int> indexvec;
+
+        for(int i = 0; i < departmentvec.size(); i++)
+            indexvec.push_back(i);
+
+        startTime();
+        queue<int> que[10];
 
         for(int i = 0 ; i < 10; i++)
         {
             for(int j = 0 ; j < departmentvec.size(); j++)
-                que[(departmentvec[j].numofgraduate / powten(i) % 10)].push(departmentvec[j]);
-            departmentvec.clear();
+                que[(departmentvec[indexvec[j]].numofgraduate / powten(i) % 10)].push(indexvec[j]);
+            indexvec.clear();
             for(int j = 0; j < 10; j++)
                 while(que[j].size())
                 {
-                    departmentvec.push_back(que[j].front());
+                    indexvec.push_back(que[j].front());
                     que[j].pop();
                 }
         }
+        vector<department> copyvec;
 
-        cout << "radix sort:" << clock() - t << "ms\n";
+        copyvec.assign(departmentvec.begin(), departmentvec.end());
+        departmentvec.clear();
+        for(int i = 0; i < indexvec.size(); i++)
+            departmentvec.push_back(copyvec[indexvec[i]]);
+
+        cout << "radix sort:" << getTime() * 1000 << "ms\n";
         writefile("radixsort");
     }
 };
 
+
 int main()
 {
+    //ios_base::sync_with_stdio(false);
+    //cin.tie(0);
     int k = 100;
 
 
@@ -369,7 +586,8 @@ int main()
             cin >> locate;
 
             sheet sh(locate);  //input file locate
-            sh.choosesortt();
+
+            sh.selectionsortt();
             sh.bubblesortt();
             sh.mergesortt();
             sh.quicksortt();

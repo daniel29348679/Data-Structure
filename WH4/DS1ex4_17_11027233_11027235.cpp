@@ -116,7 +116,7 @@ public:
     {
         if(cooking)
         {
-            if(1 && ordervec[ing].startcooking < ordervec[ing].timeout && ordervec[ing].timeout < ordervec[ing].startcooking + ordervec[ing].duration)
+            if(ordervec[ing].startcooking < ordervec[ing].timeout && ordervec[ing].timeout < ordervec[ing].startcooking + ordervec[ing].duration)
             {
                 totaldealed++;
                 ordervec[ing].stat      = "timeout";
