@@ -6,20 +6,19 @@
 using namespace std;
 
 #define MAXthread    3
-mutex mu, mus[MAXthread], mustar[MAXthread];
 
 
 LARGE_INTEGER nFreq;
 LARGE_INTEGER nBeginTime;
 LARGE_INTEGER nEndTime;
 
-void startTime()
+void startTime() //start timing
 {
     QueryPerformanceFrequency(&nFreq);
     QueryPerformanceCounter(&nBeginTime);
 }
 
-double getTime()
+double getTime() //get timing
 {
     QueryPerformanceCounter(&nEndTime);
     return (double)(nEndTime.QuadPart - nBeginTime.QuadPart) / (double)nFreq.QuadPart;
@@ -41,11 +40,15 @@ public:
     friend ostream &operator<<(ostream&s, department d);
 };
 
-inline bool compare(department& a, department& b)
+inline bool compare(department&a, department&b) //compare rule
 {
     return a.numofgraduate < b.numofgraduate;
 }
 
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//in my algorithm, I use indexvec like a kind of iterator.
+//we usually swap the whole data, which cause lots of data transfer
+//indexvec means vec at first, so that I only have to copy the vec once after sort
 template<typename v, typename T>
 void bubblesort(vector<v>&vec, T sortrule) //bubble sort 602ms
 {
@@ -59,6 +62,7 @@ void bubblesort(vector<v>&vec, T sortrule) //bubble sort 602ms
             if(!sortrule(vec[indexvec[j]], vec[indexvec[j + 1]]))
                 swap(indexvec[j], indexvec[j + 1]);
 
+//reduction data
     vector<v> copyvec;
 
     copyvec.assign(vec.begin(), vec.end());
@@ -79,12 +83,12 @@ void mergesort(vector<v>&vec, T sortrule) //mergesort 1524ms
     for(int r = 1; r < vec.size(); r *= 2)
     {
         tempvec.clear();
-        tempvec.assign(indexvec.begin(), indexvec.end());
-        indexvec.clear();
+        tempvec.assign(indexvec.begin(), indexvec.end()); //copy indexvec to tempvec
+        indexvec.clear();                                 //clear indexvec
         for(int i = 0 ; i < tempvec.size() ; i += r * 2)
         {
             int x = i, y = i + r;
-            while(x < i + r && y < i + r * 2 && y < tempvec.size() && x < tempvec.size())
+            while(x < i + r && y < i + r * 2 && y < tempvec.size() && x < tempvec.size()) //push smaller one to indexvec
             {
                 if(sortrule(vec[tempvec[x]], vec[tempvec[y]]))
                     indexvec.push_back(tempvec[x++]);
@@ -92,14 +96,14 @@ void mergesort(vector<v>&vec, T sortrule) //mergesort 1524ms
                     indexvec.push_back(tempvec[y++]);
             }
 
-            while(x < i + r && x < tempvec.size())
+            while(x < i + r && x < tempvec.size()) //push the ramaining thing to indexvec
                 indexvec.push_back(tempvec[x++]);
             while(y < i + r * 2 && y < tempvec.size())
                 indexvec.push_back(tempvec[y++]);
         }
     }
 
-
+    //reduction data
     vector<v> copyvec;
 
     copyvec.assign(vec.begin(), vec.end());
@@ -108,17 +112,20 @@ void mergesort(vector<v>&vec, T sortrule) //mergesort 1524ms
         vec.push_back(copyvec[indexvec[i]]);
 }
 
-vector<int> indexvec;
 template<typename v, typename T>
 void quicksort(vector<v>&vec, T sortrule, int l = 0, int r = -2)    //quick sort 4ms
 {
+    static vector<int> indexvec;
+
     if(r == -2)
     {
         for(int i = 0; i < vec.size(); i++)
             indexvec.push_back(i);
-        quicksort(vec, sortrule, l, vec.size());
-        vector<v> copyvec;
+        quicksort(vec, sortrule, l, vec.size()); //recursive
 
+
+        //reduction data
+        vector<v> copyvec;
         copyvec.assign(vec.begin(), vec.end());
         vec.clear();
         for(int i = 0; i < indexvec.size(); i++)
@@ -132,18 +139,19 @@ void quicksort(vector<v>&vec, T sortrule, int l = 0, int r = -2)    //quick sort
         return;
 
     int i = l, j = r - 1;
+
     while(i != j)
     {
-        while(sortrule(vec[indexvec[l]], vec[indexvec[j]]) && i < j)
+        while(sortrule(vec[indexvec[l]], vec[indexvec[j]]) && i < j)    //find last j which doesn't conform the rule
             j--;
-        while(!(sortrule(vec[indexvec[l]], vec[indexvec[i]])) && i < j)
+        while(!(sortrule(vec[indexvec[l]], vec[indexvec[i]])) && i < j) //find first i which doesn't conform the rule
             i++;
         if(i < j)
             swap(indexvec[i], indexvec[j]);
     }
     swap(indexvec[i], indexvec[l]);
-    quicksort(vec, sortrule, l, i);
-    quicksort(vec, sortrule, i + 1, r);
+    quicksort(vec, sortrule, l, i);     //recursive
+    quicksort(vec, sortrule, i + 1, r); //recursive
 }
 
 ifstream &operator>>(ifstream&s, department&d) //department input file stream Overload, return what it read
@@ -227,7 +235,7 @@ ofstream &operator<<(ofstream&s, department d) //department output file stream O
     return s;
 }
 
-inline int powten(int k)
+inline int powten(int k) //get 10**k
 {
     int i = 1;
 
@@ -237,83 +245,55 @@ inline int powten(int k)
 }
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+mutex              mu_minn, mus_f[MAXthread], mus_e[MAXthread], mus_star[MAXthread]; //mutex to lock the thread
+vector<int>        indexvecc;                                                        //indexvec for selection sort
+int                minn;                                                             //min
+vector<department> departmentvecc;                                                   //departmentvec for selection sort
+int                f[MAXthread], e[MAXthread];                                       //first and end
+bool               star[MAXthread];                                                  //control thread to run
+bool               clos = 0;                                                         //control thread to close itself
+//use mutex to lock different thread so that data won't get wrong
+//because it will cause lost of time to explain mutex,
+//you can read https://shengyu7697.github.io/std-mutex/
 
-vector<int>        indexvecc;
-int                minn;
-vector<department> departmentvecc;
-int                f[MAXthread], e[MAXthread];
-bool               star[MAXthread];
-bool               clos = 0;
-
-
-int getminn(int x = -1, bool mandatory = 0)
+void partsort(int k)  //selection find the minnest int the specify part(f->e)
 {
-    lock_guard<std::mutex> lg(mu);
+    bool keeprunning;
+    int  l, r, min;
 
-    if(x == -1)
-        return minn;
+    //announce hear to avoid announce repeated
 
-    if(!compare(departmentvecc[indexvecc[minn]], departmentvecc[indexvecc[x]]))
-        minn = x;
-    if(mandatory)
-        minn = x;
-    return 0;
-}
-
-int getf(int k, int x = -1)
-{
-    lock_guard<std::mutex> lg(mus[k]);
-
-    if(x == -1)
-        return f[k];
-
-    f[k] = x;
-    return 0;
-}
-
-int gete(int k, int x = -1)
-{
-    lock_guard<std::mutex> lg(mus[k]);
-
-    if(x == -1)
-        return e[k];
-
-    e[k] = x;
-    return 0;
-}
-
-bool getstar(int k)
-{
-    lock_guard<std::mutex> lg(mustar[k]);
-
-    return star[k];
-}
-
-void changestar(int k, bool x)
-{
-    lock_guard<std::mutex> lg(mustar[k]);
-
-    star[k] = x;
-}
-
-void partsort(int k)  //selection sort 32ms
-{
     while(1)
     {
-        if(getstar(k))
+        mus_star[k].lock();
+        keeprunning = star[k]; //tell thread start running or not
+        mus_star[k].unlock();
+        if(keeprunning)
         {
-            //cout << "run!" << f[k] << " " << e[k] << endl;
-            int l = getf(k), r = gete(k);
-            int min = l;
-            for(int j = l + 1 ; j < r; j++)
-                if(!compare(departmentvecc[indexvecc[minn]], departmentvecc[indexvecc[j]]))
-                {
+            mus_f[k].lock();
+            l = f[k]; //get first
+            mus_f[k].unlock();
+
+            mus_e[k].lock();
+            r = e[k]; //get end
+            mus_e[k].unlock();
+
+
+            min = l;
+            for(int j = l + 1 ; j < r; j++) //find the minnest
+                if(!compare(departmentvecc[indexvecc[min]], departmentvecc[indexvecc[j]]))
                     min = j;
 
-                    //cout << "minn=" << minn << endl;
-                }
-            getminn(min);
-            changestar(k, 0);
+
+            mu_minn.lock();
+            if(!compare(departmentvecc[indexvecc[minn]], departmentvecc[indexvecc[min]]))
+                minn = min; //change if departmentvecc[indexvecc[min]] < departmentvecc[indexvecc[minn]]
+
+            mu_minn.unlock();
+
+            mus_star[k].lock();
+            star[k] = 0; //pause
+            mus_star[k].unlock();
         }
         if(clos)
             return;
@@ -324,40 +304,64 @@ void selectionsort() //selection sort 32ms
 {
     for(int i = 0; i < departmentvecc.size(); i++)
         indexvecc.push_back(i);
-    thread threads[MAXthread];
+    thread threads[MAXthread]; //new thread
     clos = 0;
     for(int j = 0 ; j < MAXthread; j++)
     {
-        changestar(j, 0);
-        threads[j] = thread(partsort, j);
+        mus_star[j].lock();
+        star[j] = 0;                      //pause
+        mus_star[j].unlock();
+        threads[j] = thread(partsort, j); //give thread thing to run
     }
     startTime();
 
     for(int i = 0; i + 1 < departmentvecc.size(); i++)
     {
-        getminn(i, 1);
+        mu_minn.lock();
+        minn = i; //set minn
+        mu_minn.unlock();
+
         for(int j = 0 ; j < MAXthread; j++)
         {
-            getf(j, i + (departmentvecc.size() - i) * j / MAXthread);
-            gete(j, i + (departmentvecc.size() - i) * (j + 1) / MAXthread);
-            changestar(j, 1);
+            mus_f[j].lock();
+            f[j] = i + (departmentvecc.size() - i) * j / MAXthread;
+            mus_f[j].unlock();
+
+            mus_e[j].lock();
+            e[j] = (departmentvecc.size() - i) * (j + 1) / MAXthread;
+            mus_e[j].unlock();
+            //give thread range to run
+
+            mus_star[j].lock();
+            star[j] = 1; //start thread
+            mus_star[j].unlock();
         }
+
+        bool b;
         while(1)
         {
-            bool b = 1;
+            b = 1;
             for(int j = 0 ; j < MAXthread; j++)
-                if(getstar(j) == 1)
+            {
+                mus_star[j].lock();
+                if(star[j] == 1)
                     b = 0;
-            if(b)
+                mus_star[j].unlock();
+            }
+
+            if(b) //if all thread paused means all finished
                 break;
         }
-        swap(indexvecc[getminn()], indexvecc[i]);
+        mu_minn.lock();
+        swap(indexvecc[minn], indexvecc[i]); //swap
+        mu_minn.unlock();
     }
     clos = 1;
     for(int j = 0 ; j < MAXthread; j++)
         threads[j].join();
-    vector<department> copyvec;
 
+    //reduction data
+    vector<department> copyvec;
     copyvec.assign(departmentvecc.begin(), departmentvecc.end());
     departmentvecc.clear();
     for(int i = 0; i < copyvec.size(); i++)
@@ -446,8 +450,6 @@ public:
 
     void print()  // print departmentvec
     {
-        return;
-
         for(auto i:departmentvec)
             cout << i << '\n';
     }
@@ -526,15 +528,17 @@ public:
         for(int i = 0 ; i < 10; i++)
         {
             for(int j = 0 ; j < departmentvec.size(); j++)
-                que[(departmentvec[indexvec[j]].numofgraduate / powten(i) % 10)].push(indexvec[j]);
+                que[(departmentvec[indexvec[j]].numofgraduate / powten(i) % 10)].push(indexvec[j]);  //push into x%(10**n)
             indexvec.clear();
-            for(int j = 0; j < 10; j++)
+            for(int j = 0; j < 10; j++)                                                              //get all int the que
                 while(que[j].size())
                 {
                     indexvec.push_back(que[j].front());
                     que[j].pop();
                 }
         }
+
+        //reduction data
         vector<department> copyvec;
 
         copyvec.assign(departmentvec.begin(), departmentvec.end());
