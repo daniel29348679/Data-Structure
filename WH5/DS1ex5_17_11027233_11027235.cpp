@@ -7,7 +7,6 @@ using namespace std;
 
 #define MAXthread    3
 
-
 LARGE_INTEGER nFreq;
 LARGE_INTEGER nBeginTime;
 LARGE_INTEGER nEndTime;
@@ -42,7 +41,7 @@ public:
 
 inline bool compare(department&a, department&b) //compare rule
 {
-    return a.numofgraduate < b.numofgraduate;
+    return a.numofgraduate > b.numofgraduate;
 }
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -530,7 +529,7 @@ public:
             for(int j = 0 ; j < departmentvec.size(); j++)
                 que[(departmentvec[indexvec[j]].numofgraduate / powten(i) % 10)].push(indexvec[j]);  //push into x%(10**n)
             indexvec.clear();
-            for(int j = 0; j < 10; j++)                                                              //get all int the que
+            for(int j = 9; j >= 0; j--)                                                              //get all int the que
                 while(que[j].size())
                 {
                     indexvec.push_back(que[j].front());
