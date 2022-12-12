@@ -5,7 +5,7 @@
 #include <windows.h>
 using namespace std;
 
-#define MAXthread    3
+#define MAXthread    3    //for multithreading
 
 LARGE_INTEGER nFreq;
 LARGE_INTEGER nBeginTime;
@@ -17,11 +17,13 @@ void startTime() //start timing
     QueryPerformanceCounter(&nBeginTime);
 }
 
+
 double getTime() //get timing
 {
     QueryPerformanceCounter(&nEndTime);
     return (double)(nEndTime.QuadPart - nBeginTime.QuadPart) / (double)nFreq.QuadPart;
 }
+
 
 class department
 {
@@ -39,7 +41,9 @@ public:
     friend ostream &operator<<(ostream&s, department d);
 };
 
-inline bool compare(department&a, department&b) //compare rule
+
+//內嵌函式(to speed up, cause it's short and often used)
+inline bool compare(department&a, department&b) //compare rule (sortrule
 {
     return a.numofgraduate > b.numofgraduate;
 }
@@ -51,9 +55,9 @@ inline bool compare(department&a, department&b) //compare rule
 template<typename v, typename T>
 void bubblesort(vector<v>&vec, T sortrule) //bubble sort 602ms
 {
-    int indexvec[vec.size()];
+    int indexvec[vec.size()];//declare an array whose size same to the vec
 
-    for(int i = 0; i < vec.size(); i++)
+    for(int i = 0; i < vec.size(); i++)//store the index in them
         indexvec[i] = i;
 
     for(int i = vec.size() - 1; i > 0; i--)
@@ -64,11 +68,12 @@ void bubblesort(vector<v>&vec, T sortrule) //bubble sort 602ms
 //reduction data
     vector<v> copyvec;
 
-    copyvec.assign(vec.begin(), vec.end());
+    copyvec.assign(vec.begin(), vec.end());//copy vec to the copyvec then clear vec
     vec.clear();
     for(int i = 0; i < copyvec.size(); i++)
         vec.push_back(copyvec[indexvec[i]]);
 }
+
 
 template<typename v, typename T>
 void mergesort(vector<v>&vec, T sortrule) //mergesort 1524ms
@@ -111,6 +116,7 @@ void mergesort(vector<v>&vec, T sortrule) //mergesort 1524ms
         vec.push_back(copyvec[indexvec[i]]);
 }
 
+
 template<typename v, typename T>
 void quicksort(vector<v>&vec, T sortrule, int l = 0, int r = -2)    //quick sort 4ms
 {
@@ -152,6 +158,7 @@ void quicksort(vector<v>&vec, T sortrule, int l = 0, int r = -2)    //quick sort
     quicksort(vec, sortrule, l, i);     //recursive
     quicksort(vec, sortrule, i + 1, r); //recursive
 }
+
 
 ifstream &operator>>(ifstream&s, department&d) //department input file stream Overload, return what it read
 {
@@ -234,7 +241,8 @@ ofstream &operator<<(ofstream&s, department d) //department output file stream O
     return s;
 }
 
-inline int powten(int k) //get 10**k
+
+inline int powten(int k) //get 10**k((10的k次
 {
     int i = 1;
 
@@ -242,6 +250,7 @@ inline int powten(int k) //get 10**k
         i *= 10;
     return i;
 }
+
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 mutex              mu_minn, mus_f[MAXthread], mus_e[MAXthread], mus_star[MAXthread]; //mutex to lock the thread
@@ -299,6 +308,9 @@ void partsort(int k)  //selection find the minnest int the specify part(f->e)
     }
 }
 
+
+
+//define MAXthread  3
 void selectionsort() //selection sort 32ms
 {
     for(int i = 0; i < departmentvecc.size(); i++)
