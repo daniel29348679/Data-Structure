@@ -595,7 +595,7 @@ int main()
             sh.mergesortt();
             sh.quicksortt();
             sh.radixsortt();
-            sh.print();
+            //sh.print();
         }
     }
 }
