@@ -17,13 +17,11 @@ void startTime() //start timing
     QueryPerformanceCounter(&nBeginTime);
 }
 
-
 double getTime() //get timing
 {
     QueryPerformanceCounter(&nEndTime);
     return (double)(nEndTime.QuadPart - nBeginTime.QuadPart) / (double)nFreq.QuadPart;
 }
-
 
 class department
 {
@@ -55,9 +53,9 @@ inline bool compare(department&a, department&b) //compare rule (sortrule
 template<typename v, typename T>
 void bubblesort(vector<v>&vec, T sortrule) //bubble sort 602ms
 {
-    int indexvec[vec.size()];//declare an array whose size same to the vec
+    int indexvec[vec.size()];              //declare an array whose size same to the vec
 
-    for(int i = 0; i < vec.size(); i++)//store the index in them
+    for(int i = 0; i < vec.size(); i++)    //store the index in them
         indexvec[i] = i;
 
     for(int i = vec.size() - 1; i > 0; i--)
@@ -73,7 +71,6 @@ void bubblesort(vector<v>&vec, T sortrule) //bubble sort 602ms
     for(int i = 0; i < copyvec.size(); i++)
         vec.push_back(copyvec[indexvec[i]]);
 }
-
 
 template<typename v, typename T>
 void mergesort(vector<v>&vec, T sortrule) //mergesort 1524ms
@@ -116,7 +113,6 @@ void mergesort(vector<v>&vec, T sortrule) //mergesort 1524ms
         vec.push_back(copyvec[indexvec[i]]);
 }
 
-
 template<typename v, typename T>
 void quicksort(vector<v>&vec, T sortrule, int l = 0, int r = -2)    //quick sort 4ms
 {
@@ -158,7 +154,6 @@ void quicksort(vector<v>&vec, T sortrule, int l = 0, int r = -2)    //quick sort
     quicksort(vec, sortrule, l, i);     //recursive
     quicksort(vec, sortrule, i + 1, r); //recursive
 }
-
 
 ifstream &operator>>(ifstream&s, department&d) //department input file stream Overload, return what it read
 {
@@ -241,7 +236,6 @@ ofstream &operator<<(ofstream&s, department d) //department output file stream O
     return s;
 }
 
-
 inline int powten(int k) //get 10**k((10的k次
 {
     int i = 1;
@@ -250,7 +244,6 @@ inline int powten(int k) //get 10**k((10的k次
         i *= 10;
     return i;
 }
-
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 mutex              mu_minn, mus_f[MAXthread], mus_e[MAXthread], mus_star[MAXthread]; //mutex to lock the thread
@@ -308,9 +301,6 @@ void partsort(int k)  //selection find the minnest int the specify part(f->e)
     }
 }
 
-
-
-//define MAXthread  3
 void selectionsort() //selection sort 32ms
 {
     for(int i = 0; i < departmentvecc.size(); i++)
@@ -560,6 +550,81 @@ public:
         cout << "radix sort:" << getTime() * 1000 << "ms\n";
         writefile("radixsort");
     }
+
+    auto selectionsortt_notime()
+    {
+        reread();
+        departmentvecc.assign(departmentvec.begin(), departmentvec.end());
+        startTime();
+
+        selectionsort();
+        departmentvec.clear();
+        departmentvec.assign(departmentvecc.begin(), departmentvecc.end());
+        departmentvecc.clear();
+        return getTime() * 1000;
+    }
+
+    auto bubblesortt_notime()
+    {
+        reread();
+        startTime();
+
+        bubblesort(departmentvec, compare);
+        return getTime() * 1000;
+    }
+
+    auto mergesortt_notime()
+    {
+        reread();
+        startTime();
+
+        mergesort(departmentvec, compare);
+        return getTime() * 1000;
+    }
+
+    auto quicksortt_notime()
+    {
+        reread();
+        startTime();
+
+        quicksort(departmentvec, compare);
+        return getTime() * 1000;
+    }
+
+    auto radixsortt_notime() //1ms
+    {
+        reread();
+        vector<int> indexvec;
+
+        for(int i = 0; i < departmentvec.size(); i++)
+            indexvec.push_back(i);
+
+        startTime();
+        queue<int> que[10];
+
+        for(int i = 0 ; i < 10; i++)
+        {
+            for(int j = 0 ; j < departmentvec.size(); j++)
+                que[(departmentvec[indexvec[j]].numofgraduate / powten(i) % 10)].push(indexvec[j]);  //push into x%(10**n)
+            indexvec.clear();
+            for(int j = 9; j >= 0; j--)                                                              //get all int the que
+                while(que[j].size())
+                {
+                    indexvec.push_back(que[j].front());
+                    que[j].pop();
+                }
+        }
+
+        //reduction data
+        vector<department> copyvec;
+
+        copyvec.assign(departmentvec.begin(), departmentvec.end());
+        departmentvec.clear();
+        for(int i = 0; i < indexvec.size(); i++)
+            departmentvec.push_back(copyvec[indexvec[i]]);
+
+        return getTime() * 1000;
+    }
 };
 
 
@@ -576,6 +641,7 @@ int main()
         cout << "**  data operate system           **" << "\n"; //print menu
         cout << "* 0. Quit                          *" << "\n";
         cout << "* 1. read and sort and write file  *" << "\n";
+        cout << "* 2. Comparisons on five methods  **" << "\n";
         cout << ":";
         cin >> k;
         if(cin.fail())
@@ -588,7 +654,7 @@ int main()
             continue;     //skip this loop
         }
 
-        if(k != 0 && k != 1)
+        if(k != 0 && k != 1 && k != 2)
         {
             cout << "\nCommand does not exist!\n";
             continue; //skip this loop
@@ -607,6 +673,35 @@ int main()
             sh.mergesortt();
             sh.quicksortt();
             sh.radixsortt();
+            //sh.print();
+        }
+        if(k == 2)
+        {
+            cout << "Input: ";
+            string locate;
+            cin >> locate;
+            ofstream out;
+            ifstream in("sort_time.txt");
+
+
+            if(!in)
+            {
+                out.open("sort_time.txt");
+                out << "檔案編號  選擇排序    氣泡排序    合併排序    快速排序    基數排序\n";
+            }
+            else
+            {
+                in.close();
+                out.open("sort_time.txt", ios::app);
+            }
+
+            sheet sh(locate);  //input file locate
+            out << sh.inputlocate << '\t';
+            out << sh.selectionsortt_notime() << '\t';
+            out << sh.bubblesortt_notime() << '\t';
+            out << sh.mergesortt_notime() << '\t';
+            out << sh.quicksortt_notime() << '\t';
+            out << sh.radixsortt_notime() << '\n';
             //sh.print();
         }
     }
