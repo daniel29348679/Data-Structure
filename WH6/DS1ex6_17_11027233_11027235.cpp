@@ -369,16 +369,12 @@ int main()
 		{
 			if(!getthrrheight())
 			{
-				cout << "nothing to delete!!!!!!!!\n\n";
+				cout << "----- Execute Mission 1 first! -----\n\n";
 				continue;
 			}
 			cout << "Name	Type 1	Type 2	Total	HP	Attack	Defense	Sp. Atk	Sp. Def	Speed	Generation	Legendary\n";
 			deletelargest();
 			cout << "HP tree height = " << getthrrheight() << endl;
 		}
-
-		if(k == 4)
-			for(auto&i:nodevec)
-				cout << i.pok << endl;
 	}
 }
