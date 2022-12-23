@@ -220,15 +220,20 @@ int getthrrheight(shared_ptr<node> index = head)
 
 int printalllarge(const int&threshold, shared_ptr<node> index = head)
 {
-	if(index == nullptr || index->pok < threshold)
+	if(index == nullptr)
 		return 0;
 
 	int count = 1;
 	count += printalllarge(threshold, index->right);
-	cout << "[" << setw(3) << ++successcount << "]" << setw(4) << index->pok.no << setw(15) << index->pok.name << setw(10) << index->pok.type1
-		 << setw(10) << index->pok.total << setw(10) << index->pok.hp << setw(10) << index->pok.attack << setw(10) << index->pok.defense << endl;
-	printalllarge(threshold, index->child);
-	count += printalllarge(threshold, index->left);
+	if(index->pok >= threshold)
+	{
+		cout << "[" << setw(3) << ++successcount << "]" << setw(4) << index->pok.no << setw(15) << index->pok.name << setw(10) << index->pok.type1
+			 << setw(10) << index->pok.total << setw(10) << index->pok.hp << setw(10) << index->pok.attack << setw(10) << index->pok.defense << endl;
+		printalllarge(threshold, index->child);
+		if(index->pok > threshold)
+			count += printalllarge(threshold, index->left);
+	}
+
 	return count;
 }
 
