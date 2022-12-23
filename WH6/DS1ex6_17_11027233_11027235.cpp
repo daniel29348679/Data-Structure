@@ -341,10 +341,10 @@ int main()
 				addnode(head, d);
 			}
 			input.close();
-			cout << "        #           Name    Type 1        HP    Attack   Defense\n";
+			cout << "        #                     Name    Type 1        HP    Attack   Defense\n";
 			//printallnode();
 			for(int j = 0 ; j < nodevec.size(); j++)
-				cout << "[" << setw(3) << j + 1 << "]" << setw(4) << nodevec[j].pok.no << setw(15) << nodevec[j].pok.name << setw(10) << nodevec[j].pok.type1
+				cout << "[" << setw(3) << j + 1 << "]" << setw(4) << nodevec[j].pok.no << setw(25) << nodevec[j].pok.name << setw(10) << nodevec[j].pok.type1
 					 << setw(10) << nodevec[j].pok.hp << setw(10) << nodevec[j].pok.attack << setw(10) << nodevec[j].pok.defense << endl;
 
 			cout << "HP tree height = " << getthrrheight() << endl;
