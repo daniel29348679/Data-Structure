@@ -140,6 +140,7 @@ ifstream &operator>>(ifstream&s, pokemon&d) //department input file stream Overl
 	return s;
 }
 
+
 ostream &operator<<(ostream&s, pokemon d) //department output file stream Overload
 {
 	s << d.no << '\t';
@@ -158,23 +159,26 @@ ostream &operator<<(ostream&s, pokemon d) //department output file stream Overlo
 	return s;
 }
 
+
 class node
 {
 public:
 	int left  = -1;
 	int right = -1;
 	int child = -1;
-	pokemon pok;
-	node(pokemon& p)
+	pokemon pok;      //this node's pokemon
+	node(pokemon& p)  //constructor:set the pokemon of this node
 	{
 		pok = p;
 	}
 };
 
 
-vector<node> nodevec;
+vector<node> nodevec;  //the tree in a vector form
+
 int			 head		  = -1;
 int			 successcount = 0;
+
 void addnode(int& index, int n)
 {
 	if(index == -1)
@@ -199,7 +203,8 @@ void addnode(int& index, int n)
 	}
 }
 
-void printallnode(int index = head)
+
+void printallnode(int index = head)       //for mission1
 {
 	if(index == -1)
 		return;
@@ -210,13 +215,14 @@ void printallnode(int index = head)
 	printallnode(nodevec[index].left);
 }
 
-int getthrrheight(int index = head)
+int getthrrheight(int index = head)     //for every mission
 {
 	if(index == -1)
 		return 0;
 
 	return 1 + max(getthrrheight(nodevec[index].left), getthrrheight(nodevec[index].right));
 }
+
 
 int printalllarge(const int&threshold, int index = head)
 {
@@ -232,7 +238,8 @@ int printalllarge(const int&threshold, int index = head)
 	return count;
 }
 
-void deletelargest(int&index = head)
+
+void deletelargest(int&index = head)  //for mission3
 {
 	if(index == -1)
 		return;
@@ -251,6 +258,7 @@ void deletelargest(int&index = head)
 	}
 	index = nodevec[index].left;
 }
+
 
 int main()
 {
