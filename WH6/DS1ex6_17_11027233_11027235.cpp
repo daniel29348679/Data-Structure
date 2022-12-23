@@ -161,9 +161,9 @@ ostream &operator<<(ostream&s, pokemon d) //department output file stream Overlo
 class node
 {
 public:
-	int left  = -1;
-	int right = -1;
-	int child = -1;
+	shared_ptr<node> left  = nullptr;
+	shared_ptr<node> right = nullptr;
+	shared_ptr<node> child = nullptr;
 	pokemon pok;
 	node(pokemon& p)
 	{
@@ -172,84 +172,84 @@ public:
 };
 
 
-vector<node> nodevec;
-int			 head		  = -1;
-int			 successcount = 0;
-void addnode(int& index, int n)
+vector<node>	 nodevec;
+shared_ptr<node> head = nullptr;
+int successcount	  = 0;
+void addnode(shared_ptr<node>&index, pokemon& p)
 {
-	if(index == -1)
+	if(index == nullptr)
 	{
-		index = n;
+		index = make_shared<node>(p);
 		return;
 	}
-	if(nodevec[index].pok < nodevec[n].pok)
+	if(index->pok < p)
 	{
-		addnode(nodevec[index].right, n);
+		addnode(index->right, p);
 		return;
 	}
-	if(nodevec[index].pok == nodevec[n].pok)
+	if(index->pok == p)
 	{
-		addnode(nodevec[index].child, n);
+		addnode(index->child, p);
 		return;
 	}
-	if(nodevec[index].pok > nodevec[n].pok)
+	if(index->pok > p)
 	{
-		addnode(nodevec[index].left, n);
+		addnode(index->left, p);
 		return;
 	}
 }
 
-void printallnode(int index = head)
+void printallnode(shared_ptr<node> index = head)
 {
-	if(index == -1)
+	if(index == nullptr)
 		return;
 
-	printallnode(nodevec[index].right);
-	cout << "[" << setw(3) << ++successcount << "]" << nodevec[index].pok << endl;
-	printallnode(nodevec[index].child);
-	printallnode(nodevec[index].left);
+	printallnode(index->right);
+	cout << "[" << setw(3) << ++successcount << "]" << index->pok << endl;
+	printallnode(index->child);
+	printallnode(index->left);
 }
 
-int getthrrheight(int index = head)
+int getthrrheight(shared_ptr<node> index = head)
 {
-	if(index == -1)
+	if(index == nullptr)
 		return 0;
 
-	return 1 + max(getthrrheight(nodevec[index].left), getthrrheight(nodevec[index].right));
+	return 1 + max(getthrrheight(index->left), getthrrheight(index->right));
 }
 
-int printalllarge(const int&threshold, int index = head)
+int printalllarge(const int&threshold, shared_ptr<node> index = head)
 {
-	if(index == -1 || nodevec[index].pok < threshold)
+	if(index == nullptr || index->pok < threshold)
 		return 0;
 
 	int count = 1;
-	count += printalllarge(threshold, nodevec[index].right);
-	cout << "[" << setw(3) << ++successcount << "]" << setw(4) << nodevec[index].pok.no << setw(15) << nodevec[index].pok.name << setw(10) << nodevec[index].pok.type1
-		 << setw(10) << nodevec[index].pok.total << setw(10) << nodevec[index].pok.hp << setw(10) << nodevec[index].pok.attack << setw(10) << nodevec[index].pok.defense << endl;
-	printalllarge(threshold, nodevec[index].child);
-	count += printalllarge(threshold, nodevec[index].left);
+	count += printalllarge(threshold, index->right);
+	cout << "[" << setw(3) << ++successcount << "]" << setw(4) << index->pok.no << setw(15) << index->pok.name << setw(10) << index->pok.type1
+		 << setw(10) << index->pok.total << setw(10) << index->pok.hp << setw(10) << index->pok.attack << setw(10) << index->pok.defense << endl;
+	printalllarge(threshold, index->child);
+	count += printalllarge(threshold, index->left);
 	return count;
 }
 
-void deletelargest(int&index = head)
+void deletelargest(shared_ptr<node>&index = head)
 {
-	if(index == -1)
+	if(index == nullptr)
 		return;
 
-	if(nodevec[index].right != -1)
+	if(index->right != nullptr)
 	{
-		deletelargest(nodevec[index].right);
+		deletelargest(index->right);
 		return;
 	}
-	cout << nodevec[index].pok << endl;
-	if(nodevec[index].child != -1)
+	cout << index->pok << endl;
+	if(index->child != nullptr)
 	{
-		nodevec[nodevec[index].child].left = nodevec[index].left;
-		index = nodevec[index].child;
+		index->child->left = index->left;
+		index = index->child;
 		return;
 	}
-	index = nodevec[index].left;
+	index = index->left;
 }
 
 int main()
@@ -334,14 +334,13 @@ int main()
 			pokemon d;
 
 			nodevec.clear();
-			head = -1;
-			while(input >> d) //while input available, then input department
+			head = nullptr;
+			while(input >> d)  //while input available, then input department
+			{
 				nodevec.push_back(node(d));
+				addnode(head, d);
+			}
 			input.close();
-
-
-			for(int j = 0 ; j < nodevec.size(); j++)
-				addnode(head, j);
 			cout << "        #           Name    Type 1        HP    Attack   Defense\n";
 			//printallnode();
 			for(int j = 0 ; j < nodevec.size(); j++)
