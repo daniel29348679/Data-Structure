@@ -172,7 +172,9 @@ public:
 };
 
 
-vector<node>	 nodevec;
+vector<node> nodevec;
+
+
 shared_ptr<node> head = nullptr;
 int successcount	  = 0;
 void addnode(shared_ptr<node>&index, pokemon& p)
@@ -248,6 +250,13 @@ void deletelargest(shared_ptr<node>&index = head)
 		return;
 	}
 	cout << index->pok << endl;
+
+	for(auto i = nodevec.begin(); i != nodevec.end(); i++)
+	{
+		if(i->pok.hp == index->pok.hp)
+			nodevec.erase(i);
+		break;
+	}
 	if(index->child != nullptr)
 	{
 		index->child->left = index->left;
