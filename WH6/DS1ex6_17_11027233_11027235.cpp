@@ -253,7 +253,7 @@ void deletelargest(shared_ptr<node>&index = head)
 
 	for(auto i = nodevec.begin(); i != nodevec.end(); i++)
 	{
-		if(i->pok.hp == index->pok.hp)
+		if(i->pok.hp == index->pok.hp && i->pok.no == index->pok.no)
 			nodevec.erase(i);
 		break;
 	}
