@@ -172,9 +172,7 @@ public:
 };
 
 
-vector<node> nodevec;
-
-
+vector<node>	 nodevec;
 shared_ptr<node> head = nullptr;
 int successcount	  = 0;
 void addnode(shared_ptr<node>&index, pokemon& p)
@@ -250,14 +248,7 @@ void deletelargest(shared_ptr<node>&index = head)
 		return;
 	}
 	cout << index->pok << endl;
-
-	for(auto i = nodevec.begin(); i != nodevec.end(); i++)
-	{
-		if(i->pok.hp == index->pok.hp && i->pok.no == index->pok.no)
-			nodevec.erase(i);
-		break;
-	}
-	if(index->child != nullptr)
+	if(index->child != nullptr) //in-order successor
 	{
 		index->child->left = index->left;
 		index = index->child;
@@ -351,8 +342,8 @@ int main()
 			head = nullptr;
 			while(input >> d)  //while input available, then input department
 			{
-				nodevec.push_back(node(d));
-				addnode(head, d);
+				nodevec.push_back(node(d));  //use the 'd' to generate a node and push into the vector
+				addnode(head, d);//store in the tree(pointer), too
 			}
 			input.close();
 			cout << "        #                     Name    Type 1        HP    Attack   Defense\n";
