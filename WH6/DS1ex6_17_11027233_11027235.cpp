@@ -248,6 +248,12 @@ void deletelargest(shared_ptr<node>&index = head)
 		return;
 	}
 	cout << index->pok << endl;
+	for(int i = 0; i < nodevec.size(); i++)
+		if(nodevec[i].pok.no == index->pok.no)
+		{
+			nodevec.erase(nodevec.begin() + i);
+			break;
+		}
 	if(index->child != nullptr) //in-order successor
 	{
 		index->child->left = index->left;
@@ -255,6 +261,33 @@ void deletelargest(shared_ptr<node>&index = head)
 		return;
 	}
 	index = index->left;
+}
+
+void printtre()
+{
+	int level = 1;
+	vector<shared_ptr<node> > ptrvec, tempvec;
+
+	ptrvec.push_back(head);
+	while(ptrvec.size())
+	{
+		cout << "<level " << level++ << " >";
+		for(auto i:ptrvec)
+		{
+			cout << " (" << i->pok.hp << ", " << i->pok.no;
+			for(auto j = i->child; j != nullptr; j = j->child)
+				cout << "," << j->pok.no;
+			cout << ")";
+			if(i->left != nullptr)
+				tempvec.push_back(i->left);
+			if(i->right != nullptr)
+				tempvec.push_back(i->right);
+		}
+		cout << endl;
+		ptrvec.clear();
+		ptrvec.assign(tempvec.begin(), tempvec.end());
+		tempvec.clear();
+	}
 }
 
 int main()
@@ -340,10 +373,11 @@ int main()
 
 			nodevec.clear();
 			head = nullptr;
-			while(input >> d)  //while input available, then input department
+			while(input >> d)               //while input available, then input department
 			{
-				nodevec.push_back(node(d));  //use the 'd' to generate a node and push into the vector
-				addnode(head, d);//store in the tree(pointer), too
+				nodevec.push_back(node(d)); //use the 'd' to generate a node and push into the vector
+				addnode(head, d);
+				//store in the tree(pointer), too
 			}
 			input.close();
 			cout << "        #                     Name    Type 1        HP    Attack   Defense\n";
@@ -380,6 +414,60 @@ int main()
 			cout << "Name	Type 1	Type 2	Total	HP	Attack	Defense	Sp. Atk	Sp. Def	Speed	Generation	Legendary\n";
 			deletelargest();
 			cout << "HP tree height = " << getthrrheight() << endl;
+		}
+		if(k == 4)
+		{
+			if(!getthrrheight())
+			{
+				cout << "----- Execute Mission 1 first! -----\n\n";
+				continue;
+			}
+			printtre();
+			vector<pokemon> pokvec;
+			vector<pokemon> pokvecrepeat;
+			vector<bool>	boolvec;
+			for(auto p:nodevec | ranges::views::transform([](node n){
+				return n.pok;
+			}))
+			{
+				if(find(pokvec.begin(), pokvec.end(), p) == pokvec.end())
+				{
+					pokvec.push_back(p);
+					boolvec.push_back(0);
+				}
+				else
+					pokvecrepeat.push_back(p);
+			}
+
+			nodevec.clear();
+			head = nullptr;
+			sort(pokvec.begin(), pokvec.end());
+			int range = 1;
+			while(range < pokvec.size())
+				range *= 2;
+			range /= 2;
+			for(; range > 0; range /= 2)
+				for(int i = range - 1 ; i < pokvec.size(); i += range * 2)
+					if(!boolvec[i])
+					{
+						boolvec[i] = 1;
+						addnode(head, pokvec[i]);
+						nodevec.push_back(node(pokvec[i]));
+					}
+
+			for(int i = 0 ; i < pokvec.size(); i++)
+				if(!boolvec[i])
+				{
+					addnode(head, pokvec[i]);
+					nodevec.push_back(node(pokvec[i]));
+				}
+			for(auto i:pokvecrepeat)
+			{
+				addnode(head, i);
+				nodevec.push_back(node(i));
+			}
+			cout << "\n\nNEW!!!!!!!!!!!!!!!!!!!!!!\n";
+			printtre();
 		}
 	}
 }
