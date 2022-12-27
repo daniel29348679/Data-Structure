@@ -304,8 +304,9 @@ int main()
 		cout << "* 1. Read one file to build BST     *" << "\n";
 		cout << "* 2. Threshold search on one column *" << "\n";
 		cout << "* 3. Delete the max on one column   *" << "\n";
+		cout << "* 4. Rebuild the Tree               *" << "\n";
 		cout << "*************************************" << "\n";
-		cout << "Input a choice(0, 1, 2, 3):\n";
+		cout << "Input a choice(0, 1, 2, 3, 4):\n";
 		cin >> k;
 		if(cin.fail())
 		{
