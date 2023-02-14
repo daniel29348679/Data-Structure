@@ -446,7 +446,6 @@ int main()
 			int range = 1;
 			while(range < pokvec.size())
 				range *= 2;
-			range /= 2;
 			for(; range > 0; range /= 2)
 				for(int i = range - 1 ; i < pokvec.size(); i += range * 2)
 					if(!boolvec[i])
