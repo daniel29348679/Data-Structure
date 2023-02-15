@@ -1,4 +1,9 @@
-//Dev-C++
+//IDE Dev-C++, vscode, sublime, codeblock or even notepad
+//Compiler gcc mingw https://github.com/Vuniverse0/mingwInstaller/releases/download/1.2.0/mingwInstaller.exe
+//!!!! USE C++20 to compile or you may get an error!!!!!!!!
+//!!!! USE C++20 to compile or you may get an error!!!!!!!!
+//!!!! USE C++20 to compile or you may get an error!!!!!!!!
+//https://blog.csdn.net/qq_50285142/article/details/122930647
 #include <bits/stdc++.h>
 using namespace std;
 
