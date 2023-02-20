@@ -33,6 +33,27 @@ public:
     }
 };
 
+class mindepartment
+{
+public:
+    int no;            //編號
+    int numofgraduate; //上學年度畢業生數
+    mindepartment()
+    {
+    }
+
+    mindepartment(department d)
+    {
+        no            = d.no;
+        numofgraduate = d.numofgraduate;
+    }
+
+    auto operator<=>(const mindepartment& other) const
+    {
+        return numofgraduate - other.numofgraduate;
+    }
+};
+
 
 ifstream &operator>>(ifstream&s, department&d) //department input file stream Overload, return what it read
 {
@@ -115,12 +136,24 @@ ofstream &operator<<(ofstream&s, department d) //department output file stream O
     return s;
 }
 
+ostream &operator<<(ostream&s, mindepartment d)//department output stream Overload
+{
+    s << "[" << d.no << "] " << d.numofgraduate;
+    return s;
+}
+
+ofstream &operator<<(ofstream&s, mindepartment d) //department output file stream Overload
+{
+    s << "[" << d.no << "] " << d.numofgraduate;
+    return s;
+}
+
 class sheet
 {
 public:
-    vector<department> heap; //vector store department the sheet has
-    string inputlocate;      //where input from e.g. 201       (also name)
-    sheet()                  //constructor let inherit to use
+    vector<mindepartment> heap; //vector store department the sheet has
+    string inputlocate;         //where input from e.g. 201       (also name)
+    sheet()                     //constructor let inherit to use
     {
     };
 
@@ -171,8 +204,11 @@ public:
         department d;
 
 
-        while(input >> d)   //while input available, then input department
-            push(d);
+        while(input >> d)    //while input available, then input department
+        {
+            mindepartment m(d);
+            push(m);
+        }
         input.close();
     }
 
@@ -198,17 +234,17 @@ public:
         output.close();   //close file
     }
 
-    department root() //return root
+    mindepartment root() //return root
     {
         return *heap.begin();
     }
 
-    department bottom() //return bottom
+    mindepartment bottom() //return bottom
     {
         return *heap.rbegin();
     }
 
-    department leftmost()              //return leftmost
+    mindepartment leftmost()           //return leftmost
     {
         int i = 0;                     //root
 
@@ -217,7 +253,7 @@ public:
         return heap[i];
     }
 
-    void push(department i)
+    void push(mindepartment i)
     {
         i.no = heap.size() + 1;          //set no
         heap.push_back(i);               //pushback
