@@ -305,6 +305,7 @@ bool minlevel(int i) //return is in min level
 class sheet_2 : public sheet
 {
 public:
+    vector<department> devec;
     sheet_2(string locate)     //constructer  read the file
     //((process the file name，decide if we should skip the first three lines，read the content
     {
@@ -360,6 +361,7 @@ public:
     void push(department i)
     {
         i.no = heap.size() + 1;
+        devec.push_back(i);
         heap.push_back(i);
         int n = heap.size() - 1;
         if(n == 0)
@@ -453,6 +455,56 @@ public:
             checkandchange_max_grand(r);
         }
     }
+
+    void recheckandchange(int r)
+    {
+        int c0 = r * 2 + 1, c1 = r * 2 + 2;                                         //child
+        int cc0 = c0 * 2 + 1, cc1 = c0 * 2 + 2, cc2 = c1 * 2 + 1, cc3 = c1 * 2 + 2; //grandchild
+        int goal = -1;                                                              //to swap
+
+        if(c0 >= heap.size())
+            return;
+
+        if(cc0 >= heap.size())//no grandchild
+        {
+            goal = c0;
+            if(c1 < heap.size() && heap[goal] > heap[c1])
+                goal = c1;
+            if(heap[r] > heap[goal])
+                swap(heap[r], heap[goal]);
+            //recheckandchange(goal);
+            return;
+        }
+        goal = cc0;
+        if(cc1 < heap.size() && heap[goal] > heap[cc1])
+            goal = cc1;
+        if(cc2 < heap.size() && heap[goal] > heap[cc2])
+            goal = cc2;
+        if(cc3 < heap.size() && heap[goal] > heap[cc3])
+            goal = cc3;
+        //find smallest
+        if(heap[r] > heap[goal])
+        {
+            swap(heap[r], heap[goal]);
+            if(heap[goal] > heap[(goal - 1) / 2]) //recheck parent
+                swap(heap[goal], heap[(goal - 1) / 2]);
+
+            recheckandchange(goal);
+        }
+    }
+
+    void printsmallest(int n)
+    {
+        n = min(n, int(heap.size()));
+        int i = 0;
+        while(n--)
+        {
+            cout << "top " << ++i << ":" << "[" << devec[heap[0].no - 1].no << "] " << devec[heap[0].no - 1].data[1] << " " << devec[heap[0].no - 1].data[3] << " " << devec[heap[0].no - 1].data[4] << " " << devec[heap[0].no - 1].data[5] << " " << devec[heap[0].no - 1].numofgraduate << endl;
+            swap(heap[0], heap[heap.size() - 1]);
+            heap.pop_back();
+            recheckandchange(0);
+        }
+    }
 };
 
 
@@ -467,7 +519,9 @@ int main()
         cout << "**  data operate system           **" << "\n"; //print menu
         cout << "* 0. Quit                          *" << "\n";
         cout << "* 1. min heap                      *" << "\n";
-        cout << "* 2. max heap                     **" << "\n";
+        cout << "* 2. min-max heap                  *" << "\n";
+        cout << "* 3. smallest in min-max heap     **" << "\n";
+
         cout << ":";
         cin >> k;
         if(cin.fail())
@@ -480,7 +534,7 @@ int main()
             continue;     //skip this loop
         }
 
-        if(k != 0 && k != 1 && k != 2)
+        if(k != 0 && k != 1 && k != 2 && k != 3)
         {
             cout << "\nCommand does not exist!\n";
             continue; //skip this loop
@@ -509,6 +563,22 @@ int main()
             cout << "root: [" << sh.root().no << "] " << sh.root().numofgraduate << endl;
             cout << "bottom: [" << sh.bottom().no << "] " << sh.bottom().numofgraduate << endl;
             cout << "leftmost: [" << sh.leftmost().no << "] " << sh.leftmost().numofgraduate << endl;
+        }
+        if(k == 3)
+        {
+            cout << "Input: ";
+            string locate;
+            cin >> locate;
+            sheet_2 sh(locate);  //input file locate
+            while(1)
+            {
+                cout << "how many do you want(-1 to quit): ";
+                int n;
+                cin >> n;
+                if(n < 0)
+                    break;
+                sh.printsmallest(n);
+            }
         }
     }
 }
