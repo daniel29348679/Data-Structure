@@ -82,6 +82,7 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
     for(; i < str.size() && str[i] != '\t'; i++)               //if str[i] == '\t' -> one complete data
         num += str[i];
     i++;                                                       //skip '\t'
+    num.erase(remove(num.begin(), num.end(), ','), num.end());
     num.erase(remove(num.begin(), num.end(), '"'), num.end()); //erase "
     d.numofstudent = stoi(num);                                //convert string to int
 
@@ -90,6 +91,7 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
     for(; i < str.size() && str[i] != '\t'; i++)               //if str[i] == '\t' -> one complete data
         num += str[i];
     i++;                                                       //skip '\t'
+    num.erase(remove(num.begin(), num.end(), ','), num.end());
     num.erase(remove(num.begin(), num.end(), '"'), num.end()); //erase "
     d.numofteacher = stoi(num);                                //convert string to int
 
@@ -98,6 +100,7 @@ ifstream &operator>>(ifstream&s, department&d) //department input file stream Ov
     for(; i < str.size() && str[i] != '\t'; i++)               //if str[i] == '\t' -> one complete data
         num += str[i];
     i++;                                                       //skip '\t'
+    num.erase(remove(num.begin(), num.end(), ','), num.end());
     num.erase(remove(num.begin(), num.end(), '"'), num.end()); //erase "
     d.numofgraduate = stoi(num);                               //convert string to int
 
