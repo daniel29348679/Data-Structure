@@ -468,7 +468,7 @@ public:
         if(c0 >= heap.size())
             return;
 
-        if(cc0 >= heap.size())//no grandchild
+        if(c0 < heap.size()) //check child firstly
         {
             goal = c0;
             if(c1 < heap.size() && heap[goal] > heap[c1])
@@ -476,23 +476,25 @@ public:
             if(heap[r] > heap[goal])
                 swap(heap[r], heap[goal]);
             //recheckandchange(goal);
-            return;
         }
-        goal = cc0;
-        if(cc1 < heap.size() && heap[goal] > heap[cc1])
-            goal = cc1;
-        if(cc2 < heap.size() && heap[goal] > heap[cc2])
-            goal = cc2;
-        if(cc3 < heap.size() && heap[goal] > heap[cc3])
-            goal = cc3;
-        //find smallest
-        if(heap[r] > heap[goal])
+        if(cc0 < heap.size()) //check grandchild
         {
-            swap(heap[r], heap[goal]);
-            if(heap[goal] > heap[(goal - 1) / 2]) //recheck parent
-                swap(heap[goal], heap[(goal - 1) / 2]);
+            goal = cc0;
+            if(cc1 < heap.size() && heap[goal] > heap[cc1])
+                goal = cc1;
+            if(cc2 < heap.size() && heap[goal] > heap[cc2])
+                goal = cc2;
+            if(cc3 < heap.size() && heap[goal] > heap[cc3])
+                goal = cc3;
+            //find smallest
+            if(heap[r] > heap[goal])
+            {
+                swap(heap[r], heap[goal]);
+                if(heap[goal] > heap[(goal - 1) / 2]) //recheck parent
+                    swap(heap[goal], heap[(goal - 1) / 2]);
 
-            recheckandchange(goal);
+                recheckandchange(goal);
+            }
         }
     }
 
@@ -503,6 +505,7 @@ public:
         while(n--)
         {
             cout << "top " << ++i << ":" << "[" << devec[heap[0].no - 1].no << "] " << devec[heap[0].no - 1].data[1] << " " << devec[heap[0].no - 1].data[3] << " " << devec[heap[0].no - 1].data[4] << " " << devec[heap[0].no - 1].data[5] << " " << devec[heap[0].no - 1].numofgraduate << endl;
+            //cout << devec[heap[0].no - 1].no << endl;
             swap(heap[0], heap[heap.size() - 1]);
             heap.pop_back();
             recheckandchange(0);
