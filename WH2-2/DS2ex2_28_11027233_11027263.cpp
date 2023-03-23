@@ -43,41 +43,37 @@ public:
     }
 };
 
-class department_23 : public department
+class department_23
 {
 public:
+    string data;
+    int no;
     void operator=(const department& other)
     {
-        for(int i = 0 ; i < 8 ; i++)
-            data[i] = other.data[i];
-        numofstudent  = other.numofstudent;
-        numofteacher  = other.numofteacher;
-        numofgraduate = other.numofgraduate;
-        no            = other.no;
+        data = other.data[1];
+        no   = other.no;
     }
 
     auto operator<=>(const department_23& other) const
     {
-        return data[1] <=> other.data[1];
+        return data <=> other.data;
 
         //return strcmp(data[1].c_str(), other.data[1].c_str());
     }
 
     bool operator==(const department_23& other) const
     {
-        return data[1] == other.data[1];
+        return data == other.data;
     }
 };
 
-class department_avl : public department
+class department_avl
 {
 public:
+    int numofgraduate;
+    int no;
     void operator=(const department& other)
     {
-        for(int i = 0 ; i < 8 ; i++)
-            data[i] = other.data[i];
-        numofstudent  = other.numofstudent;
-        numofteacher  = other.numofteacher;
         numofgraduate = other.numofgraduate;
         no            = other.no;
     }
@@ -181,6 +177,7 @@ class sheet_23
 public:
     int numofdata = 0;
     string inputlocate;         //where input from e.g. 201       (also name)
+    vector<department> dvec;
     sheet_23()                  //constructor let inherit to use
     {
     };
@@ -234,9 +231,10 @@ public:
 
         while(input >> d)    //while input available, then input department
         {
+            d.no = ++numofdata;
+            dvec.push_back(d);
             department_23 dd;
-            dd    = d;
-            dd.no = ++numofdata;
+            dd = d;
             push(dd, head);
         }
         input.close();
@@ -412,8 +410,11 @@ public:
             return a.no < b.no;
         });
         int k = 0;
-        for(auto&d:v)
+        for(auto&q:v)
+        {
+            auto d = dvec[q.no - 1];
             cout << ++k << ": [" << d.no << "]" << " " << d.data[1] << " " << d.data[3] << " " << d.data[4] << " " << d.data[5] << " " << d.numofgraduate << endl;
+        }
     }
 
     int gethei()
@@ -449,6 +450,7 @@ class sheet_avl
 public:
     int numofdata = 0;
     string inputlocate;         //where input from e.g. 201       (also name)
+    vector<department> dvec;
     sheet_avl()                 //constructor let inherit to use
     {
     };
@@ -502,9 +504,10 @@ public:
 
         while(input >> d)    //while input available, then input department
         {
+            d.no = ++numofdata;
+            dvec.push_back(d);
             department_avl dd;
-            dd    = d;
-            dd.no = ++numofdata;
+            dd = d;
             push(dd, head);
         }
         input.close();
@@ -663,8 +666,11 @@ public:
             return;
         }
         int k = 0;
-        for(auto&d:head->li)
+        for(auto&q:head->li)
+        {
+            auto d = dvec[q.no - 1];
             cout << ++k << ": [" << d.no << "]" << " " << d.data[1] << " " << d.data[3] << " " << d.data[4] << " " << d.data[5] << " " << d.numofgraduate << endl;
+        }
     }
 
     int gethei()
