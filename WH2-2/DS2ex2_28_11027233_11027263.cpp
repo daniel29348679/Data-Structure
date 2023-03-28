@@ -533,6 +533,7 @@ public:
     };
 
     shared_ptr<node_avl> head = nullptr;
+
     void rotater(shared_ptr<node_avl> node)
     {
         if(node == nullptr || (node->child[0] == nullptr && node->child[1] == nullptr))
@@ -658,6 +659,29 @@ public:
         }
     }
 
+    void printlargest(const int& numoflargest)
+    {
+        int count = 0;
+
+        printlargest(numoflargest, count, head);
+    }
+
+    void printlargest(const int& numoflargest, int& count, shared_ptr<node_avl> node)
+    {
+        if(node == nullptr)
+            return;
+
+        printlargest(numoflargest, count, node->child[1]);
+        if(count < numoflargest)
+            for(auto& q:node->li)
+            {
+                auto d = dvec[q.no - 1];
+                cout << ++count << ": [" << d.no << "]" << " " << d.data[1] << " " << d.data[3] << " " << d.data[4] << " " << d.data[5] << " " << d.numofgraduate << endl;
+            }
+        if(count < numoflargest)
+            printlargest(numoflargest, count, node->child[0]);
+    }
+
     void printroot()
     {
         if(head == nullptr)
@@ -671,6 +695,11 @@ public:
             auto d = dvec[q.no - 1];
             cout << ++k << ": [" << d.no << "]" << " " << d.data[1] << " " << d.data[3] << " " << d.data[4] << " " << d.data[5] << " " << d.numofgraduate << endl;
         }
+    }
+
+    int size()
+    {
+        return dvec.size();
     }
 
     int gethei()
@@ -705,6 +734,7 @@ int main()
 {
     int k = 100;
 
+    sheet_avl shavl;
 
     while(k != 0)
     {
@@ -712,7 +742,8 @@ int main()
         cout << "**  data operate system           **" << "\n"; //print menu
         cout << "* 0. Quit                          *" << "\n";
         cout << "* 1. 23tree                        *" << "\n";
-        cout << "* 2. avltree                      **" << "\n";
+        cout << "* 2. avltree                       *" << "\n";
+        cout << "* 3. largest in avltree           **" << "\n";
         cout << ":";
         cin >> k;
         if(cin.fail())
@@ -725,7 +756,7 @@ int main()
             continue;     //skip this loop
         }
 
-        if(k != 0 && k != 1 && k != 2)
+        if(k != 0 && k != 1 && k != 2 && k != 3)
         {
             cout << "\nCommand does not exist!\n";
             continue; //skip this loop
@@ -749,11 +780,33 @@ int main()
             string locate;
             cin >> locate;
 
-            sheet_avl sh(locate);
-            cout << "Tree height = " << sh.gethei() << endl;
-            cout << "Number of nodes = " << sh.getnumofnode() << endl;
-            sh.printroot();
+            shavl = sheet_avl(locate);
+            cout << "Tree height = " << shavl.gethei() << endl;
+            cout << "Number of nodes = " << shavl.getnumofnode() << endl;
+            shavl.printroot();
             //numofstudentsheet sh(locate);  //input file locate
+        }
+        if(k == 3)
+        {
+            if(shavl.inputlocate == "")
+            {
+                cout << "run mission 2 first!!\n";
+                continue;
+            }
+            int k;
+            while(1)
+            {
+                cout << "top-K (-1 to quit): ";
+                cin >> k;
+                if(k == -1)
+                    break;
+                while(k > shavl.size())
+                {
+                    cout << "too much, retury top-K (-1 to quit): ";
+                    cin >> k;
+                }
+                shavl.printlargest(k);
+            }
         }
     }
 }
