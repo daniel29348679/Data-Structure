@@ -9,6 +9,7 @@
 using namespace std;
 
 //#define debug    ;
+class person;
 
 class person_bin
 {
@@ -18,6 +19,7 @@ public:
     unsigned char score[6] = {0, 0, 0, 0, 0, 0};
     float mean             = 0.0;
 
+    void operator=(const person&p);
 
     //ifstream, istream, ofstream, ostream are friends of person_bin's, so they can acess private members in person_bin
     friend ifstream &operator>>(ifstream&s, person_bin&p);
@@ -47,18 +49,27 @@ public:
 };
 
 
-void copy(person_bin&q, const person&p)
+void person_bin::operator=(const person&p)
 {
-    strcpy(q.sid, p.sid.c_str());       //sid
-    strcpy(q.sname, p.sname.c_str());   //sname
-    for(int i = 0 ; i < 6 ; i++)        //score
-        q.score[i] = p.score[i];
-    q.mean = p.mean;                    //mean;
+    strcpy(sid, p.sid.c_str());       //sid
+    strcpy(sname, p.sname.c_str());   //sname
+    for(int i = 0 ; i < 6 ; i++)      //score
+        score[i] = p.score[i];
+    mean = p.mean;                    //mean;
 }
 
 ifstream &operator>>(ifstream&s, person&p)
 {
-    s >> p.sid >> p.sname >> p.score[0] >> p.score[1] >> p.score[2] >> p.score[3] >> p.score[4] >> p.score[5] >> p.mean;
+    s >> p.sid;
+
+    s >> p.sname;
+    if(p.sname.size() < 3)
+    {
+        string str;
+        s >> str;
+        p.sname += str;
+    }
+    s >> p.score[0] >> p.score[1] >> p.score[2] >> p.score[3] >> p.score[4] >> p.score[5] >> p.mean;
     return s;
 }
 
@@ -126,7 +137,7 @@ public:
                 while(input >> p)
                 {
                     person_vec.push_back(p);
-                    copy(pb, p);
+                    pb = p;
                     output << pb;
 
                     #ifdef debug
@@ -148,6 +159,22 @@ public:
         for(int i = 2; i < 100000; i++)
         {
             if(bvec[i] && i > person_vec.size() * 1.2)
+                return i;
+
+            if(bvec[i])
+                for(int j = i * 2; j < 100000; j += i)
+                    bvec[j] = 0;
+        }
+        return -1;
+    }
+
+    int getstep()
+    {
+        vector<bool> bvec(100000, 1);
+
+        for(int i = 2; i < 100000; i++)
+        {
+            if(bvec[i] && i > person_vec.size() / 3)
                 return i;
 
             if(bvec[i])
@@ -203,15 +230,26 @@ public:
         }
 
         cout << "!!!!HASH TABLE!!!!!" << endl;
+        ofstream out("quadratic" + input_filename + ".txt", ios::trunc);
+
         for(int i = 0; i < hashtable.size(); i++)
         {
-            cout << "Hash code" << i << "\t";
+            cout << "Hash code:" << i << "\t";
+            out << "Hash code:" << i << "\t";
             if(get<3>(hashtable[i]) != -1)
+            {
                 cout << get<0>(hashtable[i]) << '\t' << get<1>(hashtable[i]) << '\t' << get<2>(hashtable[i]) << '\t' << get<3>(hashtable[i]);
+                out << get<0>(hashtable[i]) << '\t' << get<1>(hashtable[i]) << '\t' << get<2>(hashtable[i]) << '\t' << get<3>(hashtable[i]);
+            }
             else
+            {
                 cout << "NULL!";
+                out << "NULL!";
+            }
             cout << endl;
+            out << endl;
         }
+        out.close();
 
 
         //find average
@@ -271,6 +309,98 @@ public:
         }
         cout << "exist:" << (float)count / person_vec.size() << endl;
     }
+
+    void doublehash()
+    {
+        int         haxnum = gethaxnum();
+        int         step   = getstep();
+        vector<int> haxvec;
+        vector<tuple<string, string, float, int> > hashtable(haxnum, {"", "", 0.0, -1});
+        set<int> haxset;
+
+        for(int i = 0 ; i < haxnum ; i++)
+            haxset.insert(i);
+        for(int i = 0 ; i < person_vec.size(); i++)
+        {
+            char c[10];
+            strcpy(c, person_vec[i].sid.c_str());
+            int h = 1;
+            for(int j = 0; j < 10 && c[j] != '\0'; j++)
+            {
+                h *= c[j];
+                h %= haxnum;
+            }
+            haxset.erase(h);
+            haxvec.push_back(h);
+
+            //put into hashtable
+            int st = step - h % step;
+            for(int a = h; ;)
+            {
+                if(get<3>(hashtable[a]) == -1)
+                {
+                    hashtable[a] = make_tuple(person_vec[i].sid, person_vec[i].sname, person_vec[i].mean, h);
+                    break;
+                }
+                a += st;
+                a %= haxnum;
+            }
+        }
+
+        cout << "!!!!HASH TABLE!!!!!" << endl;
+        ofstream out("double" + input_filename + ".txt", ios::trunc);
+
+        for(int i = 0; i < hashtable.size(); i++)
+        {
+            cout << "Hash code:" << i << "\t";
+            out << "Hash code:" << i << "\t";
+            if(get<3>(hashtable[i]) != -1)
+            {
+                cout << get<0>(hashtable[i]) << '\t' << get<1>(hashtable[i]) << '\t' << get<2>(hashtable[i]) << '\t' << get<3>(hashtable[i]);
+                out << get<0>(hashtable[i]) << '\t' << get<1>(hashtable[i]) << '\t' << get<2>(hashtable[i]) << '\t' << get<3>(hashtable[i]);
+            }
+            else
+            {
+                cout << "NULL!";
+                out << "NULL!";
+            }
+            cout << endl;
+            out << endl;
+        }
+        out.close();
+
+
+        //find average
+        int count = 0;
+
+        for(auto num:haxset) //not exist
+        {
+            int st = step - num % step;
+            for(int a = num; ; a += st, a %= haxnum)
+            {
+                count++;
+                if(get<3>(hashtable[a]) == -1)
+                    break;
+            }
+        }
+
+        cout << "not exist:" << (float)count / person_vec.size() << endl;
+
+
+        count = 0;
+        for(int i = 0 ; i < person_vec.size(); i++)  //exist
+        {
+            int h  = haxvec[i];
+            int st = step - h % step;
+            for(int a = h; ; a += st, a %= haxnum)
+            {
+                count++;
+                if(get<0>(hashtable[a]) == person_vec[i].sid)
+                    break;
+            }
+        }
+        cout << "exist:" << (float)count / person_vec.size() << endl;
+    }
 };
 
 int main()
@@ -283,7 +413,7 @@ int main()
         cout << "\n";
         cout << "**  data operate system           **" << "\n"; //print menu
         cout << "* 0. Quit                          *" << "\n";
-        cout << "* 100. Mission 0                  **" << "\n";
+        cout << "* 1. Quadratic                    **" << "\n";
         cout << ":";
         cin >> k;
         if(cin.fail())
@@ -311,6 +441,16 @@ int main()
             sheet sh;
             sh.read(locate);
             sh.quadratic();
+        }
+        if(k == 2)
+        {
+            cout << "Input: ";
+            string locate;
+            cin >> locate;
+
+            sheet sh;
+            sh.read(locate);
+            sh.doublehash();
         }
     }
 }
