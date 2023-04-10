@@ -1,0 +1,11 @@
+Hash code:0	NULL!
+Hash code:1	NULL!
+Hash code:2	3102535	1	74.17	2
+Hash code:3	3102535	2	74.17	2
+Hash code:4	3102535	3	74.17	2
+Hash code:5	3102535	4	74.17	2
+Hash code:6	3102535	5	74.17	2
+Hash code:7	3102535	6	74.17	2
+Hash code:8	NULL!
+Hash code:9	NULL!
+Hash code:10	NULL!

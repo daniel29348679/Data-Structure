@@ -34,13 +34,13 @@ public:
     int score[6] = {0, 0, 0, 0, 0, 0};
     float mean   = 0.0;
 
-    void operator=(const person_bin&p)
+    void operator=(const person_bin&p) //person_bin->person
     {
-        sid   = p.sid;               //sid
-        sname = p.sname;             //sname
-        for(int i = 0 ; i < 6 ; i++) //score
+        sid   = p.sid;                 //sid
+        sname = p.sname;               //sname
+        for(int i = 0 ; i < 6 ; i++)   //score
             score[i] = p.score[i];
-        mean = p.mean;               //mean;
+        mean = p.mean;                 //mean;
     }
 
     //ifstream, istream, ofstream, ostream are friends of person_bin's, so they can acess private members in person_bin
@@ -49,13 +49,13 @@ public:
 };
 
 
-void person_bin::operator=(const person&p)
+void person_bin::operator=(const person&p) //define here because must after person defined
 {
-    strcpy(sid, p.sid.c_str());       //sid
-    strcpy(sname, p.sname.c_str());   //sname
-    for(int i = 0 ; i < 6 ; i++)      //score
+    strcpy(sid, p.sid.c_str());            //sid
+    strcpy(sname, p.sname.c_str());        //sname
+    for(int i = 0 ; i < 6 ; i++)           //score
         score[i] = p.score[i];
-    mean = p.mean;                    //mean;
+    mean = p.mean;                         //mean;
 }
 
 ifstream &operator>>(ifstream&s, person&p)
@@ -81,14 +81,14 @@ ostream &operator<<(ostream&s, person&p)
 
 ifstream &operator>>(ifstream&s, person_bin&p) //person_bin output file stream Overload
 {
-    if(!s.read((char*)&p, sizeof(p)))
-        s.clear(ios::failbit);
+    if(!s.read((char*)&p, sizeof(p)))          //copy block
+        s.clear(ios::failbit);                 //set failbit if read failed
     return s;
 }
 
 ofstream &operator<<(ofstream&s, person_bin&p) //person_bin output file stream Overload
 {
-    s.write((char*)&p, sizeof(p));
+    s.write((char*)&p, sizeof(p));             //copy block
     return s;
 }
 
@@ -110,7 +110,7 @@ public:
         for(;; cout << "\nCan't open file, typenew: ", cin >> locate)
         {
             input_filename = locate;
-            input.open("input" + locate + ".bin", ios::binary);
+            input.open("input" + locate + ".bin", ios::binary); //try input bin
             if(input)
             {
                 person_bin pb;
@@ -127,7 +127,7 @@ public:
                 input.close();
                 return;
             }
-            input.open("input" + locate + ".txt");
+            input.open("input" + locate + ".txt");//try input txt
             if(input)
             {
                 ofstream   output("input" + locate + ".bin", ios::binary);
@@ -190,10 +190,8 @@ public:
 
         vector<int> haxvec;
         vector<tuple<string, string, float, int> > hashtable(haxnum, {"", "", 0.0, -1});
-        set<int> haxset;
 
-        for(int i = 0 ; i < haxnum ; i++)
-            haxset.insert(i);
+
         for(int i = 0 ; i < person_vec.size(); i++)
         {
             char c[10];
@@ -204,7 +202,6 @@ public:
                 h *= c[j];
                 h %= haxnum;
             }
-            haxset.erase(h);
             haxvec.push_back(h);
 
             //put into hashtable
@@ -217,15 +214,19 @@ public:
                     hashtable[a] = make_tuple(person_vec[i].sid, person_vec[i].sname, person_vec[i].mean, h);
                     break;
                 }
-                a = h - (j * j) % haxnum;
-                if(a < 0)
-                    a += haxnum;
-                a %= haxnum;
-                if(get<3>(hashtable[a]) == -1)
-                {
-                    hashtable[a] = make_tuple(person_vec[i].sid, person_vec[i].sname, person_vec[i].mean, h);
-                    break;
-                }
+
+                /*
+                 * a = h - (j * j) % haxnum;
+                 * if(a < 0)
+                 *  a += haxnum;
+                 * a %= haxnum;
+                 * if(get<3>(hashtable[a]) == -1)
+                 * {
+                 *  hashtable[a] = make_tuple(person_vec[i].sid, person_vec[i].sname, person_vec[i].mean, h);
+                 *  break;
+                 * }
+                 */
+                //only +
             }
         }
 
@@ -255,9 +256,8 @@ public:
         //find average
         int count = 0;
 
-        for(auto num:haxset) //not exist
+        for(int num = 0; num < hashtable.size(); num++) //not exist
         {
-            count++;
             if(get<3>(hashtable[num]) == -1)
                 continue;
             for(int j = 1; j < haxnum; j++)
@@ -267,19 +267,22 @@ public:
                 count++;
                 if(get<3>(hashtable[a]) == -1)
                     break;
-                a = num - (j * j) % haxnum;
 
-                if(a < 0)
-                    a += haxnum;
-
-                a %= haxnum;
-                count++;
-                if(get<3>(hashtable[a]) == -1)
-                    break;
+                /*
+                 * a = num - (j * j) % haxnum;
+                 *
+                 * if(a < 0)
+                 *  a += haxnum;
+                 *
+                 * a %= haxnum;
+                 * count++;
+                 * if(get<3>(hashtable[a]) == -1)
+                 *  break;
+                 */
             }
         }
 
-        cout << "not exist:" << (float)count / person_vec.size() << endl;
+        cout << "not exist:" << (float)count / hashtable.size() << endl;
 
 
         count = 0;
@@ -296,15 +299,18 @@ public:
                 count++;
                 if(get<0>(hashtable[a]) == person_vec[i].sid)
                     break;
-                a = h - (j * j) % haxnum;
 
-                if(a < 0)
-                    a += haxnum;
-
-                a %= haxnum;
-                count++;
-                if(get<0>(hashtable[a]) == person_vec[i].sid)
-                    break;
+                /*
+                 * a = h - (j * j) % haxnum;
+                 *
+                 * if(a < 0)
+                 *  a += haxnum;
+                 *
+                 * a %= haxnum;
+                 * count++;
+                 * if(get<0>(hashtable[a]) == person_vec[i].sid)
+                 *  break;
+                 */
             }
         }
         cout << "exist:" << (float)count / person_vec.size() << endl;
@@ -316,10 +322,7 @@ public:
         int         step   = getstep();
         vector<int> haxvec;
         vector<tuple<string, string, float, int> > hashtable(haxnum, {"", "", 0.0, -1});
-        set<int> haxset;
 
-        for(int i = 0 ; i < haxnum ; i++)
-            haxset.insert(i);
         for(int i = 0 ; i < person_vec.size(); i++)
         {
             char c[10];
@@ -330,7 +333,6 @@ public:
                 h *= c[j];
                 h %= haxnum;
             }
-            haxset.erase(h);
             haxvec.push_back(h);
 
             //put into hashtable
@@ -373,21 +375,6 @@ public:
         //find average
         int count = 0;
 
-        for(auto num:haxset) //not exist
-        {
-            int st = step - num % step;
-            for(int a = num; ; a += st, a %= haxnum)
-            {
-                count++;
-                if(get<3>(hashtable[a]) == -1)
-                    break;
-            }
-        }
-
-        cout << "not exist:" << (float)count / person_vec.size() << endl;
-
-
-        count = 0;
         for(int i = 0 ; i < person_vec.size(); i++)  //exist
         {
             int h  = haxvec[i];
