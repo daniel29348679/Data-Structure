@@ -214,40 +214,18 @@ public:
                     hashtable[a] = make_tuple(person_vec[i].sid, person_vec[i].sname, person_vec[i].mean, h);
                     break;
                 }
-
-                /*
-                 * a = h - (j * j) % haxnum;
-                 * if(a < 0)
-                 *  a += haxnum;
-                 * a %= haxnum;
-                 * if(get<3>(hashtable[a]) == -1)
-                 * {
-                 *  hashtable[a] = make_tuple(person_vec[i].sid, person_vec[i].sname, person_vec[i].mean, h);
-                 *  break;
-                 * }
-                 */
-                //only +
             }
         }
 
-        cout << "!!!!HASH TABLE!!!!!" << endl;
         ofstream out("quadratic" + input_filename + ".txt", ios::trunc);
 
         for(int i = 0; i < hashtable.size(); i++)
         {
-            cout << "Hash code:" << i << "\t";
             out << "Hash code:" << i << "\t";
             if(get<3>(hashtable[i]) != -1)
-            {
-                cout << get<0>(hashtable[i]) << '\t' << get<1>(hashtable[i]) << '\t' << get<2>(hashtable[i]) << '\t' << get<3>(hashtable[i]);
                 out << get<0>(hashtable[i]) << '\t' << get<1>(hashtable[i]) << '\t' << get<2>(hashtable[i]) << '\t' << get<3>(hashtable[i]);
-            }
             else
-            {
-                cout << "NULL!";
                 out << "NULL!";
-            }
-            cout << endl;
             out << endl;
         }
         out.close();
@@ -267,22 +245,10 @@ public:
                 count++;
                 if(get<3>(hashtable[a]) == -1)
                     break;
-
-                /*
-                 * a = num - (j * j) % haxnum;
-                 *
-                 * if(a < 0)
-                 *  a += haxnum;
-                 *
-                 * a %= haxnum;
-                 * count++;
-                 * if(get<3>(hashtable[a]) == -1)
-                 *  break;
-                 */
             }
         }
 
-        cout << "not exist:" << (float)count / hashtable.size() << endl;
+        cout << "not exist:" << setprecision(4) << (float)count / hashtable.size() << endl;
 
 
         count = 0;
@@ -299,18 +265,6 @@ public:
                 count++;
                 if(get<0>(hashtable[a]) == person_vec[i].sid)
                     break;
-
-                /*
-                 * a = h - (j * j) % haxnum;
-                 *
-                 * if(a < 0)
-                 *  a += haxnum;
-                 *
-                 * a %= haxnum;
-                 * count++;
-                 * if(get<0>(hashtable[a]) == person_vec[i].sid)
-                 *  break;
-                 */
             }
         }
         cout << "exist:" << (float)count / person_vec.size() << endl;
@@ -319,8 +273,8 @@ public:
     void doublehash()
     {
         int         haxnum = gethaxnum();
-        int         step   = getstep();
-        vector<int> haxvec;
+        int         step = getstep();
+        vector<int> haxvec, stepvec;
         vector<tuple<string, string, float, int> > hashtable(haxnum, {"", "", 0.0, -1});
 
         for(int i = 0 ; i < person_vec.size(); i++)
@@ -336,7 +290,14 @@ public:
             haxvec.push_back(h);
 
             //put into hashtable
-            int st = step - h % step;
+            int hh = 1;
+            for(int j = 0; j < 10 && c[j] != '\0'; j++)
+            {
+                hh *= c[j];
+                hh %= step;
+            }
+            int st = step - (hh % step);
+            stepvec.push_back(st);
             for(int a = h; ;)
             {
                 if(get<3>(hashtable[a]) == -1)
@@ -349,28 +310,18 @@ public:
             }
         }
 
-        cout << "!!!!HASH TABLE!!!!!" << endl;
         ofstream out("double" + input_filename + ".txt", ios::trunc);
 
         for(int i = 0; i < hashtable.size(); i++)
         {
-            cout << "Hash code:" << i << "\t";
             out << "Hash code:" << i << "\t";
             if(get<3>(hashtable[i]) != -1)
-            {
-                cout << get<0>(hashtable[i]) << '\t' << get<1>(hashtable[i]) << '\t' << get<2>(hashtable[i]) << '\t' << get<3>(hashtable[i]);
                 out << get<0>(hashtable[i]) << '\t' << get<1>(hashtable[i]) << '\t' << get<2>(hashtable[i]) << '\t' << get<3>(hashtable[i]);
-            }
             else
-            {
-                cout << "NULL!";
                 out << "NULL!";
-            }
-            cout << endl;
             out << endl;
         }
         out.close();
-
 
         //find average
         int count = 0;
@@ -378,7 +329,7 @@ public:
         for(int i = 0 ; i < person_vec.size(); i++)  //exist
         {
             int h  = haxvec[i];
-            int st = step - h % step;
+            int st = stepvec[i];
             for(int a = h; ; a += st, a %= haxnum)
             {
                 count++;
@@ -395,12 +346,15 @@ int main()
     int   k = 100;
     sheet sh;
 
+    cout << fixed << setprecision(4);
     while(k != 0)
     {
         cout << "\n";
         cout << "**  data operate system           **" << "\n"; //print menu
         cout << "* 0. Quit                          *" << "\n";
-        cout << "* 1. Quadratic                    **" << "\n";
+        cout << "* 1. Quadratic                     *" << "\n";
+        cout << "* 2. Double hashing                **" << "\n";
+
         cout << ":";
         cin >> k;
         if(cin.fail())
@@ -413,7 +367,7 @@ int main()
             continue;     //skip this loop
         }
 
-        if(k != 0 && k != 1 && k != 2 && k != 3)
+        if(k != 0 && k != 1 && k != 2)
         {
             cout << "\nCommand does not exist!\n";
             continue; //skip this loop
