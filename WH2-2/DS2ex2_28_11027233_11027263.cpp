@@ -81,8 +81,6 @@ public:
     auto operator<=>(const department_avl& other) const
     {
         return numofgraduate <=> other.numofgraduate;
-
-        //return strcmp(data[1].c_str(), other.data[1].c_str());
     }
 
     bool operator==(const department_avl& other) const
