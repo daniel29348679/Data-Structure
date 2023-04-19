@@ -49,7 +49,7 @@ public:
         id = s;
     }
 
-    void putnext(int& i, float& j)
+    void putnext(int& i, float& j) // to push back nexts
     {
         nexts.push_back(make_pair(i, j));
     }
@@ -61,11 +61,11 @@ class dgraph
 public:
     string input_filename;
 
-    set<string> idset;
-    vector<tuple<string, string, float> > dvec;
-    vector<node> nodevec;
-    map<string, int> indexmap;
-    void read(string locate)     //constructer  read the file
+    set<string> idset;                          //all id here
+    vector<tuple<string, string, float> > dvec; //Directed_graph
+    vector<node> nodevec;                       //node
+    map<string, int> indexmap;                  //id to index
+    void read(string locate)                    //constructer  read the file
     {
         ifstream input;
 
@@ -99,21 +99,21 @@ public:
         }
     }
 
-    void adjlist()
+    void adjlist() //mission 1
     {
         indexmap.clear();
         nodevec.clear();
-        for(auto&s:idset)
+        for(auto&s:idset) //build nodevec
         {
             indexmap[s] = nodevec.size();
             nodevec.push_back(node(s));
         }
-        for(auto&d:dvec)
+        for(auto&d:dvec) //save Directed_graph by node
             nodevec[indexmap[get<0>(d)]].putnext(indexmap[get<1>(d)], get<2>(d));
 
 
         ofstream out("pairs" + input_filename + ".adj", ios::trunc);
-        for(int i = 0 ; i < nodevec.size(); i++)
+        for(int i = 0 ; i < nodevec.size(); i++) // write file
         {
             out << "[" << i + 1 << "] " << nodevec[i].id << ":" << endl;
             #ifdef debug
@@ -137,25 +137,25 @@ public:
 
         for(int i = 0 ; i < nodevec.size(); i++)
         {
-            set<int>    nextset;
-            vector<int> tempvev, nexvec;
+            set<int>    nextset;         // to check repeat
+            vector<int> tempvev, nexvec; //nexvec->now checking, tempvev->next time checking
 
             nextset.insert(i);
-            nexvec.push_back(i);
+            nexvec.push_back(i); //start at index i
 
             while(nexvec.size())
             {
-                for(auto&n:nexvec)
+                for(auto&n:nexvec) //index->node->vector(pair)->int
                     for(auto j:nodevec[n].nexts | ranges::views::transform([](pair<int, float> p){
                         return p.first;
                     }) | ranges::views::filter([&nextset](int x){
-                        return nextset.count(x) == 0;
+                        return nextset.count(x) == 0; //not exist in nextset
                     }))
                     {
                         nextset.insert(j);
                         tempvev.push_back(j);
                     }
-                nexvec = tempvev;
+                nexvec = tempvev; //do next time
                 tempvev.clear();
             }
 
