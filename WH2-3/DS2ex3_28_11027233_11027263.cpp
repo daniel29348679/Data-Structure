@@ -9,30 +9,23 @@
 using namespace std;
 
 //#define debug    ;
-class person;
-
-class person_bin
+struct person;
+struct person_bin
 {
-public:
-    char sid[10]           = "";
-    char sname[10]         = "";
-    unsigned char score[6] = {0, 0, 0, 0, 0, 0};
-    float mean             = 0.0;
-
+    char          sid[10]   = "";
+    char          sname[10] = "";
+    unsigned char score[6]  = {0, 0, 0, 0, 0, 0};
+    float         mean      = 0.0;
     void operator=(const person&p);
-
-    //ifstream, istream, ofstream, ostream are friends of person_bin's, so they can acess private members in person_bin
-    friend ifstream &operator>>(ifstream&s, person_bin&p);
-    friend ofstream &operator<<(ofstream&s, person_bin&p);
 };
 
-class person
+struct person
 {
 public:
     string sid;
     string sname;
-    int score[6] = {0, 0, 0, 0, 0, 0};
-    float mean   = 0.0;
+    int    score[6] = {0, 0, 0, 0, 0, 0};
+    float  mean     = 0.0;
 
     void operator=(const person_bin&p) //person_bin->person
     {
@@ -42,10 +35,6 @@ public:
             score[i] = p.score[i];
         mean = p.mean;                 //mean;
     }
-
-    //ifstream, istream, ofstream, ostream are friends of person_bin's, so they can acess private members in person_bin
-    friend ifstream &operator>>(ifstream&s, person&p);
-    friend ostream &operator<<(ostream&s, person&p);
 };
 
 
