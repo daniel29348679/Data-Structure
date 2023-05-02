@@ -9,7 +9,7 @@ Hash code:7	10427105	ªL¦ö¾§	82	6
 Hash code:8	NULL!
 Hash code:9	10420141	¤ý¯E	84.83	9
 Hash code:10	10427150	³¯«T§»	80.5	6
-Hash code:11	10427171	¤ý«Û	66.5	20
+Hash code:11	10427171	¤ý «Û	66.5	20
 Hash code:12	10127171	³¯±d¥­	83.5	12
 Hash code:13	NULL!
 Hash code:14	NULL!

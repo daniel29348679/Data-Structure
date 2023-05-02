@@ -8,7 +8,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-//#define debug    ;
+//#define debug    ; use if want to debug
 struct person;
 struct person_bin
 {
@@ -87,8 +87,17 @@ public:
     int numofdata = 0;
     vector<person> person_vec;
     string input_filename;
+    vector<tuple<string, string, float, int> > hashtable_qua;
+    vector<tuple<string, string, float, int> > hashtable_double;
+
+    bool run_1 = 0;
+    bool run_2 = 0;
+    int step;
+
     void read(string locate)     //constructer  read the file
     {
+        run_1 = 0;
+        run_2 = 0;
         ifstream input;
 
         person_vec.clear();
@@ -104,9 +113,9 @@ public:
             {
                 person_bin pb;
                 person     p;
-                while(input >> pb)
+                while(input >> pb) //read bin
                 {
-                    p = pb;
+                    p = pb;        //bin to normal
                     person_vec.push_back(p);
 
                     #ifdef debug
@@ -119,15 +128,15 @@ public:
             input.open("input" + locate + ".txt");//try input txt
             if(input)
             {
-                ofstream   output("input" + locate + ".bin", ios::binary);
+                ofstream   output("input" + locate + ".bin", ios::binary);//save file
                 person_bin pb;
                 person     p;
 
-                while(input >> p)
+                while(input >> p) //read normal
                 {
                     person_vec.push_back(p);
-                    pb = p;
-                    output << pb;
+                    pb = p;       //normal to bin
+                    output << pb; //save in bin
 
                     #ifdef debug
                     cout << p << endl;
@@ -143,7 +152,7 @@ public:
 
     int gethaxnum()
     {
-        vector<bool> bvec(100000, 1);
+        vector<bool> bvec(100000, 1); //set if Prime number
 
         for(int i = 2; i < 100000; i++)
         {
@@ -159,7 +168,7 @@ public:
 
     int getstep()
     {
-        vector<bool> bvec(100000, 1);
+        vector<bool> bvec(100000, 1); //set if Prime number
 
         for(int i = 2; i < 100000; i++)
         {
@@ -175,17 +184,22 @@ public:
 
     void quadratic()
     {
+        run_1 = 1;
         int haxnum = gethaxnum();
 
         vector<int> haxvec;
-        vector<tuple<string, string, float, int> > hashtable(haxnum, {"", "", 0.0, -1});
+
+        //vector<tuple<string, string, float, int> > hashtable_qua(haxnum, {"", "", 0.0, -1});
+        hashtable_qua.clear();
+        for(int i = 0 ; i < haxnum; i++)
+            hashtable_qua.push_back({"", "", 0.0, -1});
 
 
         for(int i = 0 ; i < person_vec.size(); i++)
         {
             char c[10];
             strcpy(c, person_vec[i].sid.c_str());
-            int h = 1;
+            int h = 1; //hash number
             for(int j = 0; j < 10 && c[j] != '\0'; j++)
             {
                 h *= c[j];
@@ -198,21 +212,21 @@ public:
             {
                 int a = h + j * j;
                 a %= haxnum;
-                if(get<3>(hashtable[a]) == -1)
+                if(get<3>(hashtable_qua[a]) == -1)
                 {
-                    hashtable[a] = make_tuple(person_vec[i].sid, person_vec[i].sname, person_vec[i].mean, h);
+                    hashtable_qua[a] = make_tuple(person_vec[i].sid, person_vec[i].sname, person_vec[i].mean, h);
                     break;
                 }
             }
         }
 
-        ofstream out("quadratic" + input_filename + ".txt", ios::trunc);
+        ofstream out("quadratic" + input_filename + ".txt", ios::trunc); //output file
 
-        for(int i = 0; i < hashtable.size(); i++)
+        for(int i = 0; i < hashtable_qua.size(); i++)
         {
             out << "Hash code:" << i << "\t";
-            if(get<3>(hashtable[i]) != -1)
-                out << get<0>(hashtable[i]) << '\t' << get<1>(hashtable[i]) << '\t' << get<2>(hashtable[i]) << '\t' << get<3>(hashtable[i]);
+            if(get<3>(hashtable_qua[i]) != -1)
+                out << get<0>(hashtable_qua[i]) << '\t' << get<1>(hashtable_qua[i]) << '\t' << get<2>(hashtable_qua[i]) << '\t' << get<3>(hashtable_qua[i]);
             else
                 out << "NULL!";
             out << endl;
@@ -223,21 +237,21 @@ public:
         //find average
         int count = 0;
 
-        for(int num = 0; num < hashtable.size(); num++) //not exist
+        for(int num = 0; num < hashtable_qua.size(); num++) //not exist
         {
-            if(get<3>(hashtable[num]) == -1)
+            if(get<3>(hashtable_qua[num]) == -1)
                 continue;
             for(int j = 1; j < haxnum; j++)
             {
                 int a = num + j * j;
                 a %= haxnum;
                 count++;
-                if(get<3>(hashtable[a]) == -1)
+                if(get<3>(hashtable_qua[a]) == -1)
                     break;
             }
         }
 
-        cout << "not exist:" << setprecision(4) << (float)count / hashtable.size() << endl;
+        cout << "not exist:" << setprecision(4) << (float)count / hashtable_qua.size() << endl;
 
 
         count = 0;
@@ -245,14 +259,14 @@ public:
         {
             int h = haxvec[i];
             count++;
-            if(get<0>(hashtable[h]) == person_vec[i].sid)
+            if(get<0>(hashtable_qua[h]) == person_vec[i].sid)
                 continue;
             for(int j = 1; j < haxnum; j++)
             {
                 int a = h + j * j;
                 a %= haxnum;
                 count++;
-                if(get<0>(hashtable[a]) == person_vec[i].sid)
+                if(get<0>(hashtable_qua[a]) == person_vec[i].sid)
                     break;
             }
         }
@@ -261,11 +275,20 @@ public:
 
     void doublehash()
     {
-        int         haxnum = gethaxnum();
-        int         step = getstep();
+        if(!run_1)
+        {
+            cout << "run 1 needed!!!!\n";
+            return;
+        }
+        run_2 = 1;
+        int haxnum = gethaxnum();
+        step = getstep();
         vector<int> haxvec, stepvec;
-        vector<tuple<string, string, float, int> > hashtable(haxnum, {"", "", 0.0, -1});
 
+        //vector<tuple<string, string, float, int> > hashtable_double(haxnum, {"", "", 0.0, -1});
+        hashtable_double.clear();
+        for(int i = 0 ; i < haxnum; i++)
+            hashtable_double.push_back({"", "", 0.0, -1});
         for(int i = 0 ; i < person_vec.size(); i++)
         {
             char c[10];
@@ -289,9 +312,9 @@ public:
             stepvec.push_back(st);
             for(int a = h; ;)
             {
-                if(get<3>(hashtable[a]) == -1)
+                if(get<3>(hashtable_double[a]) == -1)
                 {
-                    hashtable[a] = make_tuple(person_vec[i].sid, person_vec[i].sname, person_vec[i].mean, h);
+                    hashtable_double[a] = make_tuple(person_vec[i].sid, person_vec[i].sname, person_vec[i].mean, h);
                     break;
                 }
                 a += st;
@@ -299,13 +322,13 @@ public:
             }
         }
 
-        ofstream out("double" + input_filename + ".txt", ios::trunc);
+        ofstream out("double" + input_filename + ".txt", ios::trunc); //output file
 
-        for(int i = 0; i < hashtable.size(); i++)
+        for(int i = 0; i < hashtable_double.size(); i++)
         {
             out << "Hash code:" << i << "\t";
-            if(get<3>(hashtable[i]) != -1)
-                out << get<0>(hashtable[i]) << '\t' << get<1>(hashtable[i]) << '\t' << get<2>(hashtable[i]) << '\t' << get<3>(hashtable[i]);
+            if(get<3>(hashtable_double[i]) != -1)
+                out << get<0>(hashtable_double[i]) << '\t' << get<1>(hashtable_double[i]) << '\t' << get<2>(hashtable_double[i]) << '\t' << get<3>(hashtable_double[i]);
             else
                 out << "NULL!";
             out << endl;
@@ -321,12 +344,69 @@ public:
             int st = stepvec[i];
             for(int a = h; ; a += st, a %= haxnum)
             {
+<<<<<<< HEAD
                 count++; .
                 if(get<0>(hashtable[a]) == person_vec[i].sid)
+=======
+                count++;
+                if(get<0>(hashtable_double[a]) == person_vec[i].sid)
+>>>>>>> origin/main
                     break;
             }
         }
         cout << "exist:" << (float)count / person_vec.size() << endl;
+    }
+
+    void search(string id)
+    {
+        if(!(run_1 && run_2))
+        {
+            cout << "run 1&2 needed!!\n";
+            return;
+        }
+        int h = 1;
+
+        for(auto&c:id)
+        {
+            h *= c;
+            h %= hashtable_double.size();
+        }
+
+        int s = 1;
+
+        for(auto&c:id)
+        {
+            s *= c;
+            s %= step;
+        }
+        s = step - s;
+
+        for(int i = 0 ;; i++)
+        {
+            if(get<0>(hashtable_qua[(h + i * i) % hashtable_qua.size()]) == id)
+            {
+                cout << "find {" << get<0>(hashtable_qua[(h + i * i) % hashtable_qua.size()]) << "," << get<1>(hashtable_qua[(h + i * i) % hashtable_qua.size()]) << "," << get<2>(hashtable_qua[(h + i * i) % hashtable_qua.size()]) << "} success in qua, " << i + 1 << "times\n";
+                break;
+            }
+            if(get<3>(hashtable_qua[(h + i * i) % hashtable_qua.size()]) == -1)
+            {
+                cout << "find " << id << " unsuccess in qua, " << i + 1 << "times\n";
+                break;
+            }
+        }
+        for(int i = 0;; h += s, h %= hashtable_double.size(), i++)
+        {
+            if(get<0>(hashtable_double[h]) == id)
+            {
+                cout << "find {" << get<0>(hashtable_double[h]) << "," << get<1>(hashtable_double[h]) << "," << get<2>(hashtable_double[h]) << "} success in double, " << i + 1 << "times\n";
+                break;
+            }
+            if(get<3>(hashtable_double[h]) == -1)
+            {
+                cout << "find " << id << " unsuccess in double, " << i + 1 << "times\n";
+                break;
+            }
+        }
     }
 };
 
@@ -336,13 +416,15 @@ int main()
     sheet sh;
 
     cout << fixed << setprecision(4);
+
     while(k != 0)
     {
         cout << "\n";
         cout << "**  data operate system           **" << "\n"; //print menu
         cout << "* 0. Quit                          *" << "\n";
         cout << "* 1. Quadratic                     *" << "\n";
-        cout << "* 2. Double hashing                **" << "\n";
+        cout << "* 2. Double hashing                *" << "\n";
+        cout << "* 3. Search                       **" << "\n";
 
         cout << ":";
         cin >> k;
@@ -356,7 +438,7 @@ int main()
             continue;     //skip this loop
         }
 
-        if(k != 0 && k != 1 && k != 2)
+        if(k != 0 && k != 1 && k != 2 && k != 3)
         {
             cout << "\nCommand does not exist!\n";
             continue; //skip this loop
@@ -367,20 +449,17 @@ int main()
             cout << "Input: ";
             string locate;
             cin >> locate;
-
-            sheet sh;
             sh.read(locate);
             sh.quadratic();
         }
         if(k == 2)
-        {
-            cout << "Input: ";
-            string locate;
-            cin >> locate;
-
-            sheet sh;
-            sh.read(locate);
             sh.doublehash();
+        if(k == 3)
+        {
+            string id;
+            cout << "id: ";
+            cin >> id;
+            sh.search(id);
         }
     }
 }
