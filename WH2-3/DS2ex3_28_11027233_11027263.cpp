@@ -342,15 +342,13 @@ public:
         {
             int h  = haxvec[i];
             int st = stepvec[i];
+            count--;
             for(int a = h; ; a += st, a %= haxnum)
             {
-<<<<<<< HEAD
-                count++; .
-                if(get<0>(hashtable[a]) == person_vec[i].sid)
-=======
                 count++;
                 if(get<0>(hashtable_double[a]) == person_vec[i].sid)
->>>>>>> origin/main
+                    count++;
+                if(get<0>(hashtable_double[a]) == person_vec[i].sid)
                     break;
             }
         }
