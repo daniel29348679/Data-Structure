@@ -321,7 +321,7 @@ public:
             int st = stepvec[i];
             for(int a = h; ; a += st, a %= haxnum)
             {
-                count++;
+                count++; .
                 if(get<0>(hashtable[a]) == person_vec[i].sid)
                     break;
             }
