@@ -1,0 +1,353 @@
+Hash code:0	10427131	¹ù¦t²Ð	84.17	337
+Hash code:1	10227103	¥Ó®ËºÝ	82.33	1
+Hash code:2	10227130	©u¡@ª@	82.83	1
+Hash code:3	10327149	§õ«G½Ë	49.67	3
+Hash code:4	10427139	³\¥ç¨°	68.67	3
+Hash code:5	10320127	³¯©ô§Ê	81	1
+Hash code:6	10427126	±i±©³ó	76.17	323
+Hash code:7	10027168	³¯¾ÇÀM	84	7
+Hash code:8	10227107	·¨ªÃ¾§	56.83	8
+Hash code:9	NULL!
+Hash code:10	10327102	§õ®¶³Ç	78.67	1
+Hash code:11	10427143	·¨©yÀØ	74	300
+Hash code:12	10227141	´^±d­õ	69.33	12
+Hash code:13	10327246	³\¨|ºú	75.17	12
+Hash code:14	10427247	¶À«ÉÚâ	62.5	14
+Hash code:15	10027151	¸­«ä·ì	68.33	15
+Hash code:16	10427121	ªL«F¦t	67.67	12
+Hash code:17	10327120	¼B«ä·ì	75.5	1
+Hash code:18	NULL!
+Hash code:19	4106034	¦ó¬FÀM	68.5	19
+Hash code:20	10227205	Â²¹Å§»	75.17	19
+Hash code:21	10327257	Ã¹µ¾Â@	70.33	20
+Hash code:22	NULL!
+Hash code:23	10427231	¤ý¨|·s	47.5	207
+Hash code:24	NULL!
+Hash code:25	NULL!
+Hash code:26	10327201	°¨¥¿°a	70.17	1
+Hash code:27	10327239	§d©v¿Î	73.17	26
+Hash code:28	10327133	ªLÖö´Å	83.67	28
+Hash code:29	10227233	®}¼z¤å	72	29
+Hash code:30	10127167	ªL¥HÌÉ	75	30
+Hash code:31	NULL!
+Hash code:32	10427233	§d®x·ì	86.67	129
+Hash code:33	10327223	¤×Þ³§Ê	74.83	29
+Hash code:34	10427216	§d«Bæ¢	83.17	323
+Hash code:35	10320101	±ç­õ»¨	72.17	35
+Hash code:36	NULL!
+Hash code:37	10327210	Ã¹´¼¾Ë	83	1
+Hash code:38	10127135	¹ùªl¶v	80.83	38
+Hash code:39	10327115	³¯¥ßª@	71.17	38
+Hash code:40	10320108	ªL«C¾ì	86.33	40
+Hash code:41	10327146	¾G¦t¨°	79.5	40
+Hash code:42	10327151	¿à¬ü§±	71	38
+Hash code:43	NULL!
+Hash code:44	10427111	·¨¾ðµÓ	73.83	40
+Hash code:45	10327232	½²©ú¾±	74	29
+Hash code:46	10227206	¤ýÄQµ¾	63.17	46
+Hash code:47	NULL!
+Hash code:48	10427205	Ã¹±s¯è	66.83	48
+Hash code:49	10227154	¦¶´­¥ß	68.17	49
+Hash code:50	10227254	¦¿¬Ó¿Ù	81.83	50
+Hash code:51	10327254	´å¨|·_	58.67	51
+Hash code:52	10427235	·¨¶­¯ø	83.83	51
+Hash code:53	10427125	±h¡@Öo	64.83	49
+Hash code:54	10427225	²ø¨N®x	76.67	50
+Hash code:55	10427226	¶ÀÄµ¾W	76.83	344
+Hash code:56	10427136	½²©ö¬À	63.33	40
+Hash code:57	10427250	´¿«~¤¤	85.5	48
+Hash code:58	10427246	³\³Õ»D	86.17	33
+Hash code:59	NULL!
+Hash code:60	10227138	¹Q©û¿²	81	60
+Hash code:61	10327128	³¯«~·ç	73.33	60
+Hash code:62	10444232	¤ý?¸©	71.17	53
+Hash code:63	NULL!
+Hash code:64	10327218	³¯?À[	86.33	60
+Hash code:65	NULL!
+Hash code:66	NULL!
+Hash code:67	NULL!
+Hash code:68	10427101	°¨­Yªå	56.17	68
+Hash code:69	10427110	¼B¬f»¨	74.5	68
+Hash code:70	NULL!
+Hash code:71	10427244	§f¬M¸©	73.17	71
+Hash code:72	NULL!
+Hash code:73	10220140	°ª¦Û¦b	89.5	73
+Hash code:74	10227207	³¯¬X¦w	86	73
+Hash code:75	9927167	«¸­³µ¾	74.33	75
+Hash code:76	10427211	¶À¦°¥[	67.83	12
+Hash code:77	10327134	°ª­§¯ø	77	77
+Hash code:78	10427133	³\¹Åºa	70.33	77
+Hash code:79	10327233	·¨©¾­ì	77.5	79
+Hash code:80	NULL!
+Hash code:81	NULL!
+Hash code:82	10227153	¦óªÃ¾§	73.33	82
+Hash code:83	10327125	¸­®xÞ³	85.5	82
+Hash code:84	10027120	³¯¬f¿«	63.33	84
+Hash code:85	10220107	³¯¤H»ñ	71	84
+Hash code:86	10327215	³¯«Tµ¾	81.33	82
+Hash code:87	10427129	¶À¬fºû	77	86
+Hash code:88	NULL!
+Hash code:89	NULL!
+Hash code:90	10327244	³¯ö^ß¬	80.17	90
+Hash code:91	10027214	´å®Ê·ì	68.67	91
+Hash code:92	10027241	³¯¸[·¢	76.5	91
+Hash code:93	10227121	ªL¬F¦t	85.17	93
+Hash code:94	10427234	³¯«Øèb	76.33	90
+Hash code:95	10227104	´¿²Eµq	80.83	91
+Hash code:96	3102535	¼B§»ªv	72.67	96
+Hash code:97	NULL!
+Hash code:98	10427147	¼B¬f§Ó	77.67	282
+Hash code:99	NULL!
+Hash code:100	10427102	½²©¯ªå	77.17	91
+Hash code:101	10327116	ªL¤O¦t	85	92
+Hash code:102	10327208	§õ¨|§¦	65.17	102
+Hash code:103	NULL!
+Hash code:104	10227123	ªL©{«º	78.67	104
+Hash code:105	10227132	ÁéªQ¦ö	81.5	104
+Hash code:106	NULL!
+Hash code:107	10327107	¥î©µ®f	84.17	107
+Hash code:108	10227213	ªLªFÞ±	72	104
+Hash code:109	10427224	¦ó«Û§¡	80.5	109
+Hash code:110	10427146	¥j¼y¶W	65.5	110
+Hash code:111	10311143	©P¡@«\	74.83	111
+Hash code:112	10427236	³¯¬fµ{	80.67	12
+Hash code:113	10327122	¾G·q¹F	68	104
+Hash code:114	10327140	³¢´º±©	80	114
+Hash code:115	10227215	¯¬¡@»Ê	66.33	115
+Hash code:116	10427120	¦ó©ú¿«	82.67	91
+Hash code:117	10427148	²ø³Í¥à	80.33	101
+Hash code:118	10427103	¬I«Å¦t	80.17	114
+Hash code:119	NULL!
+Hash code:120	10327212	§f­Y»¨	75.5	104
+Hash code:121	10327101	§E¤lºÍ	54.67	121
+Hash code:122	10327110	¶À¥i¦|	73.67	121
+Hash code:123	10427130	³¢¡@Þ±	69.67	114
+Hash code:124	NULL!
+Hash code:125	10314134	¨ô¾Ë¨°	76.83	125
+Hash code:126	10327135	ªL¹D¦t	68.17	126
+Hash code:127	10227209	¶À«Û¸Û	64.17	127
+Hash code:128	10427124	¬_ªÃ¼e	77.33	128
+Hash code:129	10327221	³¯­}¿«	78.67	104
+Hash code:130	10327153	´¿ºaøÊ	81	126
+Hash code:131	NULL!
+Hash code:132	10427142	³\µ¤³ó	72.33	128
+Hash code:133	10327148	ªL¥@®x	92.17	133
+Hash code:134	10427138	¸­¤hÞ³	59	133
+Hash code:135	10427219	ª÷©ý»ö	56	86
+Hash code:136	10427202	³\§J¦è	74.5	345
+Hash code:137	10227129	°¨°êºÕ	72.83	137
+Hash code:138	10227219	§dñZ¥à	74.17	137
+Hash code:139	10327207	¶À´Â¥È	70	138
+Hash code:140	10427201	³¯«ÛÀM	75.67	91
+Hash code:141	10427104	´^à±µY	79	137
+Hash code:142	10327270	¦ó«ä¹F	76	138
+Hash code:143	NULL!
+Hash code:144	10427214	¶ÀÔT®x	88.5	128
+Hash code:145	10327234	³¯¤å»·	82.17	129
+Hash code:146	10327117	±i®Ð»Í	82.33	146
+Hash code:147	10227229	®}º~¨^	82.33	147
+Hash code:148	10227151	³¯«T³ó	60.17	148
+Hash code:149	10327256	§dºa»¨	89.17	148
+Hash code:150	NULL!
+Hash code:151	10427240	§d¬f½n	79.33	147
+Hash code:152	NULL!
+Hash code:153	10427140	³¯«GÞ±	77.5	137
+Hash code:154	10327243	§õ¯E§g	78	129
+Hash code:155	10220135	§õ©Ó¾§	61.33	155
+Hash code:156	10228144	¬x¤l³Ç	76	156
+Hash code:157	10327229	³¯¥ß®¦	83.17	157
+Hash code:158	10427242	´¿¬Õ®S	88	109
+Hash code:159	NULL!
+Hash code:160	10427105	ªL¦ö¾§	83.33	160
+Hash code:161	10427150	³¯«T§»	66.67	160
+Hash code:162	NULL!
+Hash code:163	10227228	¶ÀÞmµ¾	82.5	163
+Hash code:164	10427241	±i¹Å°a	72.17	128
+Hash code:165	10227148	ªL°a¦Ó	58.83	165
+Hash code:166	10427128	¦¿®mÞ³	67.33	165
+Hash code:167	10427229	¾H¥à¦ö	63.5	167
+Hash code:168	10427208	½²©yÀR	79.5	104
+Hash code:169	10427119	¶ÀÄ£¼y	84.33	169
+Hash code:170	10327145	¹ù°¶µ¾	77	170
+Hash code:171	10327154	¼ï«É»Ê	55.17	170
+Hash code:172	10427210	§õªY®¦	66.17	91
+Hash code:173	NULL!
+Hash code:174	10127102	³¯«Ø¤å	77.17	174
+Hash code:175	10227101	¦¿°··ì	50.67	174
+Hash code:176	10327111	§õ¨Ê®i	58.83	175
+Hash code:177	10427223	³¯»·¯E	66.83	168
+Hash code:178	10327206	§f¤åÂ¦	83	174
+Hash code:179	10227227	¤ýÝÂ²N	71	179
+Hash code:180	10327253	§õ©s®S	70.83	179
+Hash code:181	10227150	¥Õµq¤¸	70.5	181
+Hash code:182	NULL!
+Hash code:183	10427106	³¯«a¾±	86.17	183
+Hash code:184	10327136	³¯®õ§Ó	51.17	175
+Hash code:185	4106076	¼B¤¯ªN	65.67	185
+Hash code:186	10227137	Â²§Ê¦t	85.67	185
+Hash code:187	NULL!
+Hash code:188	10427220	±i¨|¹Å	69.33	345
+Hash code:189	10320114	³¯§±Þ±	78.67	185
+Hash code:190	NULL!
+Hash code:191	NULL!
+Hash code:192	NULL!
+Hash code:193	10427232	³¢¤¸¸t	83.33	168
+Hash code:194	10127158	§õ¨ZÀB	81.67	194
+Hash code:195	10227262	Â²§»¦t	85.83	195
+Hash code:196	NULL!
+Hash code:197	10427118	ªô§±ÀR	50.17	197
+Hash code:198	NULL!
+Hash code:199	NULL!
+Hash code:200	10320129	³\ÄÖ¤§	79.17	200
+Hash code:201	10311138	³¯®a±d	68	201
+Hash code:202	NULL!
+Hash code:203	10027247	³¯«Ø¦w	85.33	203
+Hash code:204	10127218	±i®Ê¹Å	81.33	203
+Hash code:205	NULL!
+Hash code:206	10427107	¸­ÌÉæP	62.17	206
+Hash code:207	10227118	§d¶v¼Ý	70.17	203
+Hash code:208	10227134	¦ó«~¸©	67	207
+Hash code:209	NULL!
+Hash code:210	10327127	³¢¡@ÀR	82.17	185
+Hash code:211	10227225	³¯¬R¤å	73.67	211
+Hash code:212	10227252	ÄY¤l°a	68	211
+Hash code:213	NULL!
+Hash code:214	10327155	³s¼y	69.5	214
+Hash code:215	10427170	»¯¤Ñ§»	79.33	206
+Hash code:216	10327124	§d¬f©Ó	88.5	207
+Hash code:217	NULL!
+Hash code:218	NULL!
+Hash code:219	10327205	ªL«F¿«	80.33	210
+Hash code:220	10327109	¤B±o®¦	69.33	220
+Hash code:221	10327172	§d®L§Ó	69	185
+Hash code:222	NULL!
+Hash code:223	10327142	Â²»Ê¦ö	72	207
+Hash code:224	10327137	§d¨ÎÌÉ	61	224
+Hash code:225	10427117	¤ýºÍ¨¹	70.5	225
+Hash code:226	10327250	³¯¨ÎµY	81.33	210
+Hash code:227	10227224	®]®¶°ê	59.33	227
+Hash code:228	10327106	ªL«Å¦ö	78.17	227
+Hash code:229	10327112	¦¶®m¥­	78.33	229
+Hash code:230	10242116	³¯¬L»Ê	78.17	230
+Hash code:231	10427222	ªL¨°­×	74.5	227
+Hash code:232	10227237	´¿±Ò°a	76.33	232
+Hash code:233	10320142	¶À«a²N	77.83	232
+Hash code:234	10327103	§õ©yã¸	74.17	234
+Hash code:235	10327130	¬x³ºÞ³	68.67	234
+Hash code:236	10327272	³¢§Ó±l	81.33	232
+Hash code:237	NULL!
+Hash code:238	10327121	©P©s¹F	78.17	229
+Hash code:239	NULL!
+Hash code:240	NULL!
+Hash code:241	10320170	¾H¤l²Æ	75.67	241
+Hash code:242	10427228	³æ¯E­Û	72.83	226
+Hash code:243	10227223	³¯¤å¼_	73.67	243
+Hash code:244	10227147	¯Î»FÂE	76.83	244
+Hash code:245	10420141	¤ý¯E	72	244
+Hash code:246	10327240	¹ù­P½n	71.5	246
+Hash code:247	10227232	§õ¡@¦w	72	243
+Hash code:248	10427127	Â²ºû¼w	73	244
+Hash code:249	10320136	³¢®Ë¸Û	72.17	249
+Hash code:250	10427171	¤ý«Û	82.67	225
+Hash code:251	10427135	ªL©vÀM	85.5	170
+Hash code:252	10327222	½²©Ó§Ê	80.5	243
+Hash code:253	10127146	¬I¤Í¤Í	77.83	253
+Hash code:254	10327119	¦V§Ó±s	76.17	254
+Hash code:255	10427203	´¿ÄQ¦t	74.33	246
+Hash code:256	10327241	¶À®¶¹Å	75.83	207
+Hash code:257	10427116	Ä¬­õ¿o	78.83	253
+Hash code:258	NULL!
+Hash code:259	NULL!
+Hash code:260	10320116	³¯·çÑÔ	70.83	260
+Hash code:261	10427109	¼B«H»ö	77.67	252
+Hash code:262	NULL!
+Hash code:263	10327147	®ú¨Îºû	62.5	263
+Hash code:264	10027212	´¿¶²µY	83.83	264
+Hash code:265	10227201	»ñ©ú³Ç	80.67	264
+Hash code:266	10327217	³¯©öÞm	70.67	185
+Hash code:267	10427137	¶ÀÂE§Ó	85.33	263
+Hash code:268	10320135	ªL¤lµ¾	77.5	264
+Hash code:269	10427217	½²©Ó­è	76.5	244
+Hash code:270	NULL!
+Hash code:271	10027126	Â²»¨§Ó	82.83	271
+Hash code:272	10227106	´¿©uªå	84	271
+Hash code:273	10327138	§f¤å³Ç	83.67	273
+Hash code:274	10427149	¨H·q³ó	77.5	273
+Hash code:275	10227221	¶ÀÄr¾b	64	275
+Hash code:276	10327255	³¯¶h°a	72.17	276
+Hash code:277	10320128	¾GµÏÂE	73.33	277
+Hash code:278	10427108	¦ó·ç²»	80.33	229
+Hash code:279	10327237	¼B´ð©É	71.33	279
+Hash code:280	10427271	§f°¶ÄQ	66.5	244
+Hash code:281	10427115	³¯¬R¨°	72.17	281
+Hash code:282	10327203	ªL¤l°a	68.17	282
+Hash code:283	10327113	§õ¥@¥à	73.17	283
+Hash code:284	10127261	¤ý«Û¶v	73.67	284
+Hash code:285	10227116	ªL³ÕÂí	80.5	284
+Hash code:286	10127242	³¯¬R²a	80.17	286
+Hash code:287	10227124	³¯¬R·_	74.83	286
+Hash code:288	10327129	³¯©v¸q	81	288
+Hash code:289	10327219	¦¿²Ð½å	70.67	288
+Hash code:290	10427151	±i­õÞm	69.17	281
+Hash code:291	10227202	®}»·¬P	70.67	291
+Hash code:292	10227220	¶À«³¤É	79	291
+Hash code:293	NULL!
+Hash code:294	10320133	´^ÝÂ¦|	81.5	294
+Hash code:295	10427145	¤ýºÍ¼Ý	67.83	291
+Hash code:296	10427238	³¯«a¤Í	68.5	287
+Hash code:297	10127262	®}³¥	75.83	297
+Hash code:298	10227261	ªô«a´¼	79	297
+Hash code:299	10327131	¦ó¥ò©¨	79.67	283
+Hash code:300	10327144	¥î®a®¦	76.67	300
+Hash code:301	10220120	¤B±Ó­õ	80.5	301
+Hash code:302	10427206	±i°a»®	79.5	302
+Hash code:303	10115240	¦¿«Û¼w	62	303
+Hash code:304	10427134	³¯Ãý¦Ë	59.17	300
+Hash code:305	NULL!
+Hash code:306	10327271	§ù¨Z±d	76.83	185
+Hash code:307	10227235	­ÙÙy®p	79.67	307
+Hash code:308	10127228	§E«Â¾§	73.67	308
+Hash code:309	10227218	³¯«T¼Ý	70.5	308
+Hash code:310	10127263	³¯Ãý¤å	63.5	310
+Hash code:311	10227136	¨ô¤l§g	83.83	310
+Hash code:312	NULL!
+Hash code:313	10427114	ºµÆ[¤@	72.33	309
+Hash code:314	10327216	ªL¨ç½n	75.5	310
+Hash code:315	10444117	ÃC¥ô¾e	82.67	279
+Hash code:316	10327225	¼B¬êÅï	67.83	307
+Hash code:317	NULL!
+Hash code:318	10227230	°ª¯\²[	68.67	318
+Hash code:319	10327202	¤ý¥ç¼e	83.17	318
+Hash code:320	NULL!
+Hash code:321	10427227	¥Ð­§Þ³	81.33	285
+Hash code:322	10327139	³¯«ß¤¤	78.67	322
+Hash code:323	10127264	¶À«³µ{	59.5	323
+Hash code:324	10227146	§E°·»¨	85.83	323
+Hash code:325	10427141	­ð¤_²[	81	309
+Hash code:326	10327247	µÎ¤@­×	81	326
+Hash code:327	10327220	±i¥ô§»	73.67	318
+Hash code:328	10427123	³¯ªv¥­	71.67	207
+Hash code:329	10427249	¬I¬f½n	67.67	329
+Hash code:330	10427237	ÄÁ¬fÂ`	72.33	326
+Hash code:331	10327230	³¯½Ü½«	86.5	282
+Hash code:332	10327123	§º²Ð¦t	87	332
+Hash code:333	NULL!
+Hash code:334	10427272	±i´º¤¯	60.67	285
+Hash code:335	10427212	¥Õ­Y§Â	75.33	286
+Hash code:336	10127256	ÁÂ¤lµM	70	336
+Hash code:337	10327114	¶À¸t³Ç	79.83	337
+Hash code:338	10227257	½²©öÀM	72.5	338
+Hash code:339	10227119	Ã¹¤¸§Ó	83	339
+Hash code:340	10320130	³¯¬R¿Å	71	339
+Hash code:341	10127171	³¯±d¥­	64.83	341
+Hash code:342	10427273	¶ÀÂ@´Ë	80.5	326
+Hash code:343	10327252	¦¿¥@¥ú	81.67	307
+Hash code:344	10125134	½²©v¿«	85.17	344
+Hash code:345	10227240	ªL«iµ¾	78.17	345
+Hash code:346	10327141	±i®Ë¹ç	71.67	337
+Hash code:347	NULL!
+Hash code:348	10227246	³\´¼µú	75.33	344
+Hash code:349	10327108	©P·¡¶³	91.5	340
+Hash code:350	10427221	«J¬R§»	71.5	286
+Hash code:351	10427213	®}®m¿C	82.67	207
+Hash code:352	10427248	³¯¨ä¦ë	62.83	348
