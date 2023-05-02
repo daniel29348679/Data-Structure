@@ -275,6 +275,11 @@ public:
 
     void doublehash()
     {
+        if(!run_1)
+        {
+            cout << "run 1 needed!!!!\n";
+            return;
+        }
         run_2 = 1;
         int haxnum = gethaxnum();
         step = getstep();
