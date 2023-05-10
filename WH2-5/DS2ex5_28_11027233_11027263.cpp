@@ -313,6 +313,7 @@ int main()
         cout << "\n";
         cout << "**  data operate system           **" << "\n"; //print menu
         cout << "* 0. Quit                          *" << "\n";
+        cout << "* 1. cc and sp                     *" << "\n";
         cout << "* 99. mission 0                   **" << "\n";
         cout << ":";
         cin >> k;
