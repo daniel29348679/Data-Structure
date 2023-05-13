@@ -270,8 +270,8 @@ int main()
 
             dgraph dg;
             dg.read(locate);
-            startTime();
             dg.adjlist();
+            startTime();
             dg.connect();
             cout << "success! time=" << getTime() << "s" << "\n";
         }
