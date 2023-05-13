@@ -21,7 +21,7 @@ void startTime() //start timing
     QueryPerformanceCounter(&nBeginTime);
 }
 
-double getTime() //get timing
+double getTime() //get timing (second)
 {
     QueryPerformanceCounter(&nEndTime);
     return (double)(nEndTime.QuadPart - nBeginTime.QuadPart) / (double)nFreq.QuadPart;
@@ -106,7 +106,7 @@ public:
                     idset.insert(p.getid);
                     idset.insert(p.putid);
                     #ifdef debug
-                    cout << p.putid << " " << p.getid << " " << p.weight << endl;
+                    cout << p.putid << " " << p.getid << " " << p.weight << "\n";
                     #endif
                 }
 
@@ -133,16 +133,16 @@ public:
         ofstream out("pairs" + input_filename + ".adj", ios::trunc);
         for(int i = 0 ; i < nodevec.size(); i++) // write file
         {
-            out << "[" << i + 1 << "] " << nodevec[i].id << ":" << endl;
+            out << "[" << i + 1 << "] " << nodevec[i].id << ":" << "\n";
             #ifdef debug
-            cout << "[" << i + 1 << "] " << nodevec[i].id << ":" << endl;
+            cout << "[" << i + 1 << "] " << nodevec[i].id << ":" << "\n";
             #endif
             int count = 0;
             for(auto&p:nodevec[i].nexts)
             {
-                out << "   (" << ++count << ") " << nodevec[p.first].id << " " << p.second << endl;
+                out << "   (" << ++count << ") " << nodevec[p.first].id << " " << p.second << "\n";
                 #ifdef debug
-                cout << "   (" << ++count << ") " << nodevec[p.first].id << " " << p.second << endl;
+                cout << "   (" << ++count << ") " << nodevec[p.first].id << " " << p.second << "\n";
                 #endif
             }
         }
@@ -164,7 +164,7 @@ public:
         for(int i = 0 ; i < nodevec.size(); i++)
         {
             set<int>    nextset;         // to check repeat
-            vector<int> tempvev, nexvec; //nexvec->now checking, tempvev->next time checking
+            vector<int> tempvec, nexvec; //nexvec->now checking, tempvec->next time checking
 
             nextset.insert(i);
             nexvec.push_back(i); //start at index i
@@ -179,25 +179,25 @@ public:
                     }))
                     {
                         nextset.insert(j);
-                        tempvev.push_back(j);
+                        tempvec.push_back(j);
                     }
-                nexvec = tempvev; //do next time
-                tempvev.clear();
+                swap(nexvec, tempvec);  //do next time
+                tempvec.clear();
             }
 
             nextset.erase(i);
 
             /*
-             * out << "[" << i + 1 << "] " << nodevec[i].id << "(" << nextset.size() << ")" << ":" << endl;
+             * out << "[" << i + 1 << "] " << nodevec[i].id << "(" << nextset.size() << ")" << ":" << "\n";
              #ifdef debug
-             * cout << "[" << i + 1 << "] " << nodevec[i].id << "(" << nextset.size() << ")" << ":" << endl;
+             * cout << "[" << i + 1 << "] " << nodevec[i].id << "(" << nextset.size() << ")" << ":" << "\n";
              #endif
              * int count = 0;
              * for(auto&j:nextset)
              * {
-             *  out << "   (" << ++count << ") " << nodevec[j].id << endl;
+             *  out << "   (" << ++count << ") " << nodevec[j].id << "\n";
              #ifdef debug
-             *  cout << "   (" << ++count << ") " << nodevec[j].id << endl;
+             *  cout << "   (" << ++count << ") " << nodevec[j].id << "\n";
              #endif
              * }
              */
@@ -216,16 +216,16 @@ public:
 
         for(auto&n:totalvec)
         {
-            out << "[" << i + 1 << "] " << n.id << "(" << n.idvec.size() << ")" << ":" << endl;
+            out << "[" << i + 1 << "] " << n.id << "(" << n.idvec.size() << ")" << ":" << "\n";
             #ifdef debug
-            cout << "[" << i + 1 << "] " << n.id << "(" << n.idvec.size() << ")" << ":" << endl;
+            cout << "[" << i + 1 << "] " << n.id << "(" << n.idvec.size() << ")" << ":" << "\n";
             #endif
             int count = 0;
             for(auto&j:n.idvec)
             {
-                out << "   (" << ++count << ") " << j << endl;
+                out << "   (" << ++count << ") " << j << "\n";
                 #ifdef debug
-                cout << "   (" << ++count << ") " << j << endl;
+                cout << "   (" << ++count << ") " << j << "\n";
                 #endif
             }
             i++;
@@ -273,7 +273,7 @@ int main()
             startTime();
             dg.adjlist();
             dg.connect();
-            cout << "success! time=" << getTime() << "s" << endl;
+            cout << "success! time=" << getTime() << "s" << "\n";
         }
     }
 }
