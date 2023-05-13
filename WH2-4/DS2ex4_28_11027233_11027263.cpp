@@ -6,8 +6,26 @@
 //!!!! USE C++20 to compile or you may get an error!!!!!!!!
 //https://blog.csdn.net/qq_50285142/article/details/122930647
 #include <bits/stdc++.h>
+#include <windows.h>
 using namespace std;
+
 //#define debug    ;
+
+LARGE_INTEGER nFreq;
+LARGE_INTEGER nBeginTime;
+LARGE_INTEGER nEndTime;
+
+void startTime() //start timing
+{
+    QueryPerformanceFrequency(&nFreq);
+    QueryPerformanceCounter(&nBeginTime);
+}
+
+double getTime() //get timing
+{
+    QueryPerformanceCounter(&nEndTime);
+    return (double)(nEndTime.QuadPart - nBeginTime.QuadPart) / (double)nFreq.QuadPart;
+}
 
 class pairs_bin
 {
@@ -131,9 +149,17 @@ public:
         out.close();
     }
 
+    class connectclass
+    {
+public:
+        string id;
+        vector<string> idvec;
+    };
+
     void connect()
     {
-        ofstream out("pairs" + input_filename + ".cnt", ios::trunc);
+        ofstream             out("pairs" + input_filename + ".cnt", ios::trunc);
+        vector<connectclass> totalvec;
 
         for(int i = 0 ; i < nodevec.size(); i++)
         {
@@ -161,18 +187,48 @@ public:
 
             nextset.erase(i);
 
-            out << "[" << i + 1 << "] " << nodevec[i].id << "(" << nextset.size() << ")" << ":" << endl;
+            /*
+             * out << "[" << i + 1 << "] " << nodevec[i].id << "(" << nextset.size() << ")" << ":" << endl;
+             #ifdef debug
+             * cout << "[" << i + 1 << "] " << nodevec[i].id << "(" << nextset.size() << ")" << ":" << endl;
+             #endif
+             * int count = 0;
+             * for(auto&j:nextset)
+             * {
+             *  out << "   (" << ++count << ") " << nodevec[j].id << endl;
+             #ifdef debug
+             *  cout << "   (" << ++count << ") " << nodevec[j].id << endl;
+             #endif
+             * }
+             */
+
+            totalvec.push_back({});
+            totalvec[totalvec.size() - 1].id = nodevec[i].id;
+            for(auto&j:nextset)
+                totalvec[totalvec.size() - 1].idvec.push_back(nodevec[j].id);
+        }
+
+        sort(totalvec.begin(), totalvec.end(), []( connectclass&a, connectclass&b){
+            return a.idvec.size() > b.idvec.size();
+        });
+
+        int i = 0;
+
+        for(auto&n:totalvec)
+        {
+            out << "[" << i + 1 << "] " << n.id << "(" << n.idvec.size() << ")" << ":" << endl;
             #ifdef debug
-            cout << "[" << i + 1 << "] " << nodevec[i].id << "(" << nextset.size() << ")" << ":" << endl;
+            cout << "[" << i + 1 << "] " << n.id << "(" << n.idvec.size() << ")" << ":" << endl;
             #endif
             int count = 0;
-            for(auto&j:nextset)
+            for(auto&j:n.idvec)
             {
-                out << "   (" << ++count << ") " << nodevec[j].id << endl;
+                out << "   (" << ++count << ") " << j << endl;
                 #ifdef debug
-                cout << "   (" << ++count << ") " << nodevec[j].id << endl;
+                cout << "   (" << ++count << ") " << j << endl;
                 #endif
             }
+            i++;
         }
         out.close();
     }
@@ -214,9 +270,10 @@ int main()
 
             dgraph dg;
             dg.read(locate);
+            startTime();
             dg.adjlist();
             dg.connect();
-            cout << "success!" << endl;
+            cout << "success! time=" << getTime() << "s" << endl;
         }
     }
 }
