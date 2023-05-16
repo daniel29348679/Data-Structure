@@ -163,26 +163,25 @@ public:
 
         for(int i = 0 ; i < nodevec.size(); i++)
         {
-            set<int>    nextset;         // to check repeat
-            vector<int> tempvec, nexvec; //nexvec->now checking, tempvec->next time checking
+            set<int>   nextset; // to check repeat
+            queue<int> tempque; //nexvec->now checking, tempvec->next time checking
 
             nextset.insert(i);
-            nexvec.push_back(i); //start at index i
+            tempque.push(i); //start at index i
 
-            while(nexvec.size())
+            while(tempque.size())
             {
-                for(auto&n:nexvec) //index->node->vector(pair)->int
-                    for(auto j:nodevec[n].nexts | ranges::views::transform([](pair<int, float> p){
-                        return p.first;
-                    }) | ranges::views::filter([&nextset](int x){
-                        return nextset.count(x) == 0; //not exist in nextset
-                    }))
-                    {
-                        nextset.insert(j);
-                        tempvec.push_back(j);
-                    }
-                swap(nexvec, tempvec);  //do next time
-                tempvec.clear();
+                int n = tempque.front();
+                tempque.pop();
+                for(auto j:nodevec[n].nexts | ranges::views::transform([](pair<int, float> p){
+                    return p.first;
+                }) | ranges::views::filter([&nextset](int x){
+                    return nextset.count(x) == 0;     //not exist in nextset
+                }))
+                {
+                    nextset.insert(j);
+                    tempque.push(j);
+                }
             }
 
             nextset.erase(i);
