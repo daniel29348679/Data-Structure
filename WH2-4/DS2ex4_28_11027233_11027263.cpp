@@ -232,6 +232,141 @@ public:
         }
         out.close();
     }
+
+    void inf()
+    {
+        float threshold;
+
+        cout << "type threshold:";
+        cin >> threshold;
+
+
+        ofstream             out("pairs" + input_filename + ".inf", ios::trunc);
+        vector<connectclass> totalvec;
+
+        for(int i = 0 ; i < nodevec.size(); i++)
+        {
+            set<int>   nextset;   // to check repeat
+            stack<int> nextstack; //nexvec->now checking, tempvec->next time checking
+
+            nextset.insert(i);
+            nextstack.push(i); //start at index i
+
+            while(nextstack.size())
+            {
+                auto n = nextstack.top();
+                nextstack.pop();
+                for(auto&j:nodevec[n].nexts | ranges::views::filter([&nextset, &threshold](pair<int, float>&p){
+                    return (nextset.count(get<0>(p)) == 0) && get<1>(p) >= threshold;     //not exist in nextset
+                }))
+                {
+                    nextset.insert(get<0>(j));
+                    nextstack.push(get<0>(j));
+                }
+            }
+
+            nextset.erase(i);
+
+            totalvec.push_back({});
+            totalvec[totalvec.size() - 1].id = nodevec[i].id;
+            for(auto&j:nextset)
+                totalvec[totalvec.size() - 1].idvec.push_back(nodevec[j].id);
+        }
+
+        sort(totalvec.begin(), totalvec.end(), []( connectclass&a, connectclass&b){
+            return a.idvec.size() > b.idvec.size();
+        });
+
+        int i = 0;
+
+        for(auto&n:totalvec)
+        {
+            if(n.idvec.size() == 0)
+                continue;
+            out << "[" << i + 1 << "] " << n.id << "(" << n.idvec.size() << ")" << ":" << "\n";
+            #ifdef debug
+            cout << "[" << i + 1 << "] " << n.id << "(" << n.idvec.size() << ")" << ":" << "\n";
+            #endif
+            int count = 0;
+            for(auto&j:n.idvec)
+            {
+                out << "   (" << ++count << ") " << j << "\n";
+                #ifdef debug
+                cout << "   (" << ++count << ") " << j << "\n";
+                #endif
+            }
+            i++;
+        }
+        out.close();
+    }
+
+    void pro()
+    {
+        float threshold;
+
+        srand(time(NULL));
+        threshold = (float)(rand() % 10000) / 10000;
+        cout << "pro's threshold= " << threshold << "\n";
+
+
+        ofstream             out("pairs" + input_filename + ".pro", ios::trunc);
+        vector<connectclass> totalvec;
+
+        for(int i = 0 ; i < nodevec.size(); i++)
+        {
+            set<int>   nextset;   // to check repeat
+            stack<int> nextstack; //nexvec->now checking, tempvec->next time checking
+
+            nextset.insert(i);
+            nextstack.push(i); //start at index i
+
+            while(nextstack.size())
+            {
+                auto n = nextstack.top();
+                nextstack.pop();
+                for(auto&j:nodevec[n].nexts | ranges::views::filter([&nextset, &threshold](pair<int, float>&p){
+                    return (nextset.count(get<0>(p)) == 0) && get<1>(p) >= threshold;     //not exist in nextset
+                }))
+                {
+                    nextset.insert(get<0>(j));
+                    nextstack.push(get<0>(j));
+                }
+            }
+
+            nextset.erase(i);
+
+            totalvec.push_back({});
+            totalvec[totalvec.size() - 1].id = nodevec[i].id;
+            for(auto&j:nextset)
+                totalvec[totalvec.size() - 1].idvec.push_back(nodevec[j].id);
+        }
+
+        sort(totalvec.begin(), totalvec.end(), []( connectclass&a, connectclass&b){
+            return a.idvec.size() > b.idvec.size();
+        });
+
+        int i = 0;
+
+        for(auto&n:totalvec)
+        {
+            if(n.idvec.size() == 0)
+                continue;
+            out << "[" << i + 1 << "] " << n.id << "(" << n.idvec.size() << ")" << ":" << "\n";
+            #ifdef debug
+            cout << "[" << i + 1 << "] " << n.id << "(" << n.idvec.size() << ")" << ":" << "\n";
+            #endif
+            int count = 0;
+            for(auto&j:n.idvec)
+            {
+                out << "   (" << ++count << ") " << j << "\n";
+                #ifdef debug
+                cout << "   (" << ++count << ") " << j << "\n";
+                #endif
+            }
+            i++;
+        }
+        out.close();
+    }
 };
 
 int main()
@@ -243,7 +378,8 @@ int main()
         cout << "\n";
         cout << "**  data operate system           **" << "\n"; //print menu
         cout << "* 0. Quit                          *" << "\n";
-        cout << "* 1. adj list & connect counts    **" << "\n";
+        cout << "* 1. adj list & connect counts     *" << "\n";
+        cout << "* & inf & pro                     **" << "\n";
         cout << ":";
         cin >> k;
         if(cin.fail())
@@ -273,7 +409,9 @@ int main()
             dg.adjlist();
             startTime();
             dg.connect();
-            cout << "success! time=" << getTime() << "s" << "\n";
+            cout << "connect time=" << getTime() << "s" << "\n";
+            dg.inf();
+            dg.pro();
         }
     }
 }
