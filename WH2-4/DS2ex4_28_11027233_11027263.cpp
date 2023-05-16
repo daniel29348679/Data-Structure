@@ -302,13 +302,7 @@ public:
 
     void pro()
     {
-        float threshold;
-
         srand(time(NULL));
-        threshold = (float)(rand() % 10000) / 10000;
-        cout << "pro's threshold= " << threshold << "\n";
-
-
         ofstream             out("pairs" + input_filename + ".pro", ios::trunc);
         vector<connectclass> totalvec;
 
@@ -324,12 +318,13 @@ public:
             {
                 auto n = nextstack.top();
                 nextstack.pop();
-                for(auto&j:nodevec[n].nexts | ranges::views::filter([&nextset, &threshold](pair<int, float>&p){
-                    return (nextset.count(get<0>(p)) == 0) && get<1>(p) >= threshold;     //not exist in nextset
+                for(auto&j:nodevec[n].nexts | ranges::views::filter([&nextset](pair<int, float>&p){
+                    return nextset.count(get<0>(p)) == 0;      //not exist in nextset
                 }))
                 {
                     nextset.insert(get<0>(j));
-                    nextstack.push(get<0>(j));
+                    if(get<1>(j) >= (float)(rand() % 10000) / 10000)
+                        nextstack.push(get<0>(j));
                 }
             }
 
