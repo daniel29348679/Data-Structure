@@ -118,9 +118,18 @@ public:
         }
 
         ofstream out("pairs" + input_filename + "_" + to_string(threshold) + ".adj", ios::trunc);
-        out << nodevec.size() << "\n";
+
+        int un = 0;
+        for(int i = 0 ; i < nodevec.size() ; i++)
+            if(nodevec[i].nexts.size() == 0)
+                un++;
+
+
+        out << nodevec.size() - un << "\n";
         for(int i = 0 ; i < nodevec.size() ; i++)
         {
+            if(nodevec[i].nexts.size() == 0)
+                continue;
             sort(nodevec[i].nexts.begin(), nodevec[i].nexts.end(), [](const tuple<int, float>&t0, const tuple<int, float>&t1)
             {
                 return get<0>(t0) < get<0>(t1);
@@ -244,7 +253,7 @@ public:
 
         sort(ccvec.begin(), ccvec.end(), [](const vector<int>&v0, const vector<int>&v1)
         {
-            return v0.size() < v1.size();
+            return v0.size() > v1.size();
         });
 
         ofstream out("pairs" + input_filename + "_" + to_string(threshold) + ".cc", ios::trunc);
@@ -255,8 +264,8 @@ public:
             out << "cc size:" << v.size() << "\n";
             for(auto& i : v)
             {
-                cout << "\t" << idvec[i] << "\n";
-                out << "\t" << idvec[i] << "\n";
+                cout << idvec[i] << "\n";
+                out << idvec[i] << "\n";
             }
         }
         out.close();
@@ -300,6 +309,62 @@ public:
                     cout << "\t" << idvec[i] << ", dis= " << distancesvec[i] << "\n";
                     out << "\t" << idvec[i] << ", dis= " << distancesvec[i] << "\n";
                 }
+        }
+    }
+
+    void mintree()
+    {
+        ifstream input("pairs" + input_filename + "_" + to_string(threshold) + ".cc");
+
+        if(!input)
+        {
+            cout << (string)"failed to open " + "pairs" + input_filename + "_" + to_string(threshold) + ".adj\n";
+            return;
+        }
+
+
+        string idtosearch;
+
+        char ch;
+
+        while(input >> ch >> ch >> ch >> ch >> ch >> ch >> ch)
+        {
+            int t;
+            input >> t;
+            cout << "cc size=" << t << '\n';
+            while(t--)
+            {
+                input >> idtosearch;
+                //cout << idtosearch << '\n';
+            }
+
+
+            vector<float> distancesvec(nodevec.size(), 999999);
+            vector<float> weightvec(nodevec.size(), 0);
+
+            distancesvec[indexmap[idtosearch]] = 0;
+            vector<int> nowvec, tempvec;
+            nowvec.push_back(indexmap[idtosearch]);
+            while(nowvec.size())
+            {
+                for(const auto& i :nowvec)
+                    for(const auto&j:nodevec[i].nexts)
+                        if(distancesvec[i] + get<1>(j) < distancesvec[get<0>(j)])
+                        {
+                            distancesvec[get<0>(j)] = distancesvec[i] + get<1>(j);
+                            weightvec[get<0>(j)]    = get<1>(j);
+                            tempvec.push_back(get<0>(j));
+                        }
+
+                nowvec = tempvec;
+                tempvec.clear();
+            }
+
+            float total = 0;
+            for_each(weightvec.begin(), weightvec.end(), [&](float& n) {
+                total += n;
+            });
+            cout << "total=" << total << '\n';
         }
     }
 };
@@ -348,6 +413,12 @@ int main()
             dgraph dg;
             dg.read();
             dg.ccandsp();
+        }
+        if(k == 2)
+        {
+            dgraph dg;
+            dg.read();
+            dg.mintree();
         }
     }
 }
